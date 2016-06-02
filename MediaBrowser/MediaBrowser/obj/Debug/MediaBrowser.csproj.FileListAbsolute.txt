@@ -1,0 +1,8 @@
+c:\users\j\Documents\MediaBrowser\MediaBrowser\MediaBrowser\bin\Debug\MediaBrowser.exe.config
+c:\users\j\Documents\MediaBrowser\MediaBrowser\MediaBrowser\bin\Debug\MediaBrowser.exe
+c:\users\j\Documents\MediaBrowser\MediaBrowser\MediaBrowser\bin\Debug\MediaBrowser.pdb
+c:\users\j\Documents\MediaBrowser\MediaBrowser\MediaBrowser\obj\Debug\MediaBrowser.csprojResolveAssemblyReference.cache
+c:\users\j\Documents\MediaBrowser\MediaBrowser\MediaBrowser\obj\Debug\MediaBrowser.Properties.Resources.resources
+c:\users\j\Documents\MediaBrowser\MediaBrowser\MediaBrowser\obj\Debug\MediaBrowser.csproj.GenerateResource.Cache
+c:\users\j\Documents\MediaBrowser\MediaBrowser\MediaBrowser\obj\Debug\MediaBrowser.exe
+c:\users\j\Documents\MediaBrowser\MediaBrowser\MediaBrowser\obj\Debug\MediaBrowser.pdb

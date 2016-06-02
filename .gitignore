@@ -1,0 +1,7 @@
+Documentation
+
+*.dll
+*.exe
+*.config
+*.log
+*.sql
