@@ -16,7 +16,7 @@ namespace MediaBrowser
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MediaBrowser());
+            Application.Run(new FormMediaBrowser());
         }
     }
 }

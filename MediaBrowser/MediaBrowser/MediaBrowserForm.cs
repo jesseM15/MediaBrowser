@@ -10,11 +10,11 @@ using System.Windows.Forms;
 
 namespace MediaBrowser
 {
-    public partial class MediaBrowser : Form
+    public partial class MediaBrowserForm : Form
     {
         public static Browser browser = new Browser();
 
-        public MediaBrowser()
+        public MediaBrowserForm()
         {
             InitializeComponent();
         }
@@ -26,8 +26,11 @@ namespace MediaBrowser
 
         private void sourceDirectoriesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SourceDirectories sd = new SourceDirectories();
-            sd.Show();
+            //SourceDirectoriesForm sd = new SourceDirectoriesForm();
+            //sd.Show();
+            //SourceDirectories sd = new SourceDirectories();
+            //sd.ShowForm();
+            browser.SD.ShowForm();
         }
     }
 }

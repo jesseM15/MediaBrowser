@@ -39,6 +39,36 @@ namespace MediaBrowser
             _videos = new List<Video>();
         }
 
-        
+        public void Initialize()
+        {
+            List<string> videoFiles = new List<string>();
+            // add full-path files to the list
+            foreach (string directory in _sourceDirectories)
+            {
+                videoFiles.AddRange(Directory.GetFiles(directory));
+            }
+
+            // Hard-coded GetFiles for reference. Delete when tested working.
+            //videoFiles.AddRange(Directory.GetFiles(@"E:/Videos/Movies/"));
+
+            // iterate through files and assign Media properties
+            for (int n = 0; n < videoFiles.Count(); n++)
+            {
+                Video tempvideo = new Video();
+                tempvideo.FilePath = videoFiles[n];
+                tempvideo.FileName = Path.GetFileNameWithoutExtension(videoFiles[n]);
+
+            }
+        }
+
+        public void ShowSourceDirectoryDialog()
+        {
+            FormSourceDirectories sd = new FormSourceDirectories(SourceDirectories);
+            var result = sd.ShowDialog();
+            if (result == System.Windows.Forms.DialogResult.OK)
+            {
+                SourceDirectories = sd.directories;
+            }
+        }
     }
 }

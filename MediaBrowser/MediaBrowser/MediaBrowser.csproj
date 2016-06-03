@@ -45,25 +45,25 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Browser.cs" />
-    <Compile Include="MediaBrowser.cs">
+    <Compile Include="FormMediaBrowser.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MediaBrowser.Designer.cs">
-      <DependentUpon>MediaBrowser.cs</DependentUpon>
+    <Compile Include="FormMediaBrowser.Designer.cs">
+      <DependentUpon>FormMediaBrowser.cs</DependentUpon>
     </Compile>
     <Compile Include="Logger.cs" />
     <Compile Include="Media.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SourceDirectories.cs">
+    <Compile Include="FormSourceDirectories.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SourceDirectories.Designer.cs">
-      <DependentUpon>SourceDirectories.cs</DependentUpon>
+    <Compile Include="FormSourceDirectories.Designer.cs">
+      <DependentUpon>FormSourceDirectories.cs</DependentUpon>
     </Compile>
     <Compile Include="Video.cs" />
-    <EmbeddedResource Include="MediaBrowser.resx">
-      <DependentUpon>MediaBrowser.cs</DependentUpon>
+    <EmbeddedResource Include="FormMediaBrowser.resx">
+      <DependentUpon>FormMediaBrowser.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -74,8 +74,8 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="SourceDirectories.resx">
-      <DependentUpon>SourceDirectories.cs</DependentUpon>
+    <EmbeddedResource Include="FormSourceDirectories.resx">
+      <DependentUpon>FormSourceDirectories.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

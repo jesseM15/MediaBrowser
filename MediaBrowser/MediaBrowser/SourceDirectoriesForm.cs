@@ -10,17 +10,22 @@ using System.Windows.Forms;
 
 namespace MediaBrowser
 {
-    public partial class SourceDirectories : Form
+    public partial class SourceDirectoriesForm : Form
     {
-        public SourceDirectories()
+        public List<string> sd;
+
+        public SourceDirectoriesForm(List<string> directories)
         {
             InitializeComponent();
+            List<string> sd = new List<string>();
+            sd = directories;
         }
 
         private void SourceDirectories_Load(object sender, EventArgs e)
         {
             // add directories to listbox
-            foreach (string directory in MediaBrowser.browser.SourceDirectories)
+            //foreach (string directory in MediaBrowserForm.browser.SourceDirectories)
+            foreach (string directory in sd)
             {
                 lbxSourceDirectories.Items.Add(FormatWithBackSlashes(directory));
             }
@@ -44,11 +49,22 @@ namespace MediaBrowser
         private void btnOK_Click(object sender, EventArgs e)
         {
             // code to return source directories
-            MediaBrowser.browser.SourceDirectories = new List<string>();
+            //MediaBrowserForm.browser.SourceDirectories = new List<string>();
+            /*
+            MediaBrowserForm.browser.SD.Directories = new List<string>();
             foreach (string item in lbxSourceDirectories.Items)
             {
-                MediaBrowser.browser.SourceDirectories.Add(FormatWithForwardSlashes(item));
+                //MediaBrowserForm.browser.SourceDirectories.Add(FormatWithForwardSlashes(item));
+                MediaBrowserForm.browser.SD.Directories.Add(FormatWithForwardSlashes(item));
             }
+            this.Close();
+            */
+            List<string> activeDirectories = new List<string>();
+            foreach (string item in lbxSourceDirectories.Items)
+            {
+                activeDirectories.Add(item);
+            }
+            this.DialogResult = DialogResult.OK;
             this.Close();
         }
 

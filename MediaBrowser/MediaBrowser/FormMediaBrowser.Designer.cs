@@ -1,6 +1,6 @@
 ﻿namespace MediaBrowser
 {
-    partial class MediaBrowser
+    partial class FormMediaBrowser
     {
         /// <summary>
         /// Required designer variable.
