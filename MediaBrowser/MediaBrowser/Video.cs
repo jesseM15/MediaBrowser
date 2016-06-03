@@ -8,7 +8,7 @@ using System.Drawing;
 
 namespace MediaBrowser
 {
-    class Video
+    public class Video : Media
     {
         private string _title;
         private Bitmap _mediaImage;

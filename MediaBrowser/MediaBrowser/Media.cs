@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MediaBrowser
 {
-    abstract class Media
+    public abstract class Media
     {
         private string _fileName;
         private string _filePath;
