@@ -21,7 +21,7 @@ namespace MediaBrowser
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            
+            browser.Initialize();
         }
 
         private void sourceDirectoriesToolStripMenuItem_Click(object sender, EventArgs e)

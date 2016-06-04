@@ -12,20 +12,24 @@ namespace MediaBrowser
 {
     public partial class FormSourceDirectories : Form
     {
-        public List<string> directories;
+        public List<string> currentDirectories;
+        public List<string> directoriesToAdd;
+        public List<string> directoriesToRemove;
 
         public FormSourceDirectories(List<string> sourceDirectories)
         {
             InitializeComponent();
-            directories = sourceDirectories;
+            currentDirectories = sourceDirectories;
+            directoriesToAdd = new List<string>();
+            directoriesToRemove = new List<string>();
         }
 
         private void SourceDirectories_Load(object sender, EventArgs e)
         {
             // add directories to listbox
-            foreach (string directory in directories)
+            foreach (string directory in currentDirectories)
             {
-                lbxSourceDirectories.Items.Add(FormatWithBackSlashes(directory));
+                lbxSourceDirectories.Items.Add(directory);
             }
         }
 
@@ -46,14 +50,7 @@ namespace MediaBrowser
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            // code to return source directories
-            directories = new List<string>();
-            foreach (string item in lbxSourceDirectories.Items)
-            {
-                directories.Add(FormatWithForwardSlashes(item));
-            }
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+            UpdateDirectories();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -61,20 +58,43 @@ namespace MediaBrowser
             this.Close();
         }
 
-        // formats directory path to be saved and used to get files
-        private string FormatWithForwardSlashes(string directory)
+        // code to return directoriesToAdd and directoriesToRemove
+        private void UpdateDirectories()
         {
-            directory.Replace(@"\", @"/");
-            directory += @"/";
-            return directory;
-        }
-
-        // formats directory path to be displayed like FolderBrowserDialog
-        private string FormatWithBackSlashes(string directory)
-        {
-            directory.Replace(@"/", @"\");
-            directory = directory.Substring(0, directory.Length - 1);
-            return directory;
+            // adds all the items in the listbox that are not in currentDirectories
+            foreach (string item in lbxSourceDirectories.Items)
+            {
+                bool present = false;
+                foreach (string directory in currentDirectories)
+                {
+                    if (item.Equals(directory))
+                    {
+                        present = true;
+                    }
+                }
+                if (!present)
+                {
+                    directoriesToAdd.Add(item);
+                }
+            }
+            // adds all the directories in currentDirectories that are not in listbox
+            foreach (string directory in currentDirectories)
+            {
+                bool present = false;
+                foreach (string item in lbxSourceDirectories.Items)
+                {
+                    if (directory.Equals(item))
+                    {
+                        present = true;
+                    }
+                }
+                if (!present)
+                {
+                    directoriesToRemove.Add(directory);
+                }
+            }
+            this.DialogResult = DialogResult.OK;
+            this.Close();
         }
     }
 }

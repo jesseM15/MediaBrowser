@@ -41,6 +41,11 @@ namespace MediaBrowser
 
         public void Initialize()
         {
+            DB.CreateMediaBrowserDB();
+            DB.CreateSourceDirectoryTable();
+            SourceDirectories = DB.GetActiveSourceDirectories();
+
+            /*
             List<string> videoFiles = new List<string>();
             // add full-path files to the list
             foreach (string directory in _sourceDirectories)
@@ -49,7 +54,7 @@ namespace MediaBrowser
             }
 
             // Hard-coded GetFiles for reference. Delete when tested working.
-            //videoFiles.AddRange(Directory.GetFiles(@"E:/Videos/Movies/"));
+            //videoFiles.AddRange(Directory.GetFiles(@"E:\Videos\Movies"));
 
             // iterate through files and assign Media properties
             for (int n = 0; n < videoFiles.Count(); n++)
@@ -59,6 +64,7 @@ namespace MediaBrowser
                 tempvideo.FileName = Path.GetFileNameWithoutExtension(videoFiles[n]);
 
             }
+            */
         }
 
         public void ShowSourceDirectoryDialog()
@@ -67,8 +73,28 @@ namespace MediaBrowser
             var result = sd.ShowDialog();
             if (result == System.Windows.Forms.DialogResult.OK)
             {
-                SourceDirectories = sd.directories;
+                AddSourceDirectories(sd.directoriesToAdd);
+                RemoveSourceDirectories(sd.directoriesToRemove);
             }
         }
+
+        private void AddSourceDirectories(List<string> directoriesToAdd)
+        {
+            foreach (string directory in directoriesToAdd)
+            {
+                DB.AddSourceDirectory(directory);
+                SourceDirectories.Add(directory);
+            }
+        }
+
+        private void RemoveSourceDirectories(List<string> directoriesToRemove)
+        {
+            foreach (string directory in directoriesToRemove)
+            {
+                DB.RemoveSourceDirectory(directory);
+                SourceDirectories.Remove(directory);
+            }
+        }
+
     }
 }
