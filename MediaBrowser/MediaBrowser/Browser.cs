@@ -39,34 +39,19 @@ namespace MediaBrowser
             _videos = new List<Video>();
         }
 
+        // creates the database/tables and populates Videos
         public void Initialize()
         {
             DB.CreateMediaBrowserDB();
             DB.CreateSourceDirectoryTable();
-            SourceDirectories = DB.GetActiveSourceDirectories();
+            DB.CreateVideoTable();
+            SourceDirectories = DB.GetSourceDirectories();
 
-            /*
-            List<string> videoFiles = new List<string>();
-            // add full-path files to the list
-            foreach (string directory in _sourceDirectories)
-            {
-                videoFiles.AddRange(Directory.GetFiles(directory));
-            }
+            PopulateVideos(GetVideoFiles());
 
-            // Hard-coded GetFiles for reference. Delete when tested working.
-            //videoFiles.AddRange(Directory.GetFiles(@"E:\Videos\Movies"));
-
-            // iterate through files and assign Media properties
-            for (int n = 0; n < videoFiles.Count(); n++)
-            {
-                Video tempvideo = new Video();
-                tempvideo.FilePath = videoFiles[n];
-                tempvideo.FileName = Path.GetFileNameWithoutExtension(videoFiles[n]);
-
-            }
-            */
         }
 
+        // shows FormSourceDirectories and adds/removes chosen directories
         public void ShowSourceDirectoryDialog()
         {
             FormSourceDirectories sd = new FormSourceDirectories(SourceDirectories);
@@ -78,6 +63,7 @@ namespace MediaBrowser
             }
         }
 
+        // add a list of directories to the database and SourceDirectories property
         private void AddSourceDirectories(List<string> directoriesToAdd)
         {
             foreach (string directory in directoriesToAdd)
@@ -87,6 +73,7 @@ namespace MediaBrowser
             }
         }
 
+        // removes a list of directories from the database and SourceDirectories property
         private void RemoveSourceDirectories(List<string> directoriesToRemove)
         {
             foreach (string directory in directoriesToRemove)
@@ -96,5 +83,29 @@ namespace MediaBrowser
             }
         }
 
+        // returns a list of file paths for every video in the source directories
+        private List<string> GetVideoFiles()
+        {
+            List<string> filePaths = new List<string>();
+            foreach (string directory in _sourceDirectories)
+            {
+                filePaths.AddRange(Directory.GetFiles(directory));
+            }
+            return filePaths;
+        }
+
+        private void PopulateVideos(List<string> videoFiles)
+        {
+            // iterate through files and assign Media properties
+            for (int n = 0; n < videoFiles.Count(); n++)
+            {
+                Video tempVideo = new Video();
+                tempVideo.FilePath = videoFiles[n];
+                tempVideo.FileName = Path.GetFileNameWithoutExtension(videoFiles[n]);
+                tempVideo.DownloadVideoData();
+
+            }
+
+        }
     }
 }

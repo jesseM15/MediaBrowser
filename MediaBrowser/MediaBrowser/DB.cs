@@ -70,7 +70,9 @@ namespace MediaBrowser
                 _cmd.CommandText =
                     "IF NOT EXISTS(SELECT * FROM sysobjects " +
                     "WHERE name='SourceDirectory' AND xtype='U') " +
-                    "CREATE TABLE SourceDirectory(SourceDirectoryID int NOT NULL IDENTITY(1,1) PRIMARY KEY, DirectoryPath varchar(255));";
+                    "CREATE TABLE SourceDirectory(" +
+                    "SourceDirectoryID int NOT NULL IDENTITY(1,1) PRIMARY KEY, " + 
+                    "DirectoryPath varchar(255));";
                 _cmd.Connection.Open();
                 _cmd.ExecuteNonQuery();
             }
@@ -144,7 +146,7 @@ namespace MediaBrowser
         }
 
         // returns all the source directories
-        public static List<string> GetActiveSourceDirectories()
+        public static List<string> GetSourceDirectories()
         {
             try
             {
@@ -176,5 +178,64 @@ namespace MediaBrowser
             }
         }
 
+        // creates the Video table if it does not exist
+        public static void CreateVideoTable()
+        {
+            try
+            {
+                InitCommand();
+                _cmd.CommandText =
+                    "IF NOT EXISTS(SELECT * FROM sysobjects " +
+                    "WHERE name='Video' AND xtype='U') " +
+                    "CREATE TABLE Video(" +
+                    "VideoID int NOT NULL IDENTITY(1,1) PRIMARY KEY, " +
+                    "FilePath varchar(255), " +
+                    "FileName varchar(255), " +
+                    "MediaImagePath varchar(255));";
+                _cmd.Connection.Open();
+                _cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Sql NonQuery Exception: " + ex.Message, "DB.cs");
+                throw new Exception(ex.Message, ex);
+            }
+            finally
+            {
+                if (_cmd.Connection != null)
+                {
+                    _cmd.Connection.Close();
+                }
+            }
+        }
+
+        public static DataSet GetVideoData(string filePath)
+        {
+            try
+            {
+                var dataSet = new DataSet();
+                InitCommand();
+                _cmd.CommandText =
+                    "SELECT * FROM Video " +
+                    "WHERE FilePath = @filePath;";
+                _cmd.Parameters.AddWithValue("@filePath", filePath);
+                _cmd.Connection.Open();
+                var dataAdapter = new SqlDataAdapter { SelectCommand = _cmd };
+                dataAdapter.Fill(dataSet);
+                return dataSet;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Sql Query Exception: " + ex.Message, "DB.cs");
+                throw new Exception(ex.Message, ex);
+            }
+            finally
+            {
+                if (_cmd.Connection != null)
+                {
+                    _cmd.Connection.Close();
+                }
+            }
+        }
     }
 }
