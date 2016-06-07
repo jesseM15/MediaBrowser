@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using System.IO;
+using System.Drawing;
 
 namespace MediaBrowser
 {
@@ -87,7 +88,7 @@ namespace MediaBrowser
         private List<string> GetVideoFiles()
         {
             List<string> filePaths = new List<string>();
-            foreach (string directory in _sourceDirectories)
+            foreach (string directory in SourceDirectories)
             {
                 filePaths.AddRange(Directory.GetFiles(directory));
             }
@@ -99,13 +100,22 @@ namespace MediaBrowser
             // iterate through files and assign Media properties
             for (int n = 0; n < videoFiles.Count(); n++)
             {
-                Video tempVideo = new Video();
-                tempVideo.FilePath = videoFiles[n];
-                tempVideo.FileName = Path.GetFileNameWithoutExtension(videoFiles[n]);
-                tempVideo.DownloadVideoData();
+                Video tempVideo = DB.GetVideoData(videoFiles[n]);
+                if (tempVideo != null)
+                {
+                    tempVideo.MediaImage = new Bitmap(tempVideo.MediaImagePath);
+                }
+                else
+                {
+                    tempVideo = new Video();
+                    tempVideo.FilePath = videoFiles[n];
+                    tempVideo.FileName = Path.GetFileNameWithoutExtension(videoFiles[n]);
 
+                    tempVideo.DownloadVideoData();
+                }
+                Videos.Add(tempVideo);
             }
-
         }
+
     }
 }

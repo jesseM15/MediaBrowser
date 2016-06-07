@@ -209,7 +209,7 @@ namespace MediaBrowser
             }
         }
 
-        public static DataSet GetVideoData(string filePath)
+        public static Video GetVideoData(string filePath)
         {
             try
             {
@@ -222,7 +222,15 @@ namespace MediaBrowser
                 _cmd.Connection.Open();
                 var dataAdapter = new SqlDataAdapter { SelectCommand = _cmd };
                 dataAdapter.Fill(dataSet);
-                return dataSet;
+                Video tempVideo = null;
+                foreach (DataRow row in dataSet.Tables[0].Rows)
+                {
+                    tempVideo = new Video();
+                    tempVideo.FilePath = row["FilePath"].ToString();
+                    tempVideo.FileName = row["FileName"].ToString();
+                    tempVideo.MediaImagePath = row["MediaImagePath"].ToString();
+                }
+                return tempVideo;
             }
             catch (Exception ex)
             {
