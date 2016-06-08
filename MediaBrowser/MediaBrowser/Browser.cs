@@ -103,7 +103,14 @@ namespace MediaBrowser
                 Video tempVideo = DB.GetVideoData(videoFiles[n]);
                 if (tempVideo != null)
                 {
-                    tempVideo.MediaImage = new Bitmap(tempVideo.MediaImagePath);
+                    try
+                    {
+                        tempVideo.MediaImage = new Bitmap(tempVideo.MediaImagePath);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error(ex.ToString(), "Browser.cs");
+                    }
                 }
                 else
                 {
@@ -114,6 +121,7 @@ namespace MediaBrowser
                     tempVideo.DownloadVideoData();
                 }
                 Videos.Add(tempVideo);
+                DB.AddVideo(tempVideo);
             }
         }
 

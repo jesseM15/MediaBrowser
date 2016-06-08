@@ -245,5 +245,35 @@ namespace MediaBrowser
                 }
             }
         }
+
+        // adds a video
+        public static void AddVideo(Video video)
+        {
+            try
+            {
+                InitCommand();
+                _cmd.CommandText =
+                    "INSERT INTO Video VALUES (@filePath, @fileName, @mediaImagePath);";
+                _cmd.Parameters.AddWithValue("@filePath", video.FilePath);
+                _cmd.Parameters.AddWithValue("@fileName", video.FileName);
+                _cmd.Parameters.AddWithValue("@mediaImagePath", video.MediaImagePath);
+                _cmd.Connection.Open();
+                _cmd.ExecuteNonQuery();
+                _cmd.Connection.Close();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Sql NonQuery Exception: " + ex.Message, "DB.cs");
+                throw new Exception(ex.Message, ex);
+            }
+            finally
+            {
+                if (_cmd.Connection != null)
+                {
+                    _cmd.Connection.Close();
+                }
+            }
+        }
+
     }
 }
