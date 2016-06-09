@@ -22,6 +22,7 @@ namespace MediaBrowser
         private void Form1_Load(object sender, EventArgs e)
         {
             browser.Initialize();
+            lbxBroad.DataSource = browser.BroadCategories;
         }
 
         private void sourceDirectoriesToolStripMenuItem_Click(object sender, EventArgs e)

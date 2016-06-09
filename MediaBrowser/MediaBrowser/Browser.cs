@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using System.IO;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace MediaBrowser
 {
@@ -14,6 +15,8 @@ namespace MediaBrowser
         private string _state;
         private List<string> _sourceDirectories;
         private List<Video> _videos;
+        private List<string> _broadCategories;
+        private static string _posterImagesPath;
 
         public string State
         {
@@ -33,11 +36,25 @@ namespace MediaBrowser
             set { _videos = value; }
         }
 
+        public List<string> BroadCategories
+        {
+            get { return _broadCategories; }
+            set { _broadCategories = value; }
+        }
+
+        public static string PosterImagesPath
+        {
+            get { return _posterImagesPath; }
+            set { _posterImagesPath = value; }
+        }
+
         public Browser()
         {
             _state = "";
             _sourceDirectories = new List<string>();
             _videos = new List<Video>();
+            _broadCategories = new List<string>();
+            _posterImagesPath = Path.GetDirectoryName(Application.ExecutablePath) + @"\PosterImages\";
         }
 
         // creates the database/tables and populates Videos
@@ -46,7 +63,11 @@ namespace MediaBrowser
             DB.CreateMediaBrowserDB();
             DB.CreateSourceDirectoryTable();
             DB.CreateVideoTable();
+            DB.CreateGenreTable();
             SourceDirectories = DB.GetSourceDirectories();
+
+            CreatePosterImagesDirectory();
+            SetBroadCategories();
 
             PopulateVideos(GetVideoFiles());
 
@@ -125,6 +146,24 @@ namespace MediaBrowser
                 }
                 Videos.Add(tempVideo);
             }
+        }
+
+        // create directory to store downloaded poster images in
+        private void CreatePosterImagesDirectory()
+        {
+            if (Directory.Exists(PosterImagesPath) == false)
+            {
+                Directory.CreateDirectory(PosterImagesPath);
+            }
+        }
+
+        // broad categories for lbxBroad listbox on FormMediaBrowser
+        private void SetBroadCategories()
+        {
+            // temporarily hard-coded
+            BroadCategories.Add("All");
+            BroadCategories.Add("Year");
+            BroadCategories.Add("Genre");
         }
 
     }

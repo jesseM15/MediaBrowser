@@ -281,5 +281,35 @@ namespace MediaBrowser
             }
         }
 
+        // creates the Genre table if it does not exist
+        public static void CreateGenreTable()
+        {
+            try
+            {
+                InitCommand();
+                _cmd.CommandText =
+                    "IF NOT EXISTS(SELECT * FROM sysobjects " +
+                    "WHERE name='Genre' AND xtype='U') " +
+                    "CREATE TABLE Genre(" +
+                    "GenreID int NOT NULL IDENTITY(1,1) PRIMARY KEY, " +
+                    "Genre varchar(255)," +
+                    "VideoID int NOT NULL FOREIGN KEY REFERENCES Video(VideoID));";
+                _cmd.Connection.Open();
+                _cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Sql NonQuery Exception: " + ex.Message, "DB.cs");
+                throw new Exception(ex.Message, ex);
+            }
+            finally
+            {
+                if (_cmd.Connection != null)
+                {
+                    _cmd.Connection.Close();
+                }
+            }
+        }
+
     }
 }

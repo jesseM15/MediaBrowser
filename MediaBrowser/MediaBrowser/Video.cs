@@ -16,6 +16,7 @@ namespace MediaBrowser
     {
         private string _title;
         private string _year;
+        private List<string> _genre;
         private Bitmap _mediaImage;
         private string _mediaImagePath;
 
@@ -29,6 +30,12 @@ namespace MediaBrowser
         {
             get { return _year; }
             set { _year = value; }
+        }
+
+        public List<string> Genre
+        {
+            get { return _genre; }
+            set { _genre = value; }
         }
 
         public Bitmap MediaImage
@@ -47,6 +54,7 @@ namespace MediaBrowser
         {
             _title = "";
             _year = "";
+            _genre = new List<string>();
             _mediaImage = new Bitmap(100, 200);
             _mediaImagePath = "";
         }
@@ -60,6 +68,9 @@ namespace MediaBrowser
                 XDocument doc = QueryOMDBAPI(this.FileName, this.Year);
                 string imageURL = doc.Root.Element("movie").Attribute("poster").Value;
                 this.Title = doc.Root.Element("movie").Attribute("title").Value;
+                string year = doc.Root.Element("movie").Attribute("year").Value;
+                this.Year = year.Substring(0, 4);
+                this.Genre = doc.Root.Element("movie").Attribute("genre").Value.Split(',').ToList();
 
                 Bitmap poster = null;
                 poster = new Bitmap(DownloadImage(imageURL));
@@ -109,14 +120,9 @@ namespace MediaBrowser
 
         private void SaveImage()
         {
-            string appPath = Path.GetDirectoryName(Application.ExecutablePath) + @"\PosterImages\";
-            if (Directory.Exists(appPath) == false)
-            {
-                Directory.CreateDirectory(appPath);
-            }
             try
             {
-                this.MediaImagePath = appPath + this.FileName+".jpg";
+                this.MediaImagePath = Browser.PosterImagesPath + this.FileName+".jpg";
                 this.MediaImage.Save(this.MediaImagePath);
             }
             catch (Exception ex)
