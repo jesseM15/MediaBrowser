@@ -191,7 +191,9 @@ namespace MediaBrowser
                     "VideoID int NOT NULL IDENTITY(1,1) PRIMARY KEY, " +
                     "FilePath varchar(255), " +
                     "FileName varchar(255), " +
-                    "MediaImagePath varchar(255));";
+                    "MediaImagePath varchar(255), " +
+                    "Title varchar(255), " +
+                    "Year varchar(4));";
                 _cmd.Connection.Open();
                 _cmd.ExecuteNonQuery();
             }
@@ -229,6 +231,8 @@ namespace MediaBrowser
                     tempVideo.FilePath = row["FilePath"].ToString();
                     tempVideo.FileName = row["FileName"].ToString();
                     tempVideo.MediaImagePath = row["MediaImagePath"].ToString();
+                    tempVideo.Title = row["Title"].ToString();
+                    tempVideo.Year = row["Year"].ToString();
                 }
                 return tempVideo;
             }
@@ -253,10 +257,12 @@ namespace MediaBrowser
             {
                 InitCommand();
                 _cmd.CommandText =
-                    "INSERT INTO Video VALUES (@filePath, @fileName, @mediaImagePath);";
+                    "INSERT INTO Video VALUES (@filePath, @fileName, @mediaImagePath, @title, @year);";
                 _cmd.Parameters.AddWithValue("@filePath", video.FilePath);
                 _cmd.Parameters.AddWithValue("@fileName", video.FileName);
                 _cmd.Parameters.AddWithValue("@mediaImagePath", video.MediaImagePath);
+                _cmd.Parameters.AddWithValue("@title", video.Title);
+                _cmd.Parameters.AddWithValue("@year", video.Year);
                 _cmd.Connection.Open();
                 _cmd.ExecuteNonQuery();
                 _cmd.Connection.Close();

@@ -103,6 +103,7 @@ namespace MediaBrowser
                 Video tempVideo = DB.GetVideoData(videoFiles[n]);
                 if (tempVideo != null)
                 {
+                    // Database already contains video
                     try
                     {
                         tempVideo.MediaImage = new Bitmap(tempVideo.MediaImagePath);
@@ -114,14 +115,15 @@ namespace MediaBrowser
                 }
                 else
                 {
+                    // Video not in database, data needs to be gathered
                     tempVideo = new Video();
                     tempVideo.FilePath = videoFiles[n];
                     tempVideo.FileName = Path.GetFileNameWithoutExtension(videoFiles[n]);
 
                     tempVideo.DownloadVideoData();
+                    DB.AddVideo(tempVideo);
                 }
                 Videos.Add(tempVideo);
-                DB.AddVideo(tempVideo);
             }
         }
 

@@ -15,6 +15,7 @@ namespace MediaBrowser
     public class Video : Media
     {
         private string _title;
+        private string _year;
         private Bitmap _mediaImage;
         private string _mediaImagePath;
 
@@ -22,6 +23,12 @@ namespace MediaBrowser
         {
             get { return _title; }
             set { _title = value; }
+        }
+
+        public string Year
+        {
+            get { return _year; }
+            set { _year = value; }
         }
 
         public Bitmap MediaImage
@@ -39,6 +46,7 @@ namespace MediaBrowser
         public Video()
         {
             _title = "";
+            _year = "";
             _mediaImage = new Bitmap(100, 200);
             _mediaImagePath = "";
         }
@@ -49,9 +57,7 @@ namespace MediaBrowser
             {
                 Logger.Info("Media image not found for " + this.FileName + ". Attempting download...", "Video.cs");
 
-                string requestURL = "http://www.omdbapi.com/?t=" + this.FileName + "&plot=short&r=xml";
-                WebClient wc = new WebClient();
-                XDocument doc = XDocument.Parse(wc.DownloadString(requestURL));
+                XDocument doc = QueryOMDBAPI(this.FileName, this.Year);
                 string imageURL = doc.Root.Element("movie").Attribute("poster").Value;
                 this.Title = doc.Root.Element("movie").Attribute("title").Value;
 
@@ -69,6 +75,13 @@ namespace MediaBrowser
             {
                 Logger.Error(ex.ToString(), "Video.cs");
             }
+        }
+
+        private XDocument QueryOMDBAPI(string title, string year)
+        {
+            string requestURL = "http://www.omdbapi.com/?t=" + title + "&y=" + year + "&plot=short&r=xml";
+            WebClient wc = new WebClient();
+            return XDocument.Parse(wc.DownloadString(requestURL));
         }
 
         private Image DownloadImage(string URL)
