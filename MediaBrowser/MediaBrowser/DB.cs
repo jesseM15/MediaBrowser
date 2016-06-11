@@ -250,26 +250,143 @@ namespace MediaBrowser
             }
         }
 
+        public static Video GetVideoData(int id)
+        {
+            try
+            {
+                var dataSet = new DataSet();
+                InitCommand();
+                _cmd.CommandText =
+                    "SELECT * FROM Video " +
+                    "WHERE VideoID = @id;";
+                _cmd.Parameters.AddWithValue("@id", id);
+                _cmd.Connection.Open();
+                var dataAdapter = new SqlDataAdapter { SelectCommand = _cmd };
+                dataAdapter.Fill(dataSet);
+                Video tempVideo = null;
+                foreach (DataRow row in dataSet.Tables[0].Rows)
+                {
+                    tempVideo = new Video();
+                    tempVideo.FilePath = row["FilePath"].ToString();
+                    tempVideo.FileName = row["FileName"].ToString();
+                    tempVideo.MediaImagePath = row["MediaImagePath"].ToString();
+                    tempVideo.Title = row["Title"].ToString();
+                    tempVideo.Year = row["Year"].ToString();
+                }
+                return tempVideo;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Sql Query Exception: " + ex.Message, "DB.cs");
+                throw new Exception(ex.Message, ex);
+            }
+            finally
+            {
+                if (_cmd.Connection != null)
+                {
+                    _cmd.Connection.Close();
+                }
+            }
+        }
+
         // adds a video
-        public static void AddVideo(Video video)
+        public static int AddVideo(Video video)
         {
             try
             {
                 InitCommand();
                 _cmd.CommandText =
-                    "INSERT INTO Video VALUES (@filePath, @fileName, @mediaImagePath, @title, @year);";
+                    "INSERT INTO Video VALUES (@filePath, @fileName, @mediaImagePath, @title, @year);" +
+                    "SELECT SCOPE_IDENTITY();";
                 _cmd.Parameters.AddWithValue("@filePath", video.FilePath);
                 _cmd.Parameters.AddWithValue("@fileName", video.FileName);
                 _cmd.Parameters.AddWithValue("@mediaImagePath", video.MediaImagePath);
                 _cmd.Parameters.AddWithValue("@title", video.Title);
                 _cmd.Parameters.AddWithValue("@year", video.Year);
                 _cmd.Connection.Open();
-                _cmd.ExecuteNonQuery();
-                _cmd.Connection.Close();
+                //_cmd.ExecuteNonQuery();
+                int pk = Convert.ToInt32(_cmd.ExecuteScalar());
+                return pk;
             }
             catch (Exception ex)
             {
                 Logger.Error("Sql NonQuery Exception: " + ex.Message, "DB.cs");
+                throw new Exception(ex.Message, ex);
+            }
+            finally
+            {
+                if (_cmd.Connection != null)
+                {
+                    _cmd.Connection.Close();
+                }
+            }
+        }
+
+        // returns a list of the distinct years of all the videos
+        public static List<string> GetDistinctYears()
+        {
+            try
+            {
+                InitCommand();
+                _cmd.CommandText =
+                    "SELECT DISTINCT Year FROM Video;";
+                _cmd.Connection.Open();
+                List<string> years = new List<string>();
+                SqlDataReader reader = _cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    if (reader.GetString(0) != "")
+                    {
+                        years.Add(reader.GetString(0));
+                    }
+                }
+                reader.Close();
+                return years;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Sql Query Exception: " + ex.Message, "DB.cs");
+                throw new Exception(ex.Message, ex);
+            }
+            finally
+            {
+                if (_cmd.Connection != null)
+                {
+                    _cmd.Connection.Close();
+                }
+            }
+        }
+
+        // returns a list of all videos from a specified year
+        public static List<Video> GetVideosByYear(string year)
+        {
+            try
+            {
+                var dataSet = new DataSet();
+                InitCommand();
+                _cmd.CommandText =
+                    "SELECT * FROM Video " +
+                    "WHERE Year = @year;";
+                _cmd.Parameters.AddWithValue("@year", year);
+                _cmd.Connection.Open();
+                var dataAdapter = new SqlDataAdapter { SelectCommand = _cmd };
+                dataAdapter.Fill(dataSet);
+                List<Video> result = new List<Video>();
+                foreach (DataRow row in dataSet.Tables[0].Rows)
+                {
+                    Video tempVideo = new Video();
+                    tempVideo.FilePath = row["FilePath"].ToString();
+                    tempVideo.FileName = row["FileName"].ToString();
+                    tempVideo.MediaImagePath = row["MediaImagePath"].ToString();
+                    tempVideo.Title = row["Title"].ToString();
+                    tempVideo.Year = row["Year"].ToString();
+                    result.Add(tempVideo);
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Sql Query Exception: " + ex.Message, "DB.cs");
                 throw new Exception(ex.Message, ex);
             }
             finally
@@ -300,6 +417,102 @@ namespace MediaBrowser
             catch (Exception ex)
             {
                 Logger.Error("Sql NonQuery Exception: " + ex.Message, "DB.cs");
+                throw new Exception(ex.Message, ex);
+            }
+            finally
+            {
+                if (_cmd.Connection != null)
+                {
+                    _cmd.Connection.Close();
+                }
+            }
+        }
+
+        // adds a genre
+        public static void AddGenre(string genre, int videoID)
+        {
+            try
+            {
+                InitCommand();
+                _cmd.CommandText =
+                    "INSERT INTO Genre VALUES (@Genre, @VideoID);";
+                _cmd.Parameters.AddWithValue("@Genre", genre);
+                _cmd.Parameters.AddWithValue("@VideoID", videoID);
+                _cmd.Connection.Open();
+                _cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Sql NonQuery Exception: " + ex.Message, "DB.cs");
+                throw new Exception(ex.Message, ex);
+            }
+            finally
+            {
+                if (_cmd.Connection != null)
+                {
+                    _cmd.Connection.Close();
+                }
+            }
+        }
+
+        // returns a list of the distinct genres
+        public static List<string> GetDistinctGenres()
+        {
+            try
+            {
+                InitCommand();
+                _cmd.CommandText =
+                    "SELECT DISTINCT Genre FROM Genre;";
+                _cmd.Connection.Open();
+                List<string> genres = new List<string>();
+                SqlDataReader reader = _cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    if (reader.GetString(0) != "")
+                    {
+                        genres.Add(reader.GetString(0));
+                    }
+                }
+                reader.Close();
+                return genres;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Sql Query Exception: " + ex.Message, "DB.cs");
+                throw new Exception(ex.Message, ex);
+            }
+            finally
+            {
+                if (_cmd.Connection != null)
+                {
+                    _cmd.Connection.Close();
+                }
+            }
+        }
+
+        // returns a list of videoIDs for a specified genre
+        public static List<int> GetVideoIDsByGenre(string genre)
+        {
+            try
+            {
+                InitCommand();
+                _cmd.CommandText =
+                    "SELECT VideoID FROM Genre " +
+                    "WHERE Genre = @Genre;";
+                _cmd.Parameters.AddWithValue("@Genre", genre);
+                _cmd.Connection.Open();
+                List<int> videoIDs = new List<int>();
+                SqlDataReader reader = _cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    videoIDs.Add(reader.GetInt32(0));
+                }
+                reader.Close();
+                return videoIDs;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Sql Query Exception: " + ex.Message, "DB.cs");
                 throw new Exception(ex.Message, ex);
             }
             finally

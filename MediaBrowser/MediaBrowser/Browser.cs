@@ -142,7 +142,11 @@ namespace MediaBrowser
                     tempVideo.FileName = Path.GetFileNameWithoutExtension(videoFiles[n]);
 
                     tempVideo.DownloadVideoData();
-                    DB.AddVideo(tempVideo);
+                    int primaryKey = DB.AddVideo(tempVideo);
+                    foreach (string genre in tempVideo.Genre)
+                    {
+                        DB.AddGenre(genre, primaryKey);
+                    }
                 }
                 Videos.Add(tempVideo);
             }
@@ -165,6 +169,6 @@ namespace MediaBrowser
             BroadCategories.Add("Year");
             BroadCategories.Add("Genre");
         }
-
+        
     }
 }

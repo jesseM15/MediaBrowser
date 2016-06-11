@@ -32,8 +32,9 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sourceDirectoriesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.lbxBroad = new System.Windows.Forms.ListBox();
             this.lbxNarrow = new System.Windows.Forms.ListBox();
+            this.lbxBroad = new System.Windows.Forms.ListBox();
+            this.lvwMedia = new System.Windows.Forms.ListView();
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -74,14 +75,6 @@
             this.panel1.Size = new System.Drawing.Size(166, 372);
             this.panel1.TabIndex = 1;
             // 
-            // lbxBroad
-            // 
-            this.lbxBroad.FormattingEnabled = true;
-            this.lbxBroad.Location = new System.Drawing.Point(8, 8);
-            this.lbxBroad.Name = "lbxBroad";
-            this.lbxBroad.Size = new System.Drawing.Size(148, 108);
-            this.lbxBroad.TabIndex = 0;
-            // 
             // lbxNarrow
             // 
             this.lbxNarrow.FormattingEnabled = true;
@@ -89,12 +82,31 @@
             this.lbxNarrow.Name = "lbxNarrow";
             this.lbxNarrow.Size = new System.Drawing.Size(148, 238);
             this.lbxNarrow.TabIndex = 1;
+            this.lbxNarrow.SelectedIndexChanged += new System.EventHandler(this.lbxNarrow_SelectedIndexChanged);
+            // 
+            // lbxBroad
+            // 
+            this.lbxBroad.FormattingEnabled = true;
+            this.lbxBroad.Location = new System.Drawing.Point(8, 8);
+            this.lbxBroad.Name = "lbxBroad";
+            this.lbxBroad.Size = new System.Drawing.Size(148, 108);
+            this.lbxBroad.TabIndex = 0;
+            this.lbxBroad.SelectedIndexChanged += new System.EventHandler(this.lbxBroad_SelectedIndexChanged);
+            // 
+            // lvwMedia
+            // 
+            this.lvwMedia.Location = new System.Drawing.Point(184, 36);
+            this.lvwMedia.Name = "lvwMedia";
+            this.lvwMedia.Size = new System.Drawing.Size(520, 372);
+            this.lvwMedia.TabIndex = 2;
+            this.lvwMedia.UseCompatibleStateImageBehavior = false;
             // 
             // FormMediaBrowser
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(716, 420);
+            this.Controls.Add(this.lvwMedia);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
@@ -117,6 +129,7 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.ListBox lbxNarrow;
         private System.Windows.Forms.ListBox lbxBroad;
+        private System.Windows.Forms.ListView lvwMedia;
     }
 }
 
