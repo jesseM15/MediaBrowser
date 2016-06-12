@@ -176,13 +176,6 @@ namespace MediaBrowser
             if (broad.Equals("All"))
             {
                 currentVideos = DB.GetAllVideos();
-                for (int v = 0; v < currentVideos.Count; v++)
-                {
-                    if (currentVideos[v].Title == "")
-                    {
-                        currentVideos.RemoveAt(v);
-                    }
-                }
             }
             else if (broad.Equals("Year"))
             {
@@ -196,6 +189,7 @@ namespace MediaBrowser
                     currentVideos.Add(DB.GetVideoData(id));
                 }
             }
+            LoadGenres(currentVideos);
             LoadCurrentImages(currentVideos);
             return currentVideos;
         }
@@ -205,6 +199,14 @@ namespace MediaBrowser
             foreach (Video video in currentVideos)
             {
                 video.LoadImage();
+            }
+        }
+
+        private void LoadGenres(List<Video> currentVideos)
+        {
+            foreach (Video video in currentVideos)
+            {
+                video.Genre = DB.GetGenresByVideoID(video.VideoID);
             }
         }
         

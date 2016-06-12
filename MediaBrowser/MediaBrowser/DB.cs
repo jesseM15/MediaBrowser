@@ -193,7 +193,10 @@ namespace MediaBrowser
                     "FileName varchar(255), " +
                     "MediaImagePath varchar(255), " +
                     "Title varchar(255), " +
-                    "Year varchar(4));";
+                    "Year varchar(4), " +
+                    "Length varchar(32), " +
+                    "Rating varchar(32), " +
+                    "Plot varchar(2048));";
                 _cmd.Connection.Open();
                 _cmd.ExecuteNonQuery();
             }
@@ -211,6 +214,7 @@ namespace MediaBrowser
             }
         }
 
+        // returns a video from a specified filePath
         public static Video GetVideoData(string filePath)
         {
             try
@@ -228,11 +232,15 @@ namespace MediaBrowser
                 foreach (DataRow row in dataSet.Tables[0].Rows)
                 {
                     tempVideo = new Video();
+                    tempVideo.VideoID = (int)row["VideoID"];
                     tempVideo.FilePath = row["FilePath"].ToString();
                     tempVideo.FileName = row["FileName"].ToString();
                     tempVideo.MediaImagePath = row["MediaImagePath"].ToString();
                     tempVideo.Title = row["Title"].ToString();
                     tempVideo.Year = row["Year"].ToString();
+                    tempVideo.Length = row["Length"].ToString();
+                    tempVideo.Rating = row["Rating"].ToString();
+                    tempVideo.Plot = row["Plot"].ToString();
                 }
                 return tempVideo;
             }
@@ -250,6 +258,7 @@ namespace MediaBrowser
             }
         }
 
+        // returns a video from a specified id
         public static Video GetVideoData(int id)
         {
             try
@@ -267,11 +276,15 @@ namespace MediaBrowser
                 foreach (DataRow row in dataSet.Tables[0].Rows)
                 {
                     tempVideo = new Video();
+                    tempVideo.VideoID = (int)row["VideoID"];
                     tempVideo.FilePath = row["FilePath"].ToString();
                     tempVideo.FileName = row["FileName"].ToString();
                     tempVideo.MediaImagePath = row["MediaImagePath"].ToString();
                     tempVideo.Title = row["Title"].ToString();
                     tempVideo.Year = row["Year"].ToString();
+                    tempVideo.Length = row["Length"].ToString();
+                    tempVideo.Rating = row["Rating"].ToString();
+                    tempVideo.Plot = row["Plot"].ToString();
                 }
                 return tempVideo;
             }
@@ -289,22 +302,26 @@ namespace MediaBrowser
             }
         }
 
-        // adds a video
+        // adds a video and returns the id of the added video
         public static int AddVideo(Video video)
         {
             try
             {
                 InitCommand();
                 _cmd.CommandText =
-                    "INSERT INTO Video VALUES (@filePath, @fileName, @mediaImagePath, @title, @year);" +
+                    "INSERT INTO Video VALUES " +
+                    "(@filePath, @fileName, @mediaImagePath, " +
+                    "@title, @year, @length, @rating, @plot);" +
                     "SELECT SCOPE_IDENTITY();";
                 _cmd.Parameters.AddWithValue("@filePath", video.FilePath);
                 _cmd.Parameters.AddWithValue("@fileName", video.FileName);
                 _cmd.Parameters.AddWithValue("@mediaImagePath", video.MediaImagePath);
                 _cmd.Parameters.AddWithValue("@title", video.Title);
                 _cmd.Parameters.AddWithValue("@year", video.Year);
+                _cmd.Parameters.AddWithValue("@length", video.Length);
+                _cmd.Parameters.AddWithValue("@rating", video.Rating);
+                _cmd.Parameters.AddWithValue("@plot", video.Plot);
                 _cmd.Connection.Open();
-                //_cmd.ExecuteNonQuery();
                 int pk = Convert.ToInt32(_cmd.ExecuteScalar());
                 return pk;
             }
@@ -339,11 +356,15 @@ namespace MediaBrowser
                 foreach (DataRow row in dataSet.Tables[0].Rows)
                 {
                     Video tempVideo = new Video();
+                    tempVideo.VideoID = (int)row["VideoID"];
                     tempVideo.FilePath = row["FilePath"].ToString();
                     tempVideo.FileName = row["FileName"].ToString();
                     tempVideo.MediaImagePath = row["MediaImagePath"].ToString();
                     tempVideo.Title = row["Title"].ToString();
                     tempVideo.Year = row["Year"].ToString();
+                    tempVideo.Length = row["Length"].ToString();
+                    tempVideo.Rating = row["Rating"].ToString();
+                    tempVideo.Plot = row["Plot"].ToString();
                     result.Add(tempVideo);
                 }
                 return result;
@@ -415,11 +436,15 @@ namespace MediaBrowser
                 foreach (DataRow row in dataSet.Tables[0].Rows)
                 {
                     Video tempVideo = new Video();
+                    tempVideo.VideoID = (int)row["VideoID"];
                     tempVideo.FilePath = row["FilePath"].ToString();
                     tempVideo.FileName = row["FileName"].ToString();
                     tempVideo.MediaImagePath = row["MediaImagePath"].ToString();
                     tempVideo.Title = row["Title"].ToString();
                     tempVideo.Year = row["Year"].ToString();
+                    tempVideo.Length = row["Length"].ToString();
+                    tempVideo.Rating = row["Rating"].ToString();
+                    tempVideo.Plot = row["Plot"].ToString();
                     result.Add(tempVideo);
                 }
                 return result;
@@ -475,9 +500,9 @@ namespace MediaBrowser
             {
                 InitCommand();
                 _cmd.CommandText =
-                    "INSERT INTO Genre VALUES (@Genre, @VideoID);";
-                _cmd.Parameters.AddWithValue("@Genre", genre);
-                _cmd.Parameters.AddWithValue("@VideoID", videoID);
+                    "INSERT INTO Genre VALUES (@genre, @videoID);";
+                _cmd.Parameters.AddWithValue("@genre", genre);
+                _cmd.Parameters.AddWithValue("@videoID", videoID);
                 _cmd.Connection.Open();
                 _cmd.ExecuteNonQuery();
             }
@@ -530,7 +555,7 @@ namespace MediaBrowser
             }
         }
 
-        // returns a list of videoIDs for a specified genre
+        // returns a list of VideoIDs for a specified genre
         public static List<int> GetVideoIDsByGenre(string genre)
         {
             try
@@ -538,8 +563,8 @@ namespace MediaBrowser
                 InitCommand();
                 _cmd.CommandText =
                     "SELECT VideoID FROM Genre " +
-                    "WHERE Genre = @Genre;";
-                _cmd.Parameters.AddWithValue("@Genre", genre);
+                    "WHERE Genre = @genre;";
+                _cmd.Parameters.AddWithValue("@genre", genre);
                 _cmd.Connection.Open();
                 List<int> videoIDs = new List<int>();
                 SqlDataReader reader = _cmd.ExecuteReader();
@@ -549,6 +574,40 @@ namespace MediaBrowser
                 }
                 reader.Close();
                 return videoIDs;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Sql Query Exception: " + ex.Message, "DB.cs");
+                throw new Exception(ex.Message, ex);
+            }
+            finally
+            {
+                if (_cmd.Connection != null)
+                {
+                    _cmd.Connection.Close();
+                }
+            }
+        }
+
+        // returns a list of Genres for a specified VideoID
+        public static List<string> GetGenresByVideoID(int videoID)
+        {
+            try
+            {
+                InitCommand();
+                _cmd.CommandText =
+                    "SELECT Genre FROM Genre " +
+                    "WHERE VideoID = @videoID;";
+                _cmd.Parameters.AddWithValue("@videoID", videoID);
+                _cmd.Connection.Open();
+                List<string> genres = new List<string>();
+                SqlDataReader reader = _cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    genres.Add(reader.GetString(0));
+                }
+                reader.Close();
+                return genres;
             }
             catch (Exception ex)
             {

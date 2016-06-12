@@ -14,11 +14,21 @@ namespace MediaBrowser
 {
     public class Video : Media
     {
+        private int _videoID;
         private string _title;
         private string _year;
         private List<string> _genre;
         private Bitmap _mediaImage;
         private string _mediaImagePath;
+        private string _length;
+        private string _rating;
+        private string _plot;
+
+        public int VideoID
+        {
+            get { return _videoID; }
+            set { _videoID = value; }
+        }
 
         public string Title
         {
@@ -50,6 +60,24 @@ namespace MediaBrowser
             set { _mediaImagePath = value; }
         }
 
+        public string Length
+        {
+            get { return _length; }
+            set { _length = value; }
+        }
+
+        public string Rating
+        {
+            get { return _rating; }
+            set { _rating = value; }
+        }
+
+        public string Plot
+        {
+            get { return _plot; }
+            set { _plot = value; }
+        }
+
         public Video()
         {
             _title = "";
@@ -57,6 +85,9 @@ namespace MediaBrowser
             _genre = new List<string>();
             _mediaImage = new Bitmap(100, 200);
             _mediaImagePath = "";
+            _length = "";
+            _rating = "";
+            _plot = "";
         }
 
         public void DownloadVideoData(string fileName)
@@ -71,6 +102,9 @@ namespace MediaBrowser
                 string year = doc.Root.Element("movie").Attribute("year").Value;
                 this.Year = year.Substring(0, 4);
                 this.Genre = doc.Root.Element("movie").Attribute("genre").Value.Split(',').ToList();
+                this.Length = doc.Root.Element("movie").Attribute("runtime").Value;
+                this.Rating = doc.Root.Element("movie").Attribute("imdbRating").Value;
+                this.Plot = doc.Root.Element("movie").Attribute("plot").Value;
 
                 Bitmap poster = null;
                 poster = new Bitmap(DownloadImage(imageURL));
@@ -90,7 +124,7 @@ namespace MediaBrowser
 
         private XDocument QueryOMDBAPI(string title)
         {
-            string requestURL = "http://www.omdbapi.com/?t=" + title + "&plot=short&r=xml";
+            string requestURL = "http://www.omdbapi.com/?t=" + title + "&plot=full&r=xml";
             WebClient wc = new WebClient();
             return XDocument.Parse(wc.DownloadString(requestURL));
         }

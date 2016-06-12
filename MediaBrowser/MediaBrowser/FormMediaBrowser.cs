@@ -26,8 +26,10 @@ namespace MediaBrowser
             browser.Initialize();
             lbxBroad.DataSource = browser.BroadCategories;
             lvwMedia.View = View.LargeIcon;
+            lvwMedia.MultiSelect = false;
             imageList.ImageSize = new Size(50, 100);
             lbxBroad.SetSelected(0,true);
+            pnlVideoInfo.Hide();
         }
 
         private void sourceDirectoriesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -71,6 +73,36 @@ namespace MediaBrowser
                 lvwMedia.Items.Add(item);
             }
             lvwMedia.LargeImageList = imageList;
+        }
+
+        private void lvwMedia_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            foreach (Video video in currentVideos)
+            {
+                if (lvwMedia.SelectedItems.Count == 0)
+                {
+                    pnlVideoInfo.Hide();
+                }
+                if (lvwMedia.SelectedItems.Count > 0 && lvwMedia.SelectedItems[0].Text == video.Title)
+                {
+                    pnlVideoInfo.Show();
+                    lblTitle.Text = video.Title;
+                    picPoster.Image = video.MediaImage;
+                    lblYear.Text = "Year: " + video.Year;
+                    lblLength.Text = "Run Time: " + video.Length;
+                    lblRating.Text = "Rating: " + video.Rating;
+                    rtxGenre.Clear();
+                    for (int g = 0; g < video.Genre.Count; g++)
+                    {
+                        rtxGenre.Text += video.Genre[g];
+                        if (g + 1 != video.Genre.Count)
+                        {
+                            rtxGenre.Text += ",";
+                        }
+                    }
+                    rtxPlot.Text = video.Plot;
+                }
+            }
         }
     }
 }
