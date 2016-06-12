@@ -59,13 +59,13 @@ namespace MediaBrowser
             _mediaImagePath = "";
         }
 
-        public void DownloadVideoData()
+        public void DownloadVideoData(string fileName)
         {
             try
             {
-                Logger.Info("Media image not found for " + this.FileName + ". Attempting download...", "Video.cs");
+                Logger.Info("Media image not found for " + fileName + ". Attempting download...", "Video.cs");
 
-                XDocument doc = QueryOMDBAPI(this.FileName, this.Year);
+                XDocument doc = QueryOMDBAPI(fileName);
                 string imageURL = doc.Root.Element("movie").Attribute("poster").Value;
                 this.Title = doc.Root.Element("movie").Attribute("title").Value;
                 string year = doc.Root.Element("movie").Attribute("year").Value;
@@ -79,7 +79,7 @@ namespace MediaBrowser
                 {
                     this.MediaImage = poster;
                     SaveImage();
-                    Logger.Info("Media image download successful for " + this.FileName + ".", "Video.cs");
+                    Logger.Info("Media image download successful for " + fileName + ".", "Video.cs");
                 }
             }
             catch (Exception ex)
@@ -88,9 +88,9 @@ namespace MediaBrowser
             }
         }
 
-        private XDocument QueryOMDBAPI(string title, string year)
+        private XDocument QueryOMDBAPI(string title)
         {
-            string requestURL = "http://www.omdbapi.com/?t=" + title + "&y=" + year + "&plot=short&r=xml";
+            string requestURL = "http://www.omdbapi.com/?t=" + title + "&plot=short&r=xml";
             WebClient wc = new WebClient();
             return XDocument.Parse(wc.DownloadString(requestURL));
         }
@@ -127,7 +127,19 @@ namespace MediaBrowser
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Unable to save file " + ex.Message);
+                Logger.Error("Unable to save file: " + ex.Message, "Video.cs");
+            }
+        }
+
+        public void LoadImage()
+        {
+            try
+            {
+                this.MediaImage = new Bitmap(this.MediaImagePath);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Unable to load file: " + ex.Message, "Video.cs");
             }
         }
 

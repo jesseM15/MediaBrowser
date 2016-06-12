@@ -14,6 +14,7 @@ namespace MediaBrowser
     {
         public static Browser browser = new Browser();
         private List<Video> currentVideos = new List<Video>();
+        ImageList imageList = new ImageList();
 
         public FormMediaBrowser()
         {
@@ -24,7 +25,9 @@ namespace MediaBrowser
         {
             browser.Initialize();
             lbxBroad.DataSource = browser.BroadCategories;
-            lvwMedia.View = View.List;
+            lvwMedia.View = View.LargeIcon;
+            imageList.ImageSize = new Size(50, 100);
+            lbxBroad.SetSelected(0,true);
         }
 
         private void sourceDirectoriesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -36,11 +39,8 @@ namespace MediaBrowser
         {
             if (lbxBroad.SelectedItem.Equals("All"))
             {
-                lvwMedia.Items.Clear();
-                foreach (Video video in browser.Videos)
-                {
-                    lvwMedia.Items.Add(video.Title);
-                }
+                lbxNarrow.DataSource = new List<Video>();
+                UpdateListView("All", "All");
             }
             else if (lbxBroad.SelectedItem.Equals("Year"))
             {
@@ -54,29 +54,23 @@ namespace MediaBrowser
 
         private void lbxNarrow_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (lbxBroad.SelectedItem.Equals("Year"))
+            UpdateListView(lbxBroad.SelectedItem.ToString(), lbxNarrow.SelectedItem.ToString());
+        }
+
+        private void UpdateListView(string broad, string narrow)
+        {
+            lvwMedia.Items.Clear();
+            imageList.Images.Clear();
+            currentVideos = browser.GetCurrentVideos(broad, narrow);
+            for (int v = 0; v < currentVideos.Count; v++)
             {
-                currentVideos = DB.GetVideosByYear(lbxNarrow.SelectedItem.ToString());
-                lvwMedia.Items.Clear();
-                foreach (Video video in currentVideos)
-                {
-                    lvwMedia.Items.Add(video.Title);
-                }
+                imageList.Images.Add(currentVideos[v].MediaImage);
+                ListViewItem item = new ListViewItem();
+                item.ImageIndex = v;
+                item.Text = currentVideos[v].Title;
+                lvwMedia.Items.Add(item);
             }
-            else if (lbxBroad.SelectedItem.Equals("Genre"))
-            {
-                lvwMedia.Items.Clear();
-                currentVideos.Clear();
-                List<int> videoIDs = DB.GetVideoIDsByGenre(lbxNarrow.SelectedItem.ToString());
-                foreach (int id in videoIDs)
-                {
-                    currentVideos.Add(DB.GetVideoData(id));
-                }
-                foreach (Video video in currentVideos)
-                {
-                    lvwMedia.Items.Add(video.Title);
-                }
-            }
+            lvwMedia.LargeImageList = imageList;
         }
     }
 }

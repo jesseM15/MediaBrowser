@@ -141,7 +141,7 @@ namespace MediaBrowser
                     tempVideo.FilePath = videoFiles[n];
                     tempVideo.FileName = Path.GetFileNameWithoutExtension(videoFiles[n]);
 
-                    tempVideo.DownloadVideoData();
+                    tempVideo.DownloadVideoData(tempVideo.FileName);
                     int primaryKey = DB.AddVideo(tempVideo);
                     foreach (string genre in tempVideo.Genre)
                     {
@@ -168,6 +168,44 @@ namespace MediaBrowser
             BroadCategories.Add("All");
             BroadCategories.Add("Year");
             BroadCategories.Add("Genre");
+        }
+
+        public List<Video> GetCurrentVideos(string broad, string narrow)
+        {
+            List<Video> currentVideos = new List<Video>();
+            if (broad.Equals("All"))
+            {
+                currentVideos = DB.GetAllVideos();
+                for (int v = 0; v < currentVideos.Count; v++)
+                {
+                    if (currentVideos[v].Title == "")
+                    {
+                        currentVideos.RemoveAt(v);
+                    }
+                }
+            }
+            else if (broad.Equals("Year"))
+            {
+                currentVideos = DB.GetVideosByYear(narrow);
+            }
+            else if (broad.Equals("Genre"))
+            {
+                List<int> videoIDs = DB.GetVideoIDsByGenre(narrow);
+                foreach (int id in videoIDs)
+                {
+                    currentVideos.Add(DB.GetVideoData(id));
+                }
+            }
+            LoadCurrentImages(currentVideos);
+            return currentVideos;
+        }
+
+        private void LoadCurrentImages(List<Video> currentVideos)
+        {
+            foreach (Video video in currentVideos)
+            {
+                video.LoadImage();
+            }
         }
         
     }
