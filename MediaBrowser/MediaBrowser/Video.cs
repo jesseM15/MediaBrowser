@@ -169,7 +169,15 @@ namespace MediaBrowser
         {
             try
             {
-                this.MediaImage = new Bitmap(this.MediaImagePath);
+                if (this.MediaImagePath != "")
+                {
+                    this.MediaImage = new Bitmap(this.MediaImagePath);
+                }
+                else
+                {
+                    // use the default image
+                    this.MediaImage = MediaBrowser.Properties.Resources.default_movie;
+                }
             }
             catch (Exception ex)
             {
