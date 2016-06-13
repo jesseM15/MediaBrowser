@@ -183,11 +183,7 @@ namespace MediaBrowser
             }
             else if (broad.Equals("Genre"))
             {
-                List<int> videoIDs = DB.GetVideoIDsByGenre(narrow);
-                foreach (int id in videoIDs)
-                {
-                    currentVideos.Add(DB.GetVideoData(id));
-                }
+                currentVideos = DB.GetVideosByGenre(narrow);
             }
             LoadGenres(currentVideos);
             LoadCurrentImages(currentVideos);

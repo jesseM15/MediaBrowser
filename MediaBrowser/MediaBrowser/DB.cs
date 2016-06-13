@@ -258,50 +258,6 @@ namespace MediaBrowser
             }
         }
 
-        // returns a video from a specified id
-        public static Video GetVideoData(int id)
-        {
-            try
-            {
-                var dataSet = new DataSet();
-                InitCommand();
-                _cmd.CommandText =
-                    "SELECT * FROM Video " +
-                    "WHERE VideoID = @id;";
-                _cmd.Parameters.AddWithValue("@id", id);
-                _cmd.Connection.Open();
-                var dataAdapter = new SqlDataAdapter { SelectCommand = _cmd };
-                dataAdapter.Fill(dataSet);
-                Video tempVideo = null;
-                foreach (DataRow row in dataSet.Tables[0].Rows)
-                {
-                    tempVideo = new Video();
-                    tempVideo.VideoID = (int)row["VideoID"];
-                    tempVideo.FilePath = row["FilePath"].ToString();
-                    tempVideo.FileName = row["FileName"].ToString();
-                    tempVideo.MediaImagePath = row["MediaImagePath"].ToString();
-                    tempVideo.Title = row["Title"].ToString();
-                    tempVideo.Year = row["Year"].ToString();
-                    tempVideo.Length = row["Length"].ToString();
-                    tempVideo.Rating = row["Rating"].ToString();
-                    tempVideo.Plot = row["Plot"].ToString();
-                }
-                return tempVideo;
-            }
-            catch (Exception ex)
-            {
-                Logger.Error("Sql Query Exception: " + ex.Message, "DB.cs");
-                throw new Exception(ex.Message, ex);
-            }
-            finally
-            {
-                if (_cmd.Connection != null)
-                {
-                    _cmd.Connection.Close();
-                }
-            }
-        }
-
         // adds a video and returns the id of the added video
         public static int AddVideo(Video video)
         {
@@ -555,25 +511,38 @@ namespace MediaBrowser
             }
         }
 
-        // returns a list of VideoIDs for a specified genre
-        public static List<int> GetVideoIDsByGenre(string genre)
+        // returns a list of Videos containing a specified genre
+        public static List<Video> GetVideosByGenre(string genre)
         {
             try
             {
+                var dataSet = new DataSet();
                 InitCommand();
                 _cmd.CommandText =
-                    "SELECT VideoID FROM Genre " +
+                    "SELECT * FROM Video v " +
+                    "JOIN Genre g " +
+                    "ON v.VideoID = g.VideoID " +
                     "WHERE Genre = @genre;";
                 _cmd.Parameters.AddWithValue("@genre", genre);
                 _cmd.Connection.Open();
-                List<int> videoIDs = new List<int>();
-                SqlDataReader reader = _cmd.ExecuteReader();
-                while (reader.Read())
+                var dataAdapter = new SqlDataAdapter { SelectCommand = _cmd };
+                dataAdapter.Fill(dataSet);
+                List<Video> result = new List<Video>();
+                foreach (DataRow row in dataSet.Tables[0].Rows)
                 {
-                    videoIDs.Add(reader.GetInt32(0));
+                    Video tempVideo = new Video();
+                    tempVideo.VideoID = (int)row["VideoID"];
+                    tempVideo.FilePath = row["FilePath"].ToString();
+                    tempVideo.FileName = row["FileName"].ToString();
+                    tempVideo.MediaImagePath = row["MediaImagePath"].ToString();
+                    tempVideo.Title = row["Title"].ToString();
+                    tempVideo.Year = row["Year"].ToString();
+                    tempVideo.Length = row["Length"].ToString();
+                    tempVideo.Rating = row["Rating"].ToString();
+                    tempVideo.Plot = row["Plot"].ToString();
+                    result.Add(tempVideo);
                 }
-                reader.Close();
-                return videoIDs;
+                return result;
             }
             catch (Exception ex)
             {

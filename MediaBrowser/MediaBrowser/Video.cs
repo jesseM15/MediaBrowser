@@ -102,6 +102,10 @@ namespace MediaBrowser
                 string year = doc.Root.Element("movie").Attribute("year").Value;
                 this.Year = year.Substring(0, 4);
                 this.Genre = doc.Root.Element("movie").Attribute("genre").Value.Split(',').ToList();
+                for (int g = 0; g < this.Genre.Count; g++)
+                {
+                    this.Genre[g] = this.Genre[g].Trim();
+                }
                 this.Length = doc.Root.Element("movie").Attribute("runtime").Value;
                 this.Rating = doc.Root.Element("movie").Attribute("imdbRating").Value;
                 this.Plot = doc.Root.Element("movie").Attribute("plot").Value;
