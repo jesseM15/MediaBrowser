@@ -64,6 +64,7 @@ namespace MediaBrowser
             DB.CreateSourceDirectoryTable();
             DB.CreateVideoTable();
             DB.CreateGenreTable();
+            DB.CreateDirectorTable();
             SourceDirectories = DB.GetSourceDirectories();
 
             CreatePosterImagesDirectory();
@@ -147,6 +148,10 @@ namespace MediaBrowser
                     {
                         DB.AddGenre(genre, primaryKey);
                     }
+                    foreach (string director in tempVideo.Director)
+                    {
+                        DB.AddDirector(director, primaryKey);
+                    }
                 }
                 Videos.Add(tempVideo);
             }
@@ -168,6 +173,7 @@ namespace MediaBrowser
             BroadCategories.Add("All");
             BroadCategories.Add("Year");
             BroadCategories.Add("Genre");
+            BroadCategories.Add("Director");
         }
 
         public List<Video> GetCurrentVideos(string broad, string narrow)
@@ -185,7 +191,12 @@ namespace MediaBrowser
             {
                 currentVideos = DB.GetVideosByGenre(narrow);
             }
+            else if (broad.Equals("Director"))
+            {
+                currentVideos = DB.GetVideosByDirector(narrow);
+            }
             LoadGenres(currentVideos);
+            LoadDirectors(currentVideos);
             LoadCurrentImages(currentVideos);
             return currentVideos;
         }
@@ -203,6 +214,14 @@ namespace MediaBrowser
             foreach (Video video in currentVideos)
             {
                 video.Genre = DB.GetGenresByVideoID(video.VideoID);
+            }
+        }
+
+        private void LoadDirectors(List<Video> currentVideos)
+        {
+            foreach (Video video in currentVideos)
+            {
+                video.Director = DB.GetDirectorsByVideoID(video.VideoID);
             }
         }
         

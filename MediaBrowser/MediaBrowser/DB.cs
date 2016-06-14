@@ -592,5 +592,178 @@ namespace MediaBrowser
             }
         }
 
+        // creates the Director table if it does not exist
+        public static void CreateDirectorTable()
+        {
+            try
+            {
+                InitCommand();
+                _cmd.CommandText =
+                    "IF NOT EXISTS(SELECT * FROM sysobjects " +
+                    "WHERE name='Director' AND xtype='U') " +
+                    "CREATE TABLE Director(" +
+                    "GenreID int NOT NULL IDENTITY(1,1) PRIMARY KEY, " +
+                    "Director varchar(255)," +
+                    "VideoID int NOT NULL FOREIGN KEY REFERENCES Video(VideoID));";
+                _cmd.Connection.Open();
+                _cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Sql NonQuery Exception: " + ex.Message, "DB.cs");
+                throw new Exception(ex.Message, ex);
+            }
+            finally
+            {
+                if (_cmd.Connection != null)
+                {
+                    _cmd.Connection.Close();
+                }
+            }
+        }
+
+        // adds a director
+        public static void AddDirector(string director, int videoID)
+        {
+            try
+            {
+                InitCommand();
+                _cmd.CommandText =
+                    "INSERT INTO Director VALUES (@director, @videoID);";
+                _cmd.Parameters.AddWithValue("@director", director);
+                _cmd.Parameters.AddWithValue("@videoID", videoID);
+                _cmd.Connection.Open();
+                _cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Sql NonQuery Exception: " + ex.Message, "DB.cs");
+                throw new Exception(ex.Message, ex);
+            }
+            finally
+            {
+                if (_cmd.Connection != null)
+                {
+                    _cmd.Connection.Close();
+                }
+            }
+        }
+
+        // returns a list of the distinct directors
+        public static List<string> GetDistinctDirectors()
+        {
+            try
+            {
+                InitCommand();
+                _cmd.CommandText =
+                    "SELECT DISTINCT Director FROM Director;";
+                _cmd.Connection.Open();
+                List<string> directors = new List<string>();
+                SqlDataReader reader = _cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    if (reader.GetString(0) != "")
+                    {
+                        directors.Add(reader.GetString(0));
+                    }
+                }
+                reader.Close();
+                return directors;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Sql Query Exception: " + ex.Message, "DB.cs");
+                throw new Exception(ex.Message, ex);
+            }
+            finally
+            {
+                if (_cmd.Connection != null)
+                {
+                    _cmd.Connection.Close();
+                }
+            }
+        }
+
+        // returns a list of Videos containing a specified director
+        public static List<Video> GetVideosByDirector(string director)
+        {
+            try
+            {
+                var dataSet = new DataSet();
+                InitCommand();
+                _cmd.CommandText =
+                    "SELECT * FROM Video v " +
+                    "JOIN Director d " +
+                    "ON v.VideoID = d.VideoID " +
+                    "WHERE Director = @director;";
+                _cmd.Parameters.AddWithValue("@director", director);
+                _cmd.Connection.Open();
+                var dataAdapter = new SqlDataAdapter { SelectCommand = _cmd };
+                dataAdapter.Fill(dataSet);
+                List<Video> result = new List<Video>();
+                foreach (DataRow row in dataSet.Tables[0].Rows)
+                {
+                    Video tempVideo = new Video();
+                    tempVideo.VideoID = (int)row["VideoID"];
+                    tempVideo.FilePath = row["FilePath"].ToString();
+                    tempVideo.FileName = row["FileName"].ToString();
+                    tempVideo.MediaImagePath = row["MediaImagePath"].ToString();
+                    tempVideo.Title = row["Title"].ToString();
+                    tempVideo.Year = row["Year"].ToString();
+                    tempVideo.Length = row["Length"].ToString();
+                    tempVideo.Rating = row["Rating"].ToString();
+                    tempVideo.Plot = row["Plot"].ToString();
+                    result.Add(tempVideo);
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Sql Query Exception: " + ex.Message, "DB.cs");
+                throw new Exception(ex.Message, ex);
+            }
+            finally
+            {
+                if (_cmd.Connection != null)
+                {
+                    _cmd.Connection.Close();
+                }
+            }
+        }
+
+        // returns a list of Directors for a specified VideoID
+        public static List<string> GetDirectorsByVideoID(int videoID)
+        {
+            try
+            {
+                InitCommand();
+                _cmd.CommandText =
+                    "SELECT Director FROM Director " +
+                    "WHERE VideoID = @videoID;";
+                _cmd.Parameters.AddWithValue("@videoID", videoID);
+                _cmd.Connection.Open();
+                List<string> directors = new List<string>();
+                SqlDataReader reader = _cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    directors.Add(reader.GetString(0));
+                }
+                reader.Close();
+                return directors;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Sql Query Exception: " + ex.Message, "DB.cs");
+                throw new Exception(ex.Message, ex);
+            }
+            finally
+            {
+                if (_cmd.Connection != null)
+                {
+                    _cmd.Connection.Close();
+                }
+            }
+        }
+
     }
 }

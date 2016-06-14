@@ -18,6 +18,9 @@ namespace MediaBrowser
         private string _title;
         private string _year;
         private List<string> _genre;
+        private List<string> _director;
+        private List<string> _writer;
+        private List<string> _actor;
         private Bitmap _mediaImage;
         private string _mediaImagePath;
         private string _length;
@@ -46,6 +49,24 @@ namespace MediaBrowser
         {
             get { return _genre; }
             set { _genre = value; }
+        }
+
+        public List<string> Director
+        {
+            get { return _director; }
+            set { _director = value; }
+        }
+
+        public List<string> Writer
+        {
+            get { return _writer; }
+            set { _writer = value; }
+        }
+
+        public List<string> Actor
+        {
+            get { return _actor; }
+            set { _actor = value; }
         }
 
         public Bitmap MediaImage
@@ -83,6 +104,9 @@ namespace MediaBrowser
             _title = "";
             _year = "";
             _genre = new List<string>();
+            _director = new List<string>();
+            _writer = new List<string>();
+            _actor = new List<string>();
             _mediaImage = new Bitmap(100, 200);
             _mediaImagePath = "";
             _length = "";
@@ -105,6 +129,21 @@ namespace MediaBrowser
                 for (int g = 0; g < this.Genre.Count; g++)
                 {
                     this.Genre[g] = this.Genre[g].Trim();
+                }
+                this.Director = doc.Root.Element("movie").Attribute("director").Value.Split(',').ToList();
+                for (int d = 0; d < this.Director.Count; d++)
+                {
+                    this.Director[d] = this.Director[d].Trim();
+                }
+                this.Writer = doc.Root.Element("movie").Attribute("writer").Value.Split(',').ToList();
+                for (int w = 0; w < this.Writer.Count; w++)
+                {
+                    this.Writer[w] = this.Writer[w].Trim();
+                }
+                this.Actor = doc.Root.Element("movie").Attribute("actors").Value.Split(',').ToList();
+                for (int a = 0; a < this.Actor.Count; a++)
+                {
+                    this.Actor[a] = this.Actor[a].Trim();
                 }
                 this.Length = doc.Root.Element("movie").Attribute("runtime").Value;
                 this.Rating = doc.Root.Element("movie").Attribute("imdbRating").Value;
