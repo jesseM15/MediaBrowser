@@ -65,6 +65,8 @@ namespace MediaBrowser
             DB.CreateVideoTable();
             DB.CreateGenreTable();
             DB.CreateDirectorTable();
+            DB.CreateWriterTable();
+            DB.CreateActorTable();
             SourceDirectories = DB.GetSourceDirectories();
 
             CreatePosterImagesDirectory();
@@ -152,6 +154,14 @@ namespace MediaBrowser
                     {
                         DB.AddDirector(director, primaryKey);
                     }
+                    foreach (string writer in tempVideo.Writer)
+                    {
+                        DB.AddWriter(writer, primaryKey);
+                    }
+                    foreach (string actor in tempVideo.Actor)
+                    {
+                        DB.AddActor(actor, primaryKey);
+                    }
                 }
                 Videos.Add(tempVideo);
             }
@@ -174,6 +184,8 @@ namespace MediaBrowser
             BroadCategories.Add("Year");
             BroadCategories.Add("Genre");
             BroadCategories.Add("Director");
+            BroadCategories.Add("Writer");
+            BroadCategories.Add("Actor");
         }
 
         public List<Video> GetCurrentVideos(string broad, string narrow)
@@ -195,8 +207,18 @@ namespace MediaBrowser
             {
                 currentVideos = DB.GetVideosByDirector(narrow);
             }
+            else if (broad.Equals("Writer"))
+            {
+                currentVideos = DB.GetVideosByWriter(narrow);
+            }
+            else if (broad.Equals("Actor"))
+            {
+                currentVideos = DB.GetVideosByActor(narrow);
+            }
             LoadGenres(currentVideos);
             LoadDirectors(currentVideos);
+            LoadWriters(currentVideos);
+            LoadActors(currentVideos);
             LoadCurrentImages(currentVideos);
             return currentVideos;
         }
@@ -222,6 +244,22 @@ namespace MediaBrowser
             foreach (Video video in currentVideos)
             {
                 video.Director = DB.GetDirectorsByVideoID(video.VideoID);
+            }
+        }
+
+        private void LoadWriters(List<Video> currentVideos)
+        {
+            foreach (Video video in currentVideos)
+            {
+                video.Writer = DB.GetWritersByVideoID(video.VideoID);
+            }
+        }
+
+        private void LoadActors(List<Video> currentVideos)
+        {
+            foreach (Video video in currentVideos)
+            {
+                video.Actor = DB.GetActorsByVideoID(video.VideoID);
             }
         }
         

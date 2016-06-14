@@ -602,7 +602,7 @@ namespace MediaBrowser
                     "IF NOT EXISTS(SELECT * FROM sysobjects " +
                     "WHERE name='Director' AND xtype='U') " +
                     "CREATE TABLE Director(" +
-                    "GenreID int NOT NULL IDENTITY(1,1) PRIMARY KEY, " +
+                    "DirectorID int NOT NULL IDENTITY(1,1) PRIMARY KEY, " +
                     "Director varchar(255)," +
                     "VideoID int NOT NULL FOREIGN KEY REFERENCES Video(VideoID));";
                 _cmd.Connection.Open();
@@ -750,6 +750,352 @@ namespace MediaBrowser
                 }
                 reader.Close();
                 return directors;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Sql Query Exception: " + ex.Message, "DB.cs");
+                throw new Exception(ex.Message, ex);
+            }
+            finally
+            {
+                if (_cmd.Connection != null)
+                {
+                    _cmd.Connection.Close();
+                }
+            }
+        }
+
+        // creates the Writer table if it does not exist
+        public static void CreateWriterTable()
+        {
+            try
+            {
+                InitCommand();
+                _cmd.CommandText =
+                    "IF NOT EXISTS(SELECT * FROM sysobjects " +
+                    "WHERE name='Writer' AND xtype='U') " +
+                    "CREATE TABLE Writer(" +
+                    "WriterID int NOT NULL IDENTITY(1,1) PRIMARY KEY, " +
+                    "Writer varchar(255)," +
+                    "VideoID int NOT NULL FOREIGN KEY REFERENCES Video(VideoID));";
+                _cmd.Connection.Open();
+                _cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Sql NonQuery Exception: " + ex.Message, "DB.cs");
+                throw new Exception(ex.Message, ex);
+            }
+            finally
+            {
+                if (_cmd.Connection != null)
+                {
+                    _cmd.Connection.Close();
+                }
+            }
+        }
+
+        // adds a writer
+        public static void AddWriter(string writer, int videoID)
+        {
+            try
+            {
+                InitCommand();
+                _cmd.CommandText =
+                    "INSERT INTO Writer VALUES (@writer, @videoID);";
+                _cmd.Parameters.AddWithValue("@writer", writer);
+                _cmd.Parameters.AddWithValue("@videoID", videoID);
+                _cmd.Connection.Open();
+                _cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Sql NonQuery Exception: " + ex.Message, "DB.cs");
+                throw new Exception(ex.Message, ex);
+            }
+            finally
+            {
+                if (_cmd.Connection != null)
+                {
+                    _cmd.Connection.Close();
+                }
+            }
+        }
+
+        // returns a list of the distinct writers
+        public static List<string> GetDistinctWriters()
+        {
+            try
+            {
+                InitCommand();
+                _cmd.CommandText =
+                    "SELECT DISTINCT Writer FROM Writer;";
+                _cmd.Connection.Open();
+                List<string> writers = new List<string>();
+                SqlDataReader reader = _cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    if (reader.GetString(0) != "")
+                    {
+                        writers.Add(reader.GetString(0));
+                    }
+                }
+                reader.Close();
+                return writers;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Sql Query Exception: " + ex.Message, "DB.cs");
+                throw new Exception(ex.Message, ex);
+            }
+            finally
+            {
+                if (_cmd.Connection != null)
+                {
+                    _cmd.Connection.Close();
+                }
+            }
+        }
+
+        // returns a list of Videos containing a specified writer
+        public static List<Video> GetVideosByWriter(string writer)
+        {
+            try
+            {
+                var dataSet = new DataSet();
+                InitCommand();
+                _cmd.CommandText =
+                    "SELECT * FROM Video v " +
+                    "JOIN Writer w " +
+                    "ON v.VideoID = w.VideoID " +
+                    "WHERE Writer = @writer;";
+                _cmd.Parameters.AddWithValue("@writer", writer);
+                _cmd.Connection.Open();
+                var dataAdapter = new SqlDataAdapter { SelectCommand = _cmd };
+                dataAdapter.Fill(dataSet);
+                List<Video> result = new List<Video>();
+                foreach (DataRow row in dataSet.Tables[0].Rows)
+                {
+                    Video tempVideo = new Video();
+                    tempVideo.VideoID = (int)row["VideoID"];
+                    tempVideo.FilePath = row["FilePath"].ToString();
+                    tempVideo.FileName = row["FileName"].ToString();
+                    tempVideo.MediaImagePath = row["MediaImagePath"].ToString();
+                    tempVideo.Title = row["Title"].ToString();
+                    tempVideo.Year = row["Year"].ToString();
+                    tempVideo.Length = row["Length"].ToString();
+                    tempVideo.Rating = row["Rating"].ToString();
+                    tempVideo.Plot = row["Plot"].ToString();
+                    result.Add(tempVideo);
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Sql Query Exception: " + ex.Message, "DB.cs");
+                throw new Exception(ex.Message, ex);
+            }
+            finally
+            {
+                if (_cmd.Connection != null)
+                {
+                    _cmd.Connection.Close();
+                }
+            }
+        }
+
+        // returns a list of Writers for a specified VideoID
+        public static List<string> GetWritersByVideoID(int videoID)
+        {
+            try
+            {
+                InitCommand();
+                _cmd.CommandText =
+                    "SELECT Writer FROM Writer " +
+                    "WHERE VideoID = @videoID;";
+                _cmd.Parameters.AddWithValue("@videoID", videoID);
+                _cmd.Connection.Open();
+                List<string> writers = new List<string>();
+                SqlDataReader reader = _cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    writers.Add(reader.GetString(0));
+                }
+                reader.Close();
+                return writers;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Sql Query Exception: " + ex.Message, "DB.cs");
+                throw new Exception(ex.Message, ex);
+            }
+            finally
+            {
+                if (_cmd.Connection != null)
+                {
+                    _cmd.Connection.Close();
+                }
+            }
+        }
+
+        // creates the Actor table if it does not exist
+        public static void CreateActorTable()
+        {
+            try
+            {
+                InitCommand();
+                _cmd.CommandText =
+                    "IF NOT EXISTS(SELECT * FROM sysobjects " +
+                    "WHERE name='Actor' AND xtype='U') " +
+                    "CREATE TABLE Actor(" +
+                    "ActorID int NOT NULL IDENTITY(1,1) PRIMARY KEY, " +
+                    "Actor varchar(255)," +
+                    "VideoID int NOT NULL FOREIGN KEY REFERENCES Video(VideoID));";
+                _cmd.Connection.Open();
+                _cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Sql NonQuery Exception: " + ex.Message, "DB.cs");
+                throw new Exception(ex.Message, ex);
+            }
+            finally
+            {
+                if (_cmd.Connection != null)
+                {
+                    _cmd.Connection.Close();
+                }
+            }
+        }
+
+        // adds a actor
+        public static void AddActor(string actor, int videoID)
+        {
+            try
+            {
+                InitCommand();
+                _cmd.CommandText =
+                    "INSERT INTO Actor VALUES (@actor, @videoID);";
+                _cmd.Parameters.AddWithValue("@actor", actor);
+                _cmd.Parameters.AddWithValue("@videoID", videoID);
+                _cmd.Connection.Open();
+                _cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Sql NonQuery Exception: " + ex.Message, "DB.cs");
+                throw new Exception(ex.Message, ex);
+            }
+            finally
+            {
+                if (_cmd.Connection != null)
+                {
+                    _cmd.Connection.Close();
+                }
+            }
+        }
+
+        // returns a list of the distinct actors
+        public static List<string> GetDistinctActors()
+        {
+            try
+            {
+                InitCommand();
+                _cmd.CommandText =
+                    "SELECT DISTINCT Actor FROM Actor;";
+                _cmd.Connection.Open();
+                List<string> actors = new List<string>();
+                SqlDataReader reader = _cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    if (reader.GetString(0) != "")
+                    {
+                        actors.Add(reader.GetString(0));
+                    }
+                }
+                reader.Close();
+                return actors;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Sql Query Exception: " + ex.Message, "DB.cs");
+                throw new Exception(ex.Message, ex);
+            }
+            finally
+            {
+                if (_cmd.Connection != null)
+                {
+                    _cmd.Connection.Close();
+                }
+            }
+        }
+
+        // returns a list of Videos containing a specified actor
+        public static List<Video> GetVideosByActor(string actor)
+        {
+            try
+            {
+                var dataSet = new DataSet();
+                InitCommand();
+                _cmd.CommandText =
+                    "SELECT * FROM Video v " +
+                    "JOIN Actor a " +
+                    "ON v.VideoID = a.VideoID " +
+                    "WHERE Actor = @actor;";
+                _cmd.Parameters.AddWithValue("@actor", actor);
+                _cmd.Connection.Open();
+                var dataAdapter = new SqlDataAdapter { SelectCommand = _cmd };
+                dataAdapter.Fill(dataSet);
+                List<Video> result = new List<Video>();
+                foreach (DataRow row in dataSet.Tables[0].Rows)
+                {
+                    Video tempVideo = new Video();
+                    tempVideo.VideoID = (int)row["VideoID"];
+                    tempVideo.FilePath = row["FilePath"].ToString();
+                    tempVideo.FileName = row["FileName"].ToString();
+                    tempVideo.MediaImagePath = row["MediaImagePath"].ToString();
+                    tempVideo.Title = row["Title"].ToString();
+                    tempVideo.Year = row["Year"].ToString();
+                    tempVideo.Length = row["Length"].ToString();
+                    tempVideo.Rating = row["Rating"].ToString();
+                    tempVideo.Plot = row["Plot"].ToString();
+                    result.Add(tempVideo);
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Sql Query Exception: " + ex.Message, "DB.cs");
+                throw new Exception(ex.Message, ex);
+            }
+            finally
+            {
+                if (_cmd.Connection != null)
+                {
+                    _cmd.Connection.Close();
+                }
+            }
+        }
+
+        // returns a list of Actors for a specified VideoID
+        public static List<string> GetActorsByVideoID(int videoID)
+        {
+            try
+            {
+                InitCommand();
+                _cmd.CommandText =
+                    "SELECT Actor FROM Actor " +
+                    "WHERE VideoID = @videoID;";
+                _cmd.Parameters.AddWithValue("@videoID", videoID);
+                _cmd.Connection.Open();
+                List<string> actors = new List<string>();
+                SqlDataReader reader = _cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    actors.Add(reader.GetString(0));
+                }
+                reader.Close();
+                return actors;
             }
             catch (Exception ex)
             {

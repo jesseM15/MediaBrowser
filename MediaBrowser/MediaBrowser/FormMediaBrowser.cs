@@ -56,6 +56,14 @@ namespace MediaBrowser
             {
                 lbxNarrow.DataSource = DB.GetDistinctDirectors();
             }
+            else if (lbxBroad.SelectedItem.Equals("Writer"))
+            {
+                lbxNarrow.DataSource = DB.GetDistinctWriters();
+            }
+            else if (lbxBroad.SelectedItem.Equals("Actor"))
+            {
+                lbxNarrow.DataSource = DB.GetDistinctActors();
+            }
         }
 
         private void lbxNarrow_SelectedIndexChanged(object sender, EventArgs e)
