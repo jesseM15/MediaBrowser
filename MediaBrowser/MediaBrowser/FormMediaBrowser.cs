@@ -107,7 +107,7 @@ namespace MediaBrowser
                     lblYear.Text = "Year: " + video.Year;
                     lblLength.Text = "Run Time: " + video.Length;
                     lblRating.Text = "Rating: " + video.Rating;
-                    rtxGenre.Clear();
+                    rtxGenre.Text = "Genres: ";
                     for (int g = 0; g < video.Genre.Count; g++)
                     {
                         rtxGenre.Text += video.Genre[g];
@@ -116,9 +116,37 @@ namespace MediaBrowser
                             rtxGenre.Text += ",";
                         }
                     }
+                    rtxDirector.Text = "Directors: ";
+                    for (int d = 0; d < video.Director.Count; d++)
+                    {
+                        rtxDirector.Text += video.Director[d];
+                        if (d + 1 != video.Director.Count)
+                        {
+                            rtxDirector.Text += ",";
+                        }
+                    }
+                    rtxWriter.Text = "Writers: ";
+                    for (int w = 0; w < video.Writer.Count; w++)
+                    {
+                        rtxWriter.Text += video.Writer[w];
+                        if (w + 1 != video.Writer.Count)
+                        {
+                            rtxWriter.Text += ",";
+                        }
+                    }
+                    rtxActor.Text = "Actors: ";
+                    for (int a = 0; a < video.Actor.Count; a++)
+                    {
+                        rtxActor.Text += video.Actor[a];
+                        if (a + 1 != video.Actor.Count)
+                        {
+                            rtxActor.Text += ",";
+                        }
+                    }
                     rtxPlot.Text = video.Plot;
                 }
             }
         }
+
     }
 }
