@@ -64,6 +64,10 @@ namespace MediaBrowser
             {
                 lbxNarrow.DataSource = DB.GetDistinctActors();
             }
+            else if (lbxBroad.SelectedItem.Equals("Rating"))
+            {
+                lbxNarrow.DataSource = DB.GetDistinctRatings();
+            }
         }
 
         private void lbxNarrow_SelectedIndexChanged(object sender, EventArgs e)

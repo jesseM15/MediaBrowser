@@ -186,6 +186,7 @@ namespace MediaBrowser
             BroadCategories.Add("Director");
             BroadCategories.Add("Writer");
             BroadCategories.Add("Actor");
+            BroadCategories.Add("Rating");
         }
 
         public List<Video> GetCurrentVideos(string broad, string narrow)
@@ -214,6 +215,10 @@ namespace MediaBrowser
             else if (broad.Equals("Actor"))
             {
                 currentVideos = DB.GetVideosByActor(narrow);
+            }
+            else if (broad.Equals("Rating"))
+            {
+                currentVideos = DB.GetVideosByRating(narrow);
             }
             LoadGenres(currentVideos);
             LoadDirectors(currentVideos);

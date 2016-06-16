@@ -419,6 +419,86 @@ namespace MediaBrowser
             }
         }
 
+        // returns a list of the distinct ratings of all the videos
+        public static List<string> GetDistinctRatings()
+        {
+            try
+            {
+                InitCommand();
+                _cmd.CommandText =
+                    "SELECT DISTINCT Rating FROM Video;";
+                _cmd.Connection.Open();
+                List<string> ratings = new List<string>();
+                SqlDataReader reader = _cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    if (reader.GetString(0) != "")
+                    {
+                        ratings.Add(reader.GetString(0));
+                    }
+                }
+                reader.Close();
+                return ratings;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Sql Query Exception: " + ex.Message, "DB.cs");
+                throw new Exception(ex.Message, ex);
+            }
+            finally
+            {
+                if (_cmd.Connection != null)
+                {
+                    _cmd.Connection.Close();
+                }
+            }
+        }
+
+        // returns a list of all videos from a specified rating
+        public static List<Video> GetVideosByRating(string rating)
+        {
+            try
+            {
+                var dataSet = new DataSet();
+                InitCommand();
+                _cmd.CommandText =
+                    "SELECT * FROM Video " +
+                    "WHERE Rating = @rating;";
+                _cmd.Parameters.AddWithValue("@rating", rating);
+                _cmd.Connection.Open();
+                var dataAdapter = new SqlDataAdapter { SelectCommand = _cmd };
+                dataAdapter.Fill(dataSet);
+                List<Video> result = new List<Video>();
+                foreach (DataRow row in dataSet.Tables[0].Rows)
+                {
+                    Video tempVideo = new Video();
+                    tempVideo.VideoID = (int)row["VideoID"];
+                    tempVideo.FilePath = row["FilePath"].ToString();
+                    tempVideo.FileName = row["FileName"].ToString();
+                    tempVideo.MediaImagePath = row["MediaImagePath"].ToString();
+                    tempVideo.Title = row["Title"].ToString();
+                    tempVideo.Year = row["Year"].ToString();
+                    tempVideo.Length = row["Length"].ToString();
+                    tempVideo.Rating = row["Rating"].ToString();
+                    tempVideo.Plot = row["Plot"].ToString();
+                    result.Add(tempVideo);
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Sql Query Exception: " + ex.Message, "DB.cs");
+                throw new Exception(ex.Message, ex);
+            }
+            finally
+            {
+                if (_cmd.Connection != null)
+                {
+                    _cmd.Connection.Close();
+                }
+            }
+        }
+
         // creates the Genre table if it does not exist
         public static void CreateGenreTable()
         {
