@@ -208,25 +208,5 @@ namespace MediaBrowser
             }
         }
 
-        public void LoadImage()
-        {
-            try
-            {
-                if (this.MediaImagePath != "")
-                {
-                    this.MediaImage = new Bitmap(this.MediaImagePath);
-                }
-                else
-                {
-                    // use the default image
-                    this.MediaImage = MediaBrowser.Properties.Resources.default_movie;
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Error("Unable to load file: " + ex.Message, "Video.cs");
-            }
-        }
-
     }
 }

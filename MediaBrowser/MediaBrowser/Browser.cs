@@ -17,6 +17,7 @@ namespace MediaBrowser
         private List<Video> _videos;
         private List<string> _broadCategories;
         private static string _posterImagesPath;
+        private Dictionary<string, Bitmap> _posterImages;
 
         public string State
         {
@@ -48,6 +49,12 @@ namespace MediaBrowser
             set { _posterImagesPath = value; }
         }
 
+        public Dictionary<string, Bitmap> PosterImages
+        {
+            get { return _posterImages; }
+            set { _posterImages = value; }
+        }
+
         public Browser()
         {
             _state = "";
@@ -55,6 +62,7 @@ namespace MediaBrowser
             _videos = new List<Video>();
             _broadCategories = new List<string>();
             _posterImagesPath = Path.GetDirectoryName(Application.ExecutablePath) + @"\PosterImages\";
+            _posterImages = new Dictionary<string, Bitmap>();
         }
 
         // creates the database/tables and populates Videos
@@ -70,6 +78,7 @@ namespace MediaBrowser
             SourceDirectories = DB.GetSourceDirectories();
 
             CreatePosterImagesDirectory();
+            GetPosterImages();
             SetBroadCategories();
 
             PopulateVideos(GetVideoFiles());
@@ -176,6 +185,16 @@ namespace MediaBrowser
             }
         }
 
+        // populate PosterImages with paths and images
+        private void GetPosterImages()
+        {
+            List<string> posters = new List<string>(Directory.GetFiles(PosterImagesPath));
+            foreach (string poster in posters)
+            {
+                PosterImages.Add(poster, new Bitmap(poster));
+            }
+        }
+
         // broad categories for lbxBroad listbox on FormMediaBrowser
         private void SetBroadCategories()
         {
@@ -232,7 +251,14 @@ namespace MediaBrowser
         {
             foreach (Video video in currentVideos)
             {
-                video.LoadImage();
+                if (PosterImages.ContainsKey(video.MediaImagePath))
+                {
+                    video.MediaImage = PosterImages[video.MediaImagePath];
+                }
+                else
+                {
+                    video.MediaImage = MediaBrowser.Properties.Resources.default_movie;
+                }
             }
         }
 
