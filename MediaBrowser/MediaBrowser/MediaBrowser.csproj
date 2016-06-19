@@ -47,6 +47,12 @@
   <ItemGroup>
     <Compile Include="Browser.cs" />
     <Compile Include="DB.cs" />
+    <Compile Include="FormEditVideoData.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormEditVideoData.Designer.cs">
+      <DependentUpon>FormEditVideoData.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormMediaBrowser.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -64,6 +70,9 @@
       <DependentUpon>FormSourceDirectories.cs</DependentUpon>
     </Compile>
     <Compile Include="Video.cs" />
+    <EmbeddedResource Include="FormEditVideoData.resx">
+      <DependentUpon>FormEditVideoData.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormMediaBrowser.resx">
       <DependentUpon>FormMediaBrowser.cs</DependentUpon>
     </EmbeddedResource>

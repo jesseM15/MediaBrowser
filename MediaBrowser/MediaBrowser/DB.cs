@@ -295,6 +295,45 @@ namespace MediaBrowser
             }
         }
 
+        // updates a video from the specified videoID
+        public static void UpdateVideo(Video video)
+        {
+            try
+            {
+                InitCommand();
+                _cmd.CommandText =
+                    "UPDATE Video SET " +
+                    "FilePath = @filePath, FileName = @fileName, " +
+                    "MediaImagePath = @mediaImagePath, Title = @title," +
+                    "Year = @year, Length = @length, " +
+                    "Rating = @rating, Plot = @plot " +
+                    "WHERE VideoID = @videoID;";
+                _cmd.Parameters.AddWithValue("@videoID", video.VideoID);
+                _cmd.Parameters.AddWithValue("@filePath", video.FilePath);
+                _cmd.Parameters.AddWithValue("@fileName", video.FileName);
+                _cmd.Parameters.AddWithValue("@mediaImagePath", video.MediaImagePath);
+                _cmd.Parameters.AddWithValue("@title", video.Title);
+                _cmd.Parameters.AddWithValue("@year", video.Year);
+                _cmd.Parameters.AddWithValue("@length", video.Length);
+                _cmd.Parameters.AddWithValue("@rating", video.Rating);
+                _cmd.Parameters.AddWithValue("@plot", video.Plot);
+                _cmd.Connection.Open();
+                _cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Sql NonQuery Exception: " + ex.Message, "DB.cs");
+                throw new Exception(ex.Message, ex);
+            }
+            finally
+            {
+                if (_cmd.Connection != null)
+                {
+                    _cmd.Connection.Close();
+                }
+            }
+        }
+
         // returns a list of all videos that have a title
         public static List<Video> GetAllVideos()
         {
@@ -324,6 +363,39 @@ namespace MediaBrowser
                     result.Add(tempVideo);
                 }
                 return result;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Sql Query Exception: " + ex.Message, "DB.cs");
+                throw new Exception(ex.Message, ex);
+            }
+            finally
+            {
+                if (_cmd.Connection != null)
+                {
+                    _cmd.Connection.Close();
+                }
+            }
+        }
+
+        // returns a list of all videos that have NOT resolved a title
+        public static List<string> GetAllUnresolvedVideos()
+        {
+            try
+            {
+                InitCommand();
+                _cmd.CommandText =
+                    "SELECT FilePath FROM Video " +
+                    "WHERE Title = '';";
+                _cmd.Connection.Open();
+                List<string> filePaths = new List<string>();
+                SqlDataReader reader = _cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    filePaths.Add(reader.GetString(0));
+                }
+                reader.Close();
+                return filePaths;
             }
             catch (Exception ex)
             {

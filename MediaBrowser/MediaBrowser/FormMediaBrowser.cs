@@ -23,13 +23,20 @@ namespace MediaBrowser
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            InitializeForm();
+        }
+
+        private void InitializeForm()
+        {
             browser.Initialize();
             lbxBroad.DataSource = browser.BroadCategories;
             lvwMedia.View = View.LargeIcon;
             lvwMedia.MultiSelect = false;
             imageList.ImageSize = new Size(50, 100);
-            lbxBroad.SetSelected(0,true);
+            lbxBroad.SetSelected(0, true);
             pnlVideoInfo.Hide();
+            slbUnresolvedVideos.Text = browser.UnresolvedVideos.Count.ToString() +
+                " unresolved videos";
         }
 
         private void sourceDirectoriesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -144,6 +151,35 @@ namespace MediaBrowser
                         }
                     }
                     rtxPlot.Text = video.Plot;
+                }
+            }
+        }
+
+        private void btnEditVideoData_Click(object sender, EventArgs e)
+        {
+            foreach (Video video in currentVideos)
+            {
+                if (lvwMedia.SelectedItems[0].Text == video.Title)
+                {
+                    int index = lvwMedia.SelectedItems[0].Index;
+                    FormEditVideoData evd = new FormEditVideoData(video);
+                    var result = evd.ShowDialog();
+                    if (result == System.Windows.Forms.DialogResult.OK)
+                    {
+                        evd.currentVideo.SaveImage();
+                        DB.UpdateVideo(evd.currentVideo);
+                        if (lbxBroad.SelectedItem.ToString().Equals("All"))
+                        {
+                            UpdateListView("All", "All");
+                        }
+                        else
+                        {
+                            UpdateListView(lbxBroad.SelectedItem.ToString(), lbxNarrow.SelectedItem.ToString());
+                        }
+                        lvwMedia.Items[index].Selected = true;
+                        lvwMedia.Select();
+                        break;
+                    }
                 }
             }
         }

@@ -8,3 +8,4 @@ c:\users\j\Documents\MediaBrowser\MediaBrowser\MediaBrowser\obj\Debug\MediaBrows
 c:\users\j\Documents\MediaBrowser\MediaBrowser\MediaBrowser\obj\Debug\MediaBrowser.pdb
 C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowser\obj\Debug\MediaBrowser.FormMediaBrowser.resources
 C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowser\obj\Debug\MediaBrowser.FormSourceDirectories.resources
+C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowser\obj\Debug\MediaBrowser.FormEditVideoData.resources

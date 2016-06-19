@@ -47,10 +47,13 @@
             this.picPoster = new System.Windows.Forms.PictureBox();
             this.lblTitle = new System.Windows.Forms.Label();
             this.stsMain = new System.Windows.Forms.StatusStrip();
+            this.slbUnresolvedVideos = new System.Windows.Forms.ToolStripStatusLabel();
+            this.btnEditVideoData = new System.Windows.Forms.Button();
             this.mnuMain.SuspendLayout();
             this.pnlFilter.SuspendLayout();
             this.pnlVideoInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picPoster)).BeginInit();
+            this.stsMain.SuspendLayout();
             this.SuspendLayout();
             // 
             // mnuMain
@@ -119,6 +122,7 @@
             // pnlVideoInfo
             // 
             this.pnlVideoInfo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlVideoInfo.Controls.Add(this.btnEditVideoData);
             this.pnlVideoInfo.Controls.Add(this.rtxPlot);
             this.pnlVideoInfo.Controls.Add(this.rtxActor);
             this.pnlVideoInfo.Controls.Add(this.rtxWriter);
@@ -143,7 +147,7 @@
             this.rtxPlot.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
             this.rtxPlot.Size = new System.Drawing.Size(266, 66);
             this.rtxPlot.TabIndex = 10;
-            this.rtxPlot.Text = "";
+            this.rtxPlot.Text = "Plot";
             // 
             // rtxActor
             // 
@@ -154,7 +158,7 @@
             this.rtxActor.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
             this.rtxActor.Size = new System.Drawing.Size(106, 54);
             this.rtxActor.TabIndex = 9;
-            this.rtxActor.Text = "";
+            this.rtxActor.Text = "Actor";
             // 
             // rtxWriter
             // 
@@ -165,7 +169,7 @@
             this.rtxWriter.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
             this.rtxWriter.Size = new System.Drawing.Size(106, 54);
             this.rtxWriter.TabIndex = 8;
-            this.rtxWriter.Text = "";
+            this.rtxWriter.Text = "Writer";
             // 
             // rtxDirector
             // 
@@ -176,7 +180,7 @@
             this.rtxDirector.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
             this.rtxDirector.Size = new System.Drawing.Size(106, 36);
             this.rtxDirector.TabIndex = 7;
-            this.rtxDirector.Text = "";
+            this.rtxDirector.Text = "Director";
             // 
             // rtxGenre
             // 
@@ -187,7 +191,7 @@
             this.rtxGenre.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
             this.rtxGenre.Size = new System.Drawing.Size(106, 36);
             this.rtxGenre.TabIndex = 6;
-            this.rtxGenre.Text = "";
+            this.rtxGenre.Text = "Genre";
             // 
             // lblRating
             // 
@@ -227,21 +231,41 @@
             // 
             // lblTitle
             // 
-            this.lblTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTitle.Location = new System.Drawing.Point(5, 8);
             this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new System.Drawing.Size(273, 26);
+            this.lblTitle.Size = new System.Drawing.Size(211, 26);
             this.lblTitle.TabIndex = 0;
             this.lblTitle.Text = "Title";
             // 
             // stsMain
             // 
+            this.stsMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.slbUnresolvedVideos});
             this.stsMain.Location = new System.Drawing.Point(0, 439);
             this.stsMain.Name = "stsMain";
             this.stsMain.Size = new System.Drawing.Size(862, 22);
             this.stsMain.SizingGrip = false;
             this.stsMain.TabIndex = 4;
             this.stsMain.Text = "statusStrip1";
+            // 
+            // slbUnresolvedVideos
+            // 
+            this.slbUnresolvedVideos.IsLink = true;
+            this.slbUnresolvedVideos.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
+            this.slbUnresolvedVideos.Name = "slbUnresolvedVideos";
+            this.slbUnresolvedVideos.Size = new System.Drawing.Size(118, 17);
+            this.slbUnresolvedVideos.Text = "toolStripStatusLabel1";
+            // 
+            // btnEditVideoData
+            // 
+            this.btnEditVideoData.Location = new System.Drawing.Point(222, 5);
+            this.btnEditVideoData.Name = "btnEditVideoData";
+            this.btnEditVideoData.Size = new System.Drawing.Size(56, 23);
+            this.btnEditVideoData.TabIndex = 11;
+            this.btnEditVideoData.Text = "Edit";
+            this.btnEditVideoData.UseVisualStyleBackColor = true;
+            this.btnEditVideoData.Click += new System.EventHandler(this.btnEditVideoData_Click);
             // 
             // FormMediaBrowser
             // 
@@ -263,6 +287,8 @@
             this.pnlVideoInfo.ResumeLayout(false);
             this.pnlVideoInfo.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picPoster)).EndInit();
+            this.stsMain.ResumeLayout(false);
+            this.stsMain.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -289,6 +315,8 @@
         private System.Windows.Forms.RichTextBox rtxActor;
         private System.Windows.Forms.RichTextBox rtxWriter;
         private System.Windows.Forms.StatusStrip stsMain;
+        private System.Windows.Forms.ToolStripStatusLabel slbUnresolvedVideos;
+        private System.Windows.Forms.Button btnEditVideoData;
     }
 }
 

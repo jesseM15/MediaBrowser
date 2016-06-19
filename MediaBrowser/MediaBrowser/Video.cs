@@ -195,7 +195,7 @@ namespace MediaBrowser
             return tempImage;
         }
 
-        private void SaveImage()
+        public void SaveImage()
         {
             try
             {
