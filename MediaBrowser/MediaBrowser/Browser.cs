@@ -102,8 +102,29 @@ namespace MediaBrowser
             var result = sd.ShowDialog();
             if (result == System.Windows.Forms.DialogResult.OK)
             {
-                AddSourceDirectories(sd.directoriesToAdd);
                 RemoveSourceDirectories(sd.directoriesToRemove);
+                AddSourceDirectories(sd.directoriesToAdd);
+            }
+        }
+
+        // removes a list of directories from the database and SourceDirectories property
+        private void RemoveSourceDirectories(List<string> directoriesToRemove)
+        {
+            List<string> filePaths = new List<string>();
+            foreach (string directory in directoriesToRemove)
+            {
+                filePaths.AddRange(Directory.GetFiles(directory));
+                foreach (string filePath in filePaths)
+                {
+                    int index = DB.GetVideoID(filePath);
+                    DB.RemoveGenre(index);
+                    DB.RemoveDirector(index);
+                    DB.RemoveWriter(index);
+                    DB.RemoveActor(index);
+                    DB.RemoveVideo(index);
+                }
+                DB.RemoveSourceDirectory(directory);
+                SourceDirectories.Remove(directory);
             }
         }
 
@@ -114,16 +135,6 @@ namespace MediaBrowser
             {
                 DB.AddSourceDirectory(directory);
                 SourceDirectories.Add(directory);
-            }
-        }
-
-        // removes a list of directories from the database and SourceDirectories property
-        private void RemoveSourceDirectories(List<string> directoriesToRemove)
-        {
-            foreach (string directory in directoriesToRemove)
-            {
-                DB.RemoveSourceDirectory(directory);
-                SourceDirectories.Remove(directory);
             }
         }
 

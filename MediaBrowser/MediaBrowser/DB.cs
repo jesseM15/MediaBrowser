@@ -334,6 +334,68 @@ namespace MediaBrowser
             }
         }
 
+        // returns a VideoID from a specified FilePath
+        public static int GetVideoID(string filePath)
+        {
+            try
+            {
+                InitCommand();
+                _cmd.CommandText =
+                    "SELECT VideoID FROM Video " +
+                    "WHERE FilePath = @filePath;";
+                _cmd.Parameters.AddWithValue("@filePath", filePath);
+                _cmd.Connection.Open();
+                int videoID = 0;
+                SqlDataReader reader = _cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    videoID = reader.GetInt32(0);
+                }
+                reader.Close();
+                return videoID;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Sql Query Exception: " + ex.Message, "DB.cs");
+                throw new Exception(ex.Message, ex);
+            }
+            finally
+            {
+                if (_cmd.Connection != null)
+                {
+                    _cmd.Connection.Close();
+                }
+            }
+        }
+
+        // removes a video with the specified VideoID
+        public static void RemoveVideo(int videoID)
+        {
+            try
+            {
+                InitCommand();
+                _cmd.CommandText =
+                    "DELETE FROM Video " +
+                    "WHERE VideoID=@videoID;";
+                _cmd.Parameters.AddWithValue("@videoID", videoID);
+                _cmd.Connection.Open();
+                _cmd.ExecuteNonQuery();
+                _cmd.Connection.Close();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Sql NonQuery Exception: " + ex.Message, "DB.cs");
+                throw new Exception(ex.Message, ex);
+            }
+            finally
+            {
+                if (_cmd.Connection != null)
+                {
+                    _cmd.Connection.Close();
+                }
+            }
+        }
+
         // returns a list of all videos that have a title
         public static List<Video> GetAllVideos()
         {
@@ -628,6 +690,34 @@ namespace MediaBrowser
             }
         }
 
+        // removes genres with the specified VideoID
+        public static void RemoveGenre(int videoID)
+        {
+            try
+            {
+                InitCommand();
+                _cmd.CommandText =
+                    "DELETE FROM Genre " +
+                    "WHERE VideoID=@videoID;";
+                _cmd.Parameters.AddWithValue("@videoID", videoID);
+                _cmd.Connection.Open();
+                _cmd.ExecuteNonQuery();
+                _cmd.Connection.Close();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Sql NonQuery Exception: " + ex.Message, "DB.cs");
+                throw new Exception(ex.Message, ex);
+            }
+            finally
+            {
+                if (_cmd.Connection != null)
+                {
+                    _cmd.Connection.Close();
+                }
+            }
+        }
+
         // returns a list of the distinct genres
         public static List<string> GetDistinctGenres()
         {
@@ -786,6 +876,34 @@ namespace MediaBrowser
                 _cmd.Parameters.AddWithValue("@videoID", videoID);
                 _cmd.Connection.Open();
                 _cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Sql NonQuery Exception: " + ex.Message, "DB.cs");
+                throw new Exception(ex.Message, ex);
+            }
+            finally
+            {
+                if (_cmd.Connection != null)
+                {
+                    _cmd.Connection.Close();
+                }
+            }
+        }
+
+        // removes directors with the specified VideoID
+        public static void RemoveDirector(int videoID)
+        {
+            try
+            {
+                InitCommand();
+                _cmd.CommandText =
+                    "DELETE FROM Director " +
+                    "WHERE VideoID=@videoID;";
+                _cmd.Parameters.AddWithValue("@videoID", videoID);
+                _cmd.Connection.Open();
+                _cmd.ExecuteNonQuery();
+                _cmd.Connection.Close();
             }
             catch (Exception ex)
             {
@@ -974,6 +1092,34 @@ namespace MediaBrowser
             }
         }
 
+        // removes writers with the specified VideoID
+        public static void RemoveWriter(int videoID)
+        {
+            try
+            {
+                InitCommand();
+                _cmd.CommandText =
+                    "DELETE FROM Writer " +
+                    "WHERE VideoID=@videoID;";
+                _cmd.Parameters.AddWithValue("@videoID", videoID);
+                _cmd.Connection.Open();
+                _cmd.ExecuteNonQuery();
+                _cmd.Connection.Close();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Sql NonQuery Exception: " + ex.Message, "DB.cs");
+                throw new Exception(ex.Message, ex);
+            }
+            finally
+            {
+                if (_cmd.Connection != null)
+                {
+                    _cmd.Connection.Close();
+                }
+            }
+        }
+
         // returns a list of the distinct writers
         public static List<string> GetDistinctWriters()
         {
@@ -1132,6 +1278,34 @@ namespace MediaBrowser
                 _cmd.Parameters.AddWithValue("@videoID", videoID);
                 _cmd.Connection.Open();
                 _cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Sql NonQuery Exception: " + ex.Message, "DB.cs");
+                throw new Exception(ex.Message, ex);
+            }
+            finally
+            {
+                if (_cmd.Connection != null)
+                {
+                    _cmd.Connection.Close();
+                }
+            }
+        }
+
+        // removes actors with the specified VideoID
+        public static void RemoveActor(int videoID)
+        {
+            try
+            {
+                InitCommand();
+                _cmd.CommandText =
+                    "DELETE FROM Actor " +
+                    "WHERE VideoID=@videoID;";
+                _cmd.Parameters.AddWithValue("@videoID", videoID);
+                _cmd.Connection.Open();
+                _cmd.ExecuteNonQuery();
+                _cmd.Connection.Close();
             }
             catch (Exception ex)
             {
