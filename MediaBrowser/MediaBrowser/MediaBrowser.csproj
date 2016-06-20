@@ -59,6 +59,12 @@
     <Compile Include="FormMediaBrowser.Designer.cs">
       <DependentUpon>FormMediaBrowser.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormUnresolvedVideos.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormUnresolvedVideos.Designer.cs">
+      <DependentUpon>FormUnresolvedVideos.cs</DependentUpon>
+    </Compile>
     <Compile Include="Logger.cs" />
     <Compile Include="Media.cs" />
     <Compile Include="Program.cs" />
@@ -75,6 +81,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormMediaBrowser.resx">
       <DependentUpon>FormMediaBrowser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormUnresolvedVideos.resx">
+      <DependentUpon>FormUnresolvedVideos.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

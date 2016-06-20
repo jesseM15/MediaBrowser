@@ -184,5 +184,15 @@ namespace MediaBrowser
             }
         }
 
+        private void slbUnresolvedVideos_Click(object sender, EventArgs e)
+        {
+            FormUnresolvedVideos uv = new FormUnresolvedVideos(browser.UnresolvedVideos);
+            var result = uv.ShowDialog();
+            if (result == System.Windows.Forms.DialogResult.OK)
+            {
+
+            }
+        }
+
     }
 }

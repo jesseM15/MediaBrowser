@@ -36,6 +36,7 @@
             this.lbxBroad = new System.Windows.Forms.ListBox();
             this.lvwMedia = new System.Windows.Forms.ListView();
             this.pnlVideoInfo = new System.Windows.Forms.Panel();
+            this.btnEditVideoData = new System.Windows.Forms.Button();
             this.rtxPlot = new System.Windows.Forms.RichTextBox();
             this.rtxActor = new System.Windows.Forms.RichTextBox();
             this.rtxWriter = new System.Windows.Forms.RichTextBox();
@@ -48,7 +49,6 @@
             this.lblTitle = new System.Windows.Forms.Label();
             this.stsMain = new System.Windows.Forms.StatusStrip();
             this.slbUnresolvedVideos = new System.Windows.Forms.ToolStripStatusLabel();
-            this.btnEditVideoData = new System.Windows.Forms.Button();
             this.mnuMain.SuspendLayout();
             this.pnlFilter.SuspendLayout();
             this.pnlVideoInfo.SuspendLayout();
@@ -137,6 +137,16 @@
             this.pnlVideoInfo.Name = "pnlVideoInfo";
             this.pnlVideoInfo.Size = new System.Drawing.Size(285, 400);
             this.pnlVideoInfo.TabIndex = 3;
+            // 
+            // btnEditVideoData
+            // 
+            this.btnEditVideoData.Location = new System.Drawing.Point(222, 5);
+            this.btnEditVideoData.Name = "btnEditVideoData";
+            this.btnEditVideoData.Size = new System.Drawing.Size(56, 23);
+            this.btnEditVideoData.TabIndex = 11;
+            this.btnEditVideoData.Text = "Edit";
+            this.btnEditVideoData.UseVisualStyleBackColor = true;
+            this.btnEditVideoData.Click += new System.EventHandler(this.btnEditVideoData_Click);
             // 
             // rtxPlot
             // 
@@ -256,16 +266,7 @@
             this.slbUnresolvedVideos.Name = "slbUnresolvedVideos";
             this.slbUnresolvedVideos.Size = new System.Drawing.Size(118, 17);
             this.slbUnresolvedVideos.Text = "toolStripStatusLabel1";
-            // 
-            // btnEditVideoData
-            // 
-            this.btnEditVideoData.Location = new System.Drawing.Point(222, 5);
-            this.btnEditVideoData.Name = "btnEditVideoData";
-            this.btnEditVideoData.Size = new System.Drawing.Size(56, 23);
-            this.btnEditVideoData.TabIndex = 11;
-            this.btnEditVideoData.Text = "Edit";
-            this.btnEditVideoData.UseVisualStyleBackColor = true;
-            this.btnEditVideoData.Click += new System.EventHandler(this.btnEditVideoData_Click);
+            this.slbUnresolvedVideos.Click += new System.EventHandler(this.slbUnresolvedVideos_Click);
             // 
             // FormMediaBrowser
             // 

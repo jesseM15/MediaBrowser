@@ -441,23 +441,35 @@ namespace MediaBrowser
         }
 
         // returns a list of all videos that have NOT resolved a title
-        public static List<string> GetAllUnresolvedVideos()
+        public static List<Video> GetAllUnresolvedVideos()
         {
             try
             {
+                var dataSet = new DataSet();
                 InitCommand();
                 _cmd.CommandText =
-                    "SELECT FilePath FROM Video " +
+                    "SELECT * FROM Video " +
                     "WHERE Title = '';";
                 _cmd.Connection.Open();
-                List<string> filePaths = new List<string>();
-                SqlDataReader reader = _cmd.ExecuteReader();
-                while (reader.Read())
+                var dataAdapter = new SqlDataAdapter { SelectCommand = _cmd };
+                dataAdapter.Fill(dataSet);
+                List<Video> result = new List<Video>();
+                foreach (DataRow row in dataSet.Tables[0].Rows)
                 {
-                    filePaths.Add(reader.GetString(0));
+                    Video tempVideo = new Video();
+                    tempVideo.VideoID = (int)row["VideoID"];
+                    tempVideo.FilePath = row["FilePath"].ToString();
+                    tempVideo.FileName = row["FileName"].ToString();
+                    tempVideo.MediaImagePath = row["MediaImagePath"].ToString();
+                    tempVideo.Title = row["Title"].ToString();
+                    tempVideo.Year = row["Year"].ToString();
+                    tempVideo.Length = row["Length"].ToString();
+                    tempVideo.Rating = row["Rating"].ToString();
+                    tempVideo.Plot = row["Plot"].ToString();
+                    result.Add(tempVideo);
                 }
-                reader.Close();
-                return filePaths;
+                return result;
+                
             }
             catch (Exception ex)
             {

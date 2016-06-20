@@ -15,10 +15,10 @@ namespace MediaBrowser
         private string _state;
         private List<string> _sourceDirectories;
         private List<Video> _videos;
+        private List<Video> _unresolvedVideos;
         private List<string> _broadCategories;
         private static string _posterImagesPath;
         private Dictionary<string, Bitmap> _posterImages;
-        private List<string> _unresolvedVideos;
 
         public string State
         {
@@ -36,6 +36,12 @@ namespace MediaBrowser
         {
             get { return _videos; }
             set { _videos = value; }
+        }
+
+        public List<Video> UnresolvedVideos
+        {
+            get { return _unresolvedVideos; }
+            set { _unresolvedVideos = value; }
         }
 
         public List<string> BroadCategories
@@ -56,12 +62,6 @@ namespace MediaBrowser
             set { _posterImages = value; }
         }
 
-        public List<string> UnresolvedVideos
-        {
-            get { return _unresolvedVideos; }
-            set { _unresolvedVideos = value; }
-        }
-
         public Browser()
         {
             _state = "";
@@ -70,7 +70,7 @@ namespace MediaBrowser
             _broadCategories = new List<string>();
             _posterImagesPath = Path.GetDirectoryName(Application.ExecutablePath) + @"\PosterImages\";
             _posterImages = new Dictionary<string, Bitmap>();
-            _unresolvedVideos = new List<string>();
+            _unresolvedVideos = new List<Video>();
         }
 
         // creates the database/tables and populates Videos
