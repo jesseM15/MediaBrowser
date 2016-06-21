@@ -59,6 +59,12 @@
     <Compile Include="FormMediaBrowser.Designer.cs">
       <DependentUpon>FormMediaBrowser.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormSearch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormSearch.Designer.cs">
+      <DependentUpon>FormSearch.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormUnresolvedVideos.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -81,6 +87,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormMediaBrowser.resx">
       <DependentUpon>FormMediaBrowser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormSearch.resx">
+      <DependentUpon>FormSearch.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormUnresolvedVideos.resx">
       <DependentUpon>FormUnresolvedVideos.cs</DependentUpon>

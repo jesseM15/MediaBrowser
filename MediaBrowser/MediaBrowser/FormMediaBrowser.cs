@@ -167,6 +167,26 @@ namespace MediaBrowser
                     if (result == System.Windows.Forms.DialogResult.OK)
                     {
                         evd.currentVideo.SaveImage();
+                        DB.RemoveGenre(evd.currentVideo.VideoID);
+                        DB.RemoveDirector(evd.currentVideo.VideoID);
+                        DB.RemoveWriter(evd.currentVideo.VideoID);
+                        DB.RemoveActor(evd.currentVideo.VideoID);
+                        foreach (string genre in evd.currentVideo.Genre)
+                        {
+                            DB.AddGenre(genre, evd.currentVideo.VideoID);
+                        }
+                        foreach (string director in evd.currentVideo.Director)
+                        {
+                            DB.AddDirector(director, evd.currentVideo.VideoID);
+                        }
+                        foreach (string writer in evd.currentVideo.Writer)
+                        {
+                            DB.AddWriter(writer, evd.currentVideo.VideoID);
+                        }
+                        foreach (string actor in evd.currentVideo.Actor)
+                        {
+                            DB.AddActor(actor, evd.currentVideo.VideoID);
+                        }
                         DB.UpdateVideo(evd.currentVideo);
                         if (lbxBroad.SelectedItem.ToString().Equals("All"))
                         {

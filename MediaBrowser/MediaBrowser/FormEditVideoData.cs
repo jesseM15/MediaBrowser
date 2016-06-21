@@ -27,6 +27,17 @@ namespace MediaBrowser
             PopulateForm();
         }
 
+        private void btnSearch_Click(object sender, EventArgs e)
+        {
+            FormSearch s = new FormSearch(currentVideo);
+            var result = s.ShowDialog();
+            if (result == System.Windows.Forms.DialogResult.OK)
+            {
+                currentVideo = s.searchVideo;
+                PopulateForm();
+            }
+        }
+
         private void btnChangePoster_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
@@ -107,5 +118,6 @@ namespace MediaBrowser
             }
             return output;
         }
+
     }
 }

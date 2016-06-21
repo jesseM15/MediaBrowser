@@ -10,3 +10,4 @@ C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowser\obj\Debug\MediaBrows
 C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowser\obj\Debug\MediaBrowser.FormSourceDirectories.resources
 C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowser\obj\Debug\MediaBrowser.FormEditVideoData.resources
 C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowser\obj\Debug\MediaBrowser.FormUnresolvedVideos.resources
+C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowser\obj\Debug\MediaBrowser.FormSearch.resources

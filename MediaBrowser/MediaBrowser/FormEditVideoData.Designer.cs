@@ -49,6 +49,7 @@
             this.lblLength = new System.Windows.Forms.Label();
             this.lblPoster = new System.Windows.Forms.Label();
             this.picPoster = new System.Windows.Forms.PictureBox();
+            this.btnSearch = new System.Windows.Forms.Button();
             this.btnChangePoster = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
@@ -227,12 +228,22 @@
             this.picPoster.TabIndex = 20;
             this.picPoster.TabStop = false;
             // 
+            // btnSearch
+            // 
+            this.btnSearch.Location = new System.Drawing.Point(15, 344);
+            this.btnSearch.Name = "btnSearch";
+            this.btnSearch.Size = new System.Drawing.Size(103, 23);
+            this.btnSearch.TabIndex = 21;
+            this.btnSearch.Text = "Search OMDB";
+            this.btnSearch.UseVisualStyleBackColor = true;
+            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
+            // 
             // btnChangePoster
             // 
             this.btnChangePoster.Location = new System.Drawing.Point(349, 315);
             this.btnChangePoster.Name = "btnChangePoster";
             this.btnChangePoster.Size = new System.Drawing.Size(103, 23);
-            this.btnChangePoster.TabIndex = 21;
+            this.btnChangePoster.TabIndex = 22;
             this.btnChangePoster.Text = "Change Poster";
             this.btnChangePoster.UseVisualStyleBackColor = true;
             this.btnChangePoster.Click += new System.EventHandler(this.btnChangePoster_Click);
@@ -242,7 +253,7 @@
             this.btnCancel.Location = new System.Drawing.Point(296, 344);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
-            this.btnCancel.TabIndex = 22;
+            this.btnCancel.TabIndex = 23;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
@@ -252,7 +263,7 @@
             this.btnOK.Location = new System.Drawing.Point(377, 344);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
-            this.btnOK.TabIndex = 23;
+            this.btnOK.TabIndex = 24;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
@@ -265,6 +276,7 @@
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnChangePoster);
+            this.Controls.Add(this.btnSearch);
             this.Controls.Add(this.picPoster);
             this.Controls.Add(this.lblPoster);
             this.Controls.Add(this.txtLength);
@@ -318,6 +330,7 @@
         private System.Windows.Forms.Label lblLength;
         private System.Windows.Forms.Label lblPoster;
         private System.Windows.Forms.PictureBox picPoster;
+        private System.Windows.Forms.Button btnSearch;
         private System.Windows.Forms.Button btnChangePoster;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnOK;
