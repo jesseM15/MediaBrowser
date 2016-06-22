@@ -136,6 +136,7 @@ namespace MediaBrowser
                 DB.AddSourceDirectory(directory);
                 SourceDirectories.Add(directory);
             }
+            Initialize();
         }
 
         // returns a list of file paths for every video in the source directories

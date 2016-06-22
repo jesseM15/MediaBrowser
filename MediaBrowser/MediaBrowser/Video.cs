@@ -114,13 +114,13 @@ namespace MediaBrowser
             _plot = "";
         }
 
-        public void DownloadVideoData(string fileName)
+        public void DownloadVideoData(string searchTitle, string searchYear="")
         {
             try
             {
-                Logger.Info("Media image not found for " + fileName + ". Attempting download...", "Video.cs");
+                Logger.Info("Media image not found for " + searchTitle + ". Attempting download...", "Video.cs");
 
-                XDocument doc = QueryOMDBAPI(fileName);
+                XDocument doc = QueryOMDBAPI(searchTitle, searchYear);
                 string imageURL = doc.Root.Element("movie").Attribute("poster").Value;
                 this.Title = doc.Root.Element("movie").Attribute("title").Value;
                 string year = doc.Root.Element("movie").Attribute("year").Value;
@@ -156,7 +156,7 @@ namespace MediaBrowser
                 {
                     this.MediaImage = poster;
                     SaveImage();
-                    Logger.Info("Media image download successful for " + fileName + ".", "Video.cs");
+                    Logger.Info("Media image download successful for " + searchTitle + ".", "Video.cs");
                 }
             }
             catch (Exception ex)
@@ -165,9 +165,9 @@ namespace MediaBrowser
             }
         }
 
-        private XDocument QueryOMDBAPI(string title)
+        private XDocument QueryOMDBAPI(string title, string year="")
         {
-            string requestURL = "http://www.omdbapi.com/?t=" + title + "&plot=full&r=xml";
+            string requestURL = "http://www.omdbapi.com/?t=" + title + "&y=" + year + "&plot=full&r=xml";
             WebClient wc = new WebClient();
             return XDocument.Parse(wc.DownloadString(requestURL));
         }

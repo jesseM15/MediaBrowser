@@ -27,7 +27,7 @@ namespace MediaBrowser
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            searchVideo.DownloadVideoData(txtTitle.Text);
+            searchVideo.DownloadVideoData(txtTitle.Text, txtYear.Text);
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
