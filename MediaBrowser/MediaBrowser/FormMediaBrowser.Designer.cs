@@ -49,6 +49,8 @@
             this.lblTitle = new System.Windows.Forms.Label();
             this.stsMain = new System.Windows.Forms.StatusStrip();
             this.slbUnresolvedVideos = new System.Windows.Forms.ToolStripStatusLabel();
+            this.sprGatheringVideoData = new System.Windows.Forms.ToolStripProgressBar();
+            this.slbRightAlign = new System.Windows.Forms.ToolStripStatusLabel();
             this.mnuMain.SuspendLayout();
             this.pnlFilter.SuspendLayout();
             this.pnlVideoInfo.SuspendLayout();
@@ -251,7 +253,9 @@
             // stsMain
             // 
             this.stsMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.slbUnresolvedVideos});
+            this.slbRightAlign,
+            this.slbUnresolvedVideos,
+            this.sprGatheringVideoData});
             this.stsMain.Location = new System.Drawing.Point(0, 439);
             this.stsMain.Name = "stsMain";
             this.stsMain.Size = new System.Drawing.Size(862, 22);
@@ -268,6 +272,17 @@
             this.slbUnresolvedVideos.Text = "toolStripStatusLabel1";
             this.slbUnresolvedVideos.Click += new System.EventHandler(this.slbUnresolvedVideos_Click);
             // 
+            // sprGatheringVideoData
+            // 
+            this.sprGatheringVideoData.Name = "sprGatheringVideoData";
+            this.sprGatheringVideoData.Size = new System.Drawing.Size(100, 16);
+            // 
+            // slbRightAlign
+            // 
+            this.slbRightAlign.Name = "slbRightAlign";
+            this.slbRightAlign.Size = new System.Drawing.Size(478, 17);
+            this.slbRightAlign.Spring = true;
+            // 
             // FormMediaBrowser
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -282,6 +297,7 @@
             this.Name = "FormMediaBrowser";
             this.Text = "Media Browser";
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.Shown += new System.EventHandler(this.FormMediaBrowser_Shown_1);
             this.mnuMain.ResumeLayout(false);
             this.mnuMain.PerformLayout();
             this.pnlFilter.ResumeLayout(false);
@@ -318,6 +334,8 @@
         private System.Windows.Forms.StatusStrip stsMain;
         private System.Windows.Forms.ToolStripStatusLabel slbUnresolvedVideos;
         private System.Windows.Forms.Button btnEditVideoData;
+        private System.Windows.Forms.ToolStripProgressBar sprGatheringVideoData;
+        private System.Windows.Forms.ToolStripStatusLabel slbRightAlign;
     }
 }
 

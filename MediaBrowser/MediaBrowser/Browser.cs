@@ -20,6 +20,17 @@ namespace MediaBrowser
         private static string _posterImagesPath;
         private Dictionary<string, Bitmap> _posterImages;
 
+        public event Action<int> ProgressChanged;
+
+        private void OnProgressChanged(int progress)
+        {
+            var eh = ProgressChanged;
+            if (eh != null)
+            {
+                eh(progress);
+            }
+        }
+
         public string State
         {
             get { return _state; }
@@ -90,9 +101,6 @@ namespace MediaBrowser
             CreatePosterImagesDirectory();
             GetPosterImages();
             SetBroadCategories();
-
-            PopulateVideos(GetVideoFiles());
-
         }
 
         // shows FormSourceDirectories and adds/removes chosen directories
@@ -140,7 +148,7 @@ namespace MediaBrowser
         }
 
         // returns a list of file paths for every video in the source directories
-        private List<string> GetVideoFiles()
+        public List<string> GetVideoFiles()
         {
             List<string> filePaths = new List<string>();
             foreach (string directory in SourceDirectories)
@@ -150,7 +158,7 @@ namespace MediaBrowser
             return filePaths;
         }
 
-        private void PopulateVideos(List<string> videoFiles)
+        public void PopulateVideos(List<string> videoFiles)
         {
             // iterate through files and assign Media properties
             for (int n = 0; n < videoFiles.Count(); n++)
@@ -195,6 +203,7 @@ namespace MediaBrowser
                     }
                 }
                 Videos.Add(tempVideo);
+                OnProgressChanged(1);
             }
         }
 

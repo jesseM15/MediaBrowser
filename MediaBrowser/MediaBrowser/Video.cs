@@ -119,7 +119,7 @@ namespace MediaBrowser
             try
             {
                 Logger.Info("Media image not found for " + searchTitle + ". Attempting download...", "Video.cs");
-
+                
                 XDocument doc = QueryOMDBAPI(searchTitle, searchYear);
                 string imageURL = doc.Root.Element("movie").Attribute("poster").Value;
                 this.Title = doc.Root.Element("movie").Attribute("title").Value;
@@ -165,7 +165,7 @@ namespace MediaBrowser
             }
         }
 
-        private XDocument QueryOMDBAPI(string title, string year="")
+        private XDocument QueryOMDBAPI(string title, string year)
         {
             string requestURL = "http://www.omdbapi.com/?t=" + title + "&y=" + year + "&plot=full&r=xml";
             WebClient wc = new WebClient();

@@ -19,11 +19,17 @@ namespace MediaBrowser
         public FormMediaBrowser()
         {
             InitializeComponent();
+            browser.ProgressChanged += ProgressChanged;
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             InitializeForm();
+        }
+
+        private void FormMediaBrowser_Shown_1(object sender, EventArgs e)
+        {
+            InitializeVideos();
         }
 
         private void InitializeForm()
@@ -39,6 +45,13 @@ namespace MediaBrowser
                 " unresolved videos";
         }
 
+        private void InitializeVideos()
+        {
+            List<string> videoFiles = browser.GetVideoFiles();
+            sprGatheringVideoData.Maximum = videoFiles.Count;
+            browser.PopulateVideos(videoFiles);
+        }
+
         private void sourceDirectoriesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             browser.ShowSourceDirectoryDialog();
@@ -49,7 +62,7 @@ namespace MediaBrowser
             if (lbxBroad.SelectedItem.Equals("All"))
             {
                 lbxNarrow.DataSource = new List<Video>();
-                UpdateListView("All", "All");
+                UpdateListView("All");
             }
             else if (lbxBroad.SelectedItem.Equals("Year"))
             {
@@ -82,7 +95,7 @@ namespace MediaBrowser
             UpdateListView(lbxBroad.SelectedItem.ToString(), lbxNarrow.SelectedItem.ToString());
         }
 
-        private void UpdateListView(string broad, string narrow)
+        private void UpdateListView(string broad, string narrow="")
         {
             lvwMedia.Items.Clear();
             imageList.Images.Clear();
@@ -114,45 +127,28 @@ namespace MediaBrowser
                     lblYear.Text = "Year: " + video.Year;
                     lblLength.Text = "Run Time: " + video.Length;
                     lblRating.Text = "Rating: " + video.Rating;
-                    rtxGenre.Text = "Genres: ";
-                    for (int g = 0; g < video.Genre.Count; g++)
-                    {
-                        rtxGenre.Text += video.Genre[g];
-                        if (g + 1 != video.Genre.Count)
-                        {
-                            rtxGenre.Text += ",";
-                        }
-                    }
-                    rtxDirector.Text = "Directors: ";
-                    for (int d = 0; d < video.Director.Count; d++)
-                    {
-                        rtxDirector.Text += video.Director[d];
-                        if (d + 1 != video.Director.Count)
-                        {
-                            rtxDirector.Text += ",";
-                        }
-                    }
-                    rtxWriter.Text = "Writers: ";
-                    for (int w = 0; w < video.Writer.Count; w++)
-                    {
-                        rtxWriter.Text += video.Writer[w];
-                        if (w + 1 != video.Writer.Count)
-                        {
-                            rtxWriter.Text += ",";
-                        }
-                    }
-                    rtxActor.Text = "Actors: ";
-                    for (int a = 0; a < video.Actor.Count; a++)
-                    {
-                        rtxActor.Text += video.Actor[a];
-                        if (a + 1 != video.Actor.Count)
-                        {
-                            rtxActor.Text += ",";
-                        }
-                    }
+                    rtxGenre.Text = "Genres: " + CreateCommaSeperatedString(video.Genre);
+                    rtxDirector.Text = "Directors: " + CreateCommaSeperatedString(video.Director);
+                    rtxWriter.Text = "Writers: " + CreateCommaSeperatedString(video.Writer);
+                    rtxActor.Text = "Actors: " + CreateCommaSeperatedString(video.Actor);
                     rtxPlot.Text = video.Plot;
                 }
             }
+        }
+
+        // redundant method like this in FormEditVideoData
+        private string CreateCommaSeperatedString(List<string> input)
+        {
+            string output = "";
+            for (int i = 0; i < input.Count; i++)
+            {
+                output += input[i];
+                if (i + 1 != input.Count)
+                {
+                    output += ",";
+                }
+            }
+            return output;
         }
 
         private void btnEditVideoData_Click(object sender, EventArgs e)
@@ -190,7 +186,7 @@ namespace MediaBrowser
                         DB.UpdateVideo(evd.currentVideo);
                         if (lbxBroad.SelectedItem.ToString().Equals("All"))
                         {
-                            UpdateListView("All", "All");
+                            UpdateListView("All");
                         }
                         else
                         {
@@ -213,6 +209,16 @@ namespace MediaBrowser
 
             }
         }
+
+        private void ProgressChanged(int progress)
+        {
+            sprGatheringVideoData.Value += progress;
+            if (sprGatheringVideoData.Value >= sprGatheringVideoData.Maximum)
+            {
+                sprGatheringVideoData.ProgressBar.Hide();
+            }
+        }
+
 
     }
 }
