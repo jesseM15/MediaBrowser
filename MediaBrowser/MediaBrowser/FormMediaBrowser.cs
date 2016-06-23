@@ -14,7 +14,8 @@ namespace MediaBrowser
     {
         public static Browser browser = new Browser();
         private List<Video> currentVideos = new List<Video>();
-        ImageList imageList = new ImageList();
+        ImageList imageListSmall = new ImageList();
+        ImageList imageListLarge = new ImageList();
 
         public FormMediaBrowser()
         {
@@ -27,7 +28,7 @@ namespace MediaBrowser
             InitializeForm();
         }
 
-        private void FormMediaBrowser_Shown_1(object sender, EventArgs e)
+        private void FormMediaBrowser_Shown(object sender, EventArgs e)
         {
             InitializeVideos();
         }
@@ -36,9 +37,11 @@ namespace MediaBrowser
         {
             browser.Initialize();
             lbxBroad.DataSource = browser.BroadCategories;
+            CreateDetailViewColumns();
             lvwMedia.View = View.LargeIcon;
             lvwMedia.MultiSelect = false;
-            imageList.ImageSize = new Size(50, 100);
+            imageListSmall.ImageSize = new Size(20,20);
+            imageListLarge.ImageSize = new Size(50, 100);
             lbxBroad.SetSelected(0, true);
             pnlVideoInfo.Hide();
             slbUnresolvedVideos.Text = browser.UnresolvedVideos.Count.ToString() +
@@ -98,17 +101,55 @@ namespace MediaBrowser
         private void UpdateListView(string broad, string narrow="")
         {
             lvwMedia.Items.Clear();
-            imageList.Images.Clear();
+            imageListLarge.Images.Clear();
             currentVideos = browser.GetCurrentVideos(broad, narrow);
             for (int v = 0; v < currentVideos.Count; v++)
             {
-                imageList.Images.Add(currentVideos[v].MediaImage);
+                imageListSmall.Images.Add(currentVideos[v].MediaImage);
+                imageListLarge.Images.Add(currentVideos[v].MediaImage);
                 ListViewItem item = new ListViewItem();
                 item.ImageIndex = v;
                 item.Text = currentVideos[v].Title;
                 lvwMedia.Items.Add(item);
+                ListViewItem.ListViewSubItem subitem = new ListViewItem.ListViewSubItem();
+                subitem.Text = currentVideos[v].Year;
+                item.SubItems.Add(subitem);
+                subitem = new ListViewItem.ListViewSubItem();
+                subitem.Text = CreateCommaSeperatedString(currentVideos[v].Genre);
+                item.SubItems.Add(subitem);
+                subitem = new ListViewItem.ListViewSubItem();
+                subitem.Text = currentVideos[v].Rating;
+                item.SubItems.Add(subitem);
+                subitem = new ListViewItem.ListViewSubItem();
+                subitem.Text = currentVideos[v].Length;
+                item.SubItems.Add(subitem);
             }
-            lvwMedia.LargeImageList = imageList;
+            lvwMedia.SmallImageList = imageListSmall;
+            lvwMedia.LargeImageList = imageListLarge;
+        }
+
+        private void CreateDetailViewColumns()
+        {
+            ColumnHeader videoHeader = new ColumnHeader();
+            videoHeader.Text = "Video";
+            videoHeader.Width = 150;
+            lvwMedia.Columns.Add(videoHeader);
+            ColumnHeader yearHeader = new ColumnHeader();
+            yearHeader.Text = "Year";
+            yearHeader.Width = 50;
+            lvwMedia.Columns.Add(yearHeader);
+            ColumnHeader genreHeader = new ColumnHeader();
+            genreHeader.Text = "Genres";
+            genreHeader.Width = 160;
+            lvwMedia.Columns.Add(genreHeader);
+            ColumnHeader ratingHeader = new ColumnHeader();
+            ratingHeader.Text = "Rating";
+            ratingHeader.Width = 50;
+            lvwMedia.Columns.Add(ratingHeader);
+            ColumnHeader lengthHeader = new ColumnHeader();
+            lengthHeader.Text = "Run Time";
+            lengthHeader.Width = 80;
+            lvwMedia.Columns.Add(lengthHeader);
         }
 
         private void lvwMedia_SelectedIndexChanged(object sender, EventArgs e)
@@ -217,6 +258,26 @@ namespace MediaBrowser
             {
                 sprGatheringVideoData.ProgressBar.Hide();
             }
+        }
+
+        private void largeIconsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            lvwMedia.View = View.LargeIcon;
+        }
+
+        private void smallIconsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            lvwMedia.View = View.SmallIcon;
+        }
+
+        private void listToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            lvwMedia.View = View.List;
+        }
+
+        private void detailsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            lvwMedia.View = View.Details;
         }
 
 
