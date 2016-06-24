@@ -56,6 +56,7 @@
             this.smallIconsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.detailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.bgwPopulateVideos = new System.ComponentModel.BackgroundWorker();
             this.mnuMain.SuspendLayout();
             this.pnlFilter.SuspendLayout();
             this.pnlVideoInfo.SuspendLayout();
@@ -328,6 +329,13 @@
             this.detailsToolStripMenuItem.Text = "Details";
             this.detailsToolStripMenuItem.Click += new System.EventHandler(this.detailsToolStripMenuItem_Click);
             // 
+            // bgwPopulateVideos
+            // 
+            this.bgwPopulateVideos.WorkerReportsProgress = true;
+            this.bgwPopulateVideos.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgwPopulateVideos_DoWork);
+            this.bgwPopulateVideos.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bgwPopulateVideos_ProgressChanged);
+            this.bgwPopulateVideos.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgwPopulateVideos_RunWorkerCompleted);
+            // 
             // FormMediaBrowser
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -386,6 +394,7 @@
         private System.Windows.Forms.ToolStripMenuItem smallIconsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem listToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem detailsToolStripMenuItem;
+        private System.ComponentModel.BackgroundWorker bgwPopulateVideos;
     }
 }
 

@@ -20,7 +20,7 @@ namespace MediaBrowser
         public FormMediaBrowser()
         {
             InitializeComponent();
-            browser.ProgressChanged += ProgressChanged;
+            browser.SourceDirectoriesUpdated += SourceDirectoriesUpdated;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -44,15 +44,15 @@ namespace MediaBrowser
             imageListLarge.ImageSize = new Size(50, 100);
             lbxBroad.SetSelected(0, true);
             pnlVideoInfo.Hide();
-            slbUnresolvedVideos.Text = browser.UnresolvedVideos.Count.ToString() +
-                " unresolved videos";
         }
 
         private void InitializeVideos()
         {
             List<string> videoFiles = browser.GetVideoFiles();
-            sprGatheringVideoData.Maximum = videoFiles.Count;
-            browser.PopulateVideos(videoFiles);
+            sprGatheringVideoData.ProgressBar.Show();
+            slbUnresolvedVideos.IsLink = false;
+            slbUnresolvedVideos.Text = "Gathering Video Data...";
+            bgwPopulateVideos.RunWorkerAsync(videoFiles);
         }
 
         private void sourceDirectoriesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -243,20 +243,12 @@ namespace MediaBrowser
 
         private void slbUnresolvedVideos_Click(object sender, EventArgs e)
         {
-            FormUnresolvedVideos uv = new FormUnresolvedVideos(browser.UnresolvedVideos);
-            var result = uv.ShowDialog();
-            if (result == System.Windows.Forms.DialogResult.OK)
+            FormUnresolvedVideos uv = new FormUnresolvedVideos(DB.GetAllUnresolvedVideos());
+            uv.Show();
+            if (uv.IsDisposed)
             {
-
-            }
-        }
-
-        private void ProgressChanged(int progress)
-        {
-            sprGatheringVideoData.Value += progress;
-            if (sprGatheringVideoData.Value >= sprGatheringVideoData.Maximum)
-            {
-                sprGatheringVideoData.ProgressBar.Hide();
+                slbUnresolvedVideos.Text = DB.GetAllUnresolvedVideos().Count.ToString() +
+                " unresolved videos";
             }
         }
 
@@ -278,6 +270,36 @@ namespace MediaBrowser
         private void detailsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             lvwMedia.View = View.Details;
+        }
+
+        private void bgwPopulateVideos_DoWork(object sender, DoWorkEventArgs e)
+        {
+            List<string> videoFiles = (List<string>)e.Argument;
+            //browser.PopulateVideos(videoFiles);
+            for (int n = 0; n < videoFiles.Count; n++)
+            {
+                browser.PopulateVideo(videoFiles[n]);
+                double progress = (double)n / videoFiles.Count * 100;
+                bgwPopulateVideos.ReportProgress((int)progress);
+            }
+        }
+
+        private void bgwPopulateVideos_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            sprGatheringVideoData.Value = e.ProgressPercentage;
+        }
+
+        private void bgwPopulateVideos_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            sprGatheringVideoData.ProgressBar.Hide();
+            slbUnresolvedVideos.IsLink = true;
+            slbUnresolvedVideos.Text = DB.GetAllUnresolvedVideos().Count.ToString() +
+                " unresolved videos";
+        }
+
+        private void SourceDirectoriesUpdated(bool updated)
+        {
+            InitializeVideos();
         }
 
 
