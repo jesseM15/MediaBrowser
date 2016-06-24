@@ -1,9 +1,0 @@
-c:\users\j\Documents\MediaBrowser\BackgroundWorkerTutorial\BackgroundWorkerTutorial\bin\Debug\BackgroundWorkerTutorial.exe.config
-c:\users\j\Documents\MediaBrowser\BackgroundWorkerTutorial\BackgroundWorkerTutorial\bin\Debug\BackgroundWorkerTutorial.exe
-c:\users\j\Documents\MediaBrowser\BackgroundWorkerTutorial\BackgroundWorkerTutorial\bin\Debug\BackgroundWorkerTutorial.pdb
-c:\users\j\Documents\MediaBrowser\BackgroundWorkerTutorial\BackgroundWorkerTutorial\obj\Debug\BackgroundWorkerTutorial.csprojResolveAssemblyReference.cache
-c:\users\j\Documents\MediaBrowser\BackgroundWorkerTutorial\BackgroundWorkerTutorial\obj\Debug\BackgroundWorkerTutorial.Form1.resources
-c:\users\j\Documents\MediaBrowser\BackgroundWorkerTutorial\BackgroundWorkerTutorial\obj\Debug\BackgroundWorkerTutorial.Properties.Resources.resources
-c:\users\j\Documents\MediaBrowser\BackgroundWorkerTutorial\BackgroundWorkerTutorial\obj\Debug\BackgroundWorkerTutorial.csproj.GenerateResource.Cache
-c:\users\j\Documents\MediaBrowser\BackgroundWorkerTutorial\BackgroundWorkerTutorial\obj\Debug\BackgroundWorkerTutorial.exe
-c:\users\j\Documents\MediaBrowser\BackgroundWorkerTutorial\BackgroundWorkerTutorial\obj\Debug\BackgroundWorkerTutorial.pdb

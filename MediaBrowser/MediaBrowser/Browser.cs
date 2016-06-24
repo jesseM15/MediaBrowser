@@ -15,18 +15,19 @@ namespace MediaBrowser
         private string _state;
         private List<string> _sourceDirectories;
         private List<Video> _videos;
+        private List<Video> _unresolvedVideos;
         private List<string> _broadCategories;
         private static string _posterImagesPath;
         private Dictionary<string, Bitmap> _posterImages;
 
-        public event Action<bool> SourceDirectoriesUpdated;
+        public event Action<int> ProgressChanged;
 
-        private void OnSourceDirectoryUpdate(bool updated)
+        private void OnProgressChanged(int progress)
         {
-            var eh = SourceDirectoriesUpdated;
+            var eh = ProgressChanged;
             if (eh != null)
             {
-                eh(updated);
+                eh(progress);
             }
         }
 
@@ -46,6 +47,12 @@ namespace MediaBrowser
         {
             get { return _videos; }
             set { _videos = value; }
+        }
+
+        public List<Video> UnresolvedVideos
+        {
+            get { return _unresolvedVideos; }
+            set { _unresolvedVideos = value; }
         }
 
         public List<string> BroadCategories
@@ -74,6 +81,7 @@ namespace MediaBrowser
             _broadCategories = new List<string>();
             _posterImagesPath = Path.GetDirectoryName(Application.ExecutablePath) + @"\PosterImages\";
             _posterImages = new Dictionary<string, Bitmap>();
+            _unresolvedVideos = new List<Video>();
         }
 
         // creates the database/tables and populates Videos
@@ -87,6 +95,8 @@ namespace MediaBrowser
             DB.CreateWriterTable();
             DB.CreateActorTable();
             SourceDirectories = DB.GetSourceDirectories();
+
+            UnresolvedVideos = DB.GetAllUnresolvedVideos();
 
             CreatePosterImagesDirectory();
             GetPosterImages();
@@ -134,7 +144,7 @@ namespace MediaBrowser
                 DB.AddSourceDirectory(directory);
                 SourceDirectories.Add(directory);
             }
-            OnSourceDirectoryUpdate(true);
+            Initialize();
         }
 
         // returns a list of file paths for every video in the source directories
@@ -148,46 +158,52 @@ namespace MediaBrowser
             return filePaths;
         }
 
-        public void PopulateVideo(string filePath)
+        public void PopulateVideos(List<string> videoFiles)
         {
-            Video tempVideo = DB.GetVideoData(filePath);
-            if (tempVideo != null)
+            // iterate through files and assign Media properties
+            for (int n = 0; n < videoFiles.Count(); n++)
             {
-                // Database already contains video
-                try
+                Video tempVideo = DB.GetVideoData(videoFiles[n]);
+                if (tempVideo != null)
                 {
-                    tempVideo.MediaImage = new Bitmap(tempVideo.MediaImagePath);
+                    // Database already contains video
+                    try
+                    {
+                        tempVideo.MediaImage = new Bitmap(tempVideo.MediaImagePath);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error(ex.ToString(), "Browser.cs");
+                    }
                 }
-                catch (Exception ex)
+                else
                 {
-                    Logger.Error(ex.ToString(), "Browser.cs");
-                }
-            }
-            else
-            {
-                // Video not in database, data needs to be gathered
-                tempVideo = new Video();
-                tempVideo.FilePath = filePath;
-                tempVideo.FileName = Path.GetFileNameWithoutExtension(filePath);
+                    // Video not in database, data needs to be gathered
+                    tempVideo = new Video();
+                    tempVideo.FilePath = videoFiles[n];
+                    tempVideo.FileName = Path.GetFileNameWithoutExtension(videoFiles[n]);
 
-                tempVideo.DownloadVideoData(tempVideo.FileName);
-                int primaryKey = DB.AddVideo(tempVideo);
-                foreach (string genre in tempVideo.Genre)
-                {
-                    DB.AddGenre(genre, primaryKey);
+                    tempVideo.DownloadVideoData(tempVideo.FileName);
+                    int primaryKey = DB.AddVideo(tempVideo);
+                    foreach (string genre in tempVideo.Genre)
+                    {
+                        DB.AddGenre(genre, primaryKey);
+                    }
+                    foreach (string director in tempVideo.Director)
+                    {
+                        DB.AddDirector(director, primaryKey);
+                    }
+                    foreach (string writer in tempVideo.Writer)
+                    {
+                        DB.AddWriter(writer, primaryKey);
+                    }
+                    foreach (string actor in tempVideo.Actor)
+                    {
+                        DB.AddActor(actor, primaryKey);
+                    }
                 }
-                foreach (string director in tempVideo.Director)
-                {
-                    DB.AddDirector(director, primaryKey);
-                }
-                foreach (string writer in tempVideo.Writer)
-                {
-                    DB.AddWriter(writer, primaryKey);
-                }
-                foreach (string actor in tempVideo.Actor)
-                {
-                    DB.AddActor(actor, primaryKey);
-                }
+                Videos.Add(tempVideo);
+                OnProgressChanged(1);
             }
         }
 
@@ -203,17 +219,10 @@ namespace MediaBrowser
         // populate PosterImages with paths and images
         private void GetPosterImages()
         {
-            try
+            List<string> posters = new List<string>(Directory.GetFiles(PosterImagesPath));
+            foreach (string poster in posters)
             {
-                List<string> posters = new List<string>(Directory.GetFiles(PosterImagesPath));
-                foreach (string poster in posters)
-                {
-                    PosterImages.Add(poster, new Bitmap(poster));
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex.Message, "Browser.cs");
+                PosterImages.Add(poster, new Bitmap(poster));
             }
         }
 
