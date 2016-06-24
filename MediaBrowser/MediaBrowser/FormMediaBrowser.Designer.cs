@@ -31,6 +31,11 @@
             this.mnuMain = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sourceDirectoriesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.largeIconsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.smallIconsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.listToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.detailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlFilter = new System.Windows.Forms.Panel();
             this.lbxNarrow = new System.Windows.Forms.ListBox();
             this.lbxBroad = new System.Windows.Forms.ListBox();
@@ -51,11 +56,7 @@
             this.slbRightAlign = new System.Windows.Forms.ToolStripStatusLabel();
             this.slbUnresolvedVideos = new System.Windows.Forms.ToolStripStatusLabel();
             this.sprGatheringVideoData = new System.Windows.Forms.ToolStripProgressBar();
-            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.largeIconsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.smallIconsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.listToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.detailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.bgwPopulateVideos = new System.ComponentModel.BackgroundWorker();
             this.mnuMain.SuspendLayout();
             this.pnlFilter.SuspendLayout();
             this.pnlVideoInfo.SuspendLayout();
@@ -88,6 +89,45 @@
             this.sourceDirectoriesToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.sourceDirectoriesToolStripMenuItem.Text = "Source Directories";
             this.sourceDirectoriesToolStripMenuItem.Click += new System.EventHandler(this.sourceDirectoriesToolStripMenuItem_Click);
+            // 
+            // viewToolStripMenuItem
+            // 
+            this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.largeIconsToolStripMenuItem,
+            this.smallIconsToolStripMenuItem,
+            this.listToolStripMenuItem,
+            this.detailsToolStripMenuItem});
+            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
+            this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.viewToolStripMenuItem.Text = "View";
+            // 
+            // largeIconsToolStripMenuItem
+            // 
+            this.largeIconsToolStripMenuItem.Name = "largeIconsToolStripMenuItem";
+            this.largeIconsToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.largeIconsToolStripMenuItem.Text = "Large Icons";
+            this.largeIconsToolStripMenuItem.Click += new System.EventHandler(this.largeIconsToolStripMenuItem_Click);
+            // 
+            // smallIconsToolStripMenuItem
+            // 
+            this.smallIconsToolStripMenuItem.Name = "smallIconsToolStripMenuItem";
+            this.smallIconsToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.smallIconsToolStripMenuItem.Text = "Small Icons";
+            this.smallIconsToolStripMenuItem.Click += new System.EventHandler(this.smallIconsToolStripMenuItem_Click);
+            // 
+            // listToolStripMenuItem
+            // 
+            this.listToolStripMenuItem.Name = "listToolStripMenuItem";
+            this.listToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.listToolStripMenuItem.Text = "List";
+            this.listToolStripMenuItem.Click += new System.EventHandler(this.listToolStripMenuItem_Click);
+            // 
+            // detailsToolStripMenuItem
+            // 
+            this.detailsToolStripMenuItem.Name = "detailsToolStripMenuItem";
+            this.detailsToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.detailsToolStripMenuItem.Text = "Details";
+            this.detailsToolStripMenuItem.Click += new System.EventHandler(this.detailsToolStripMenuItem_Click);
             // 
             // pnlFilter
             // 
@@ -289,44 +329,12 @@
             this.sprGatheringVideoData.Name = "sprGatheringVideoData";
             this.sprGatheringVideoData.Size = new System.Drawing.Size(100, 16);
             // 
-            // viewToolStripMenuItem
+            // bgwPopulateVideos
             // 
-            this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.largeIconsToolStripMenuItem,
-            this.smallIconsToolStripMenuItem,
-            this.listToolStripMenuItem,
-            this.detailsToolStripMenuItem});
-            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
-            this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-            this.viewToolStripMenuItem.Text = "View";
-            // 
-            // largeIconsToolStripMenuItem
-            // 
-            this.largeIconsToolStripMenuItem.Name = "largeIconsToolStripMenuItem";
-            this.largeIconsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.largeIconsToolStripMenuItem.Text = "Large Icons";
-            this.largeIconsToolStripMenuItem.Click += new System.EventHandler(this.largeIconsToolStripMenuItem_Click);
-            // 
-            // smallIconsToolStripMenuItem
-            // 
-            this.smallIconsToolStripMenuItem.Name = "smallIconsToolStripMenuItem";
-            this.smallIconsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.smallIconsToolStripMenuItem.Text = "Small Icons";
-            this.smallIconsToolStripMenuItem.Click += new System.EventHandler(this.smallIconsToolStripMenuItem_Click);
-            // 
-            // listToolStripMenuItem
-            // 
-            this.listToolStripMenuItem.Name = "listToolStripMenuItem";
-            this.listToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.listToolStripMenuItem.Text = "List";
-            this.listToolStripMenuItem.Click += new System.EventHandler(this.listToolStripMenuItem_Click);
-            // 
-            // detailsToolStripMenuItem
-            // 
-            this.detailsToolStripMenuItem.Name = "detailsToolStripMenuItem";
-            this.detailsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.detailsToolStripMenuItem.Text = "Details";
-            this.detailsToolStripMenuItem.Click += new System.EventHandler(this.detailsToolStripMenuItem_Click);
+            this.bgwPopulateVideos.WorkerReportsProgress = true;
+            this.bgwPopulateVideos.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgwPopulateVideos_DoWork);
+            this.bgwPopulateVideos.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bgwPopulateVideos_ProgressChanged);
+            this.bgwPopulateVideos.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgwPopulateVideos_RunWorkerCompleted);
             // 
             // FormMediaBrowser
             // 
@@ -386,6 +394,7 @@
         private System.Windows.Forms.ToolStripMenuItem smallIconsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem listToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem detailsToolStripMenuItem;
+        private System.ComponentModel.BackgroundWorker bgwPopulateVideos;
     }
 }
 
