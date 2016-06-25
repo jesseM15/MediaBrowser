@@ -115,7 +115,7 @@ namespace MediaBrowser
                 subitem.Text = currentVideos[v].Year;
                 item.SubItems.Add(subitem);
                 subitem = new ListViewItem.ListViewSubItem();
-                subitem.Text = CreateCommaSeperatedString(currentVideos[v].Genre);
+                subitem.Text = ListHelper.CreateCommaSeperatedString(currentVideos[v].Genre);
                 item.SubItems.Add(subitem);
                 subitem = new ListViewItem.ListViewSubItem();
                 subitem.Text = currentVideos[v].Rating;
@@ -168,28 +168,13 @@ namespace MediaBrowser
                     lblYear.Text = "Year: " + video.Year;
                     lblLength.Text = "Run Time: " + video.Length;
                     lblRating.Text = "Rating: " + video.Rating;
-                    rtxGenre.Text = "Genres: " + CreateCommaSeperatedString(video.Genre);
-                    rtxDirector.Text = "Directors: " + CreateCommaSeperatedString(video.Director);
-                    rtxWriter.Text = "Writers: " + CreateCommaSeperatedString(video.Writer);
-                    rtxActor.Text = "Actors: " + CreateCommaSeperatedString(video.Actor);
+                    rtxGenre.Text = "Genres: " + ListHelper.CreateCommaSeperatedString(video.Genre);
+                    rtxDirector.Text = "Directors: " + ListHelper.CreateCommaSeperatedString(video.Director);
+                    rtxWriter.Text = "Writers: " + ListHelper.CreateCommaSeperatedString(video.Writer);
+                    rtxActor.Text = "Actors: " + ListHelper.CreateCommaSeperatedString(video.Actor);
                     rtxPlot.Text = video.Plot;
                 }
             }
-        }
-
-        // redundant method like this in FormEditVideoData
-        private string CreateCommaSeperatedString(List<string> input)
-        {
-            string output = "";
-            for (int i = 0; i < input.Count; i++)
-            {
-                output += input[i];
-                if (i + 1 != input.Count)
-                {
-                    output += ",";
-                }
-            }
-            return output;
         }
 
         private void btnEditVideoData_Click(object sender, EventArgs e)

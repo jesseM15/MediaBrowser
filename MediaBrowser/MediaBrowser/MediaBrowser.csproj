@@ -81,6 +81,7 @@
     <Compile Include="FormSourceDirectories.Designer.cs">
       <DependentUpon>FormSourceDirectories.cs</DependentUpon>
     </Compile>
+    <Compile Include="ListHelper.cs" />
     <Compile Include="Video.cs" />
     <EmbeddedResource Include="FormEditVideoData.resx">
       <DependentUpon>FormEditVideoData.cs</DependentUpon>

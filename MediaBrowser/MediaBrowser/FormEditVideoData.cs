@@ -58,28 +58,16 @@ namespace MediaBrowser
             currentVideo.Title = txtTitle.Text;
             currentVideo.Year = txtYear.Text;
             List<string> genres = new List<string>(txtGenres.Text.Split(',').ToList());
-            for (int g = 0; g < genres.Count; g++)
-            {
-                genres[g] = genres[g].Trim();
-            }
+            genres = ListHelper.ListTrim(genres);
             currentVideo.Genre = genres;
             List<string> directors = new List<string>(txtDirectors.Text.Split(',').ToList());
-            for (int d = 0; d < directors.Count; d++)
-            {
-                directors[d] = directors[d].Trim();
-            }
+            directors = ListHelper.ListTrim(directors);
             currentVideo.Director = directors;
             List<string> writers = new List<string>(txtWriters.Text.Split(',').ToList());
-            for (int w = 0; w < writers.Count; w++)
-            {
-                writers[w] = writers[w].Trim();
-            }
+            writers = ListHelper.ListTrim(writers);
             currentVideo.Writer = writers;
             List<string> actors = new List<string>(txtActors.Text.Split(',').ToList());
-            for (int a = 0; a < actors.Count; a++)
-            {
-                actors[a] = actors[a].Trim();
-            }
+            actors = ListHelper.ListTrim(actors);
             currentVideo.Actor = actors;
             currentVideo.Plot = txtPlot.Text;
             currentVideo.Length = txtLength.Text;
@@ -95,28 +83,14 @@ namespace MediaBrowser
             lblFilePath.Text = "Editing data for: " + currentVideo.FilePath;
             txtTitle.Text = currentVideo.Title;
             txtYear.Text = currentVideo.Year;
-            txtGenres.Text = BuildStringFromList(currentVideo.Genre);
-            txtDirectors.Text = BuildStringFromList(currentVideo.Director);
-            txtWriters.Text = BuildStringFromList(currentVideo.Writer);
-            txtActors.Text = BuildStringFromList(currentVideo.Actor);
+            txtGenres.Text = ListHelper.CreateCommaSeperatedString(currentVideo.Genre);
+            txtDirectors.Text = ListHelper.CreateCommaSeperatedString(currentVideo.Director);
+            txtWriters.Text = ListHelper.CreateCommaSeperatedString(currentVideo.Writer);
+            txtActors.Text = ListHelper.CreateCommaSeperatedString(currentVideo.Actor);
             txtPlot.Text = currentVideo.Plot;
             txtRating.Text = currentVideo.Rating;
             txtLength.Text = currentVideo.Length;
             picPoster.Image = currentVideo.MediaImage;
-        }
-
-        private string BuildStringFromList(List<string> input)
-        {
-            string output = "";
-            for (int n = 0; n < input.Count; n++)
-            {
-                output += input[n];
-                if (n + 1 != input.Count)
-                {
-                    output += ",";
-                }
-            }
-            return output;
         }
 
     }
