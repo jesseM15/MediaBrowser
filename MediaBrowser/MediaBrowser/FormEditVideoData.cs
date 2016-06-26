@@ -71,7 +71,7 @@ namespace MediaBrowser
             currentVideo.Actor = actors;
             currentVideo.Plot = txtPlot.Text;
             currentVideo.Length = txtLength.Text;
-            currentVideo.Rating = txtRating.Text;
+            currentVideo.Rating = float.Parse(txtRating.Text, System.Globalization.CultureInfo.InvariantCulture.NumberFormat); 
             currentVideo.MediaImage = new Bitmap(picPoster.Image);
 
             this.DialogResult = DialogResult.OK;
@@ -88,7 +88,7 @@ namespace MediaBrowser
             txtWriters.Text = ListHelper.CreateCommaSeperatedString(currentVideo.Writer);
             txtActors.Text = ListHelper.CreateCommaSeperatedString(currentVideo.Actor);
             txtPlot.Text = currentVideo.Plot;
-            txtRating.Text = currentVideo.Rating;
+            txtRating.Text = currentVideo.Rating.ToString();
             txtLength.Text = currentVideo.Length;
             picPoster.Image = currentVideo.MediaImage;
         }

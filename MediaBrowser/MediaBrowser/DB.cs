@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Globalization;
 
 namespace MediaBrowser
 {
@@ -195,7 +196,7 @@ namespace MediaBrowser
                     "Title varchar(255), " +
                     "Year varchar(4), " +
                     "Length varchar(32), " +
-                    "Rating varchar(32), " +
+                    "Rating float(24), " +
                     "Plot varchar(2048));";
                 _cmd.Connection.Open();
                 _cmd.ExecuteNonQuery();
@@ -239,7 +240,9 @@ namespace MediaBrowser
                     tempVideo.Title = row["Title"].ToString();
                     tempVideo.Year = row["Year"].ToString();
                     tempVideo.Length = row["Length"].ToString();
-                    tempVideo.Rating = row["Rating"].ToString();
+                    tempVideo.Rating = 
+                        float.Parse(row["Rating"].ToString(), 
+                        CultureInfo.InvariantCulture.NumberFormat);
                     tempVideo.Plot = row["Plot"].ToString();
                 }
                 return tempVideo;
@@ -420,7 +423,9 @@ namespace MediaBrowser
                     tempVideo.Title = row["Title"].ToString();
                     tempVideo.Year = row["Year"].ToString();
                     tempVideo.Length = row["Length"].ToString();
-                    tempVideo.Rating = row["Rating"].ToString();
+                    tempVideo.Rating = 
+                        float.Parse(row["Rating"].ToString(), 
+                        CultureInfo.InvariantCulture.NumberFormat);
                     tempVideo.Plot = row["Plot"].ToString();
                     result.Add(tempVideo);
                 }
@@ -464,7 +469,9 @@ namespace MediaBrowser
                     tempVideo.Title = row["Title"].ToString();
                     tempVideo.Year = row["Year"].ToString();
                     tempVideo.Length = row["Length"].ToString();
-                    tempVideo.Rating = row["Rating"].ToString();
+                    tempVideo.Rating = 
+                        float.Parse(row["Rating"].ToString(), 
+                        CultureInfo.InvariantCulture.NumberFormat);
                     tempVideo.Plot = row["Plot"].ToString();
                     result.Add(tempVideo);
                 }
@@ -545,7 +552,9 @@ namespace MediaBrowser
                     tempVideo.Title = row["Title"].ToString();
                     tempVideo.Year = row["Year"].ToString();
                     tempVideo.Length = row["Length"].ToString();
-                    tempVideo.Rating = row["Rating"].ToString();
+                    tempVideo.Rating =
+                        float.Parse(row["Rating"].ToString(),
+                        CultureInfo.InvariantCulture.NumberFormat);
                     tempVideo.Plot = row["Plot"].ToString();
                     result.Add(tempVideo);
                 }
@@ -566,7 +575,7 @@ namespace MediaBrowser
         }
 
         // returns a list of the distinct ratings of all the videos
-        public static List<string> GetDistinctRatings()
+        public static List<float> GetDistinctRatings()
         {
             try
             {
@@ -574,13 +583,13 @@ namespace MediaBrowser
                 _cmd.CommandText =
                     "SELECT DISTINCT Rating FROM Video;";
                 _cmd.Connection.Open();
-                List<string> ratings = new List<string>();
+                List<float> ratings = new List<float>();
                 SqlDataReader reader = _cmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    if (reader.GetString(0) != "")
+                    if (reader.GetFloat(0) != 0)
                     {
-                        ratings.Add(reader.GetString(0));
+                        ratings.Add(reader.GetFloat(0));
                     }
                 }
                 reader.Close();
@@ -625,7 +634,56 @@ namespace MediaBrowser
                     tempVideo.Title = row["Title"].ToString();
                     tempVideo.Year = row["Year"].ToString();
                     tempVideo.Length = row["Length"].ToString();
-                    tempVideo.Rating = row["Rating"].ToString();
+                    tempVideo.Rating =
+                        float.Parse(row["Rating"].ToString(),
+                        CultureInfo.InvariantCulture.NumberFormat);
+                    tempVideo.Plot = row["Plot"].ToString();
+                    result.Add(tempVideo);
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Sql Query Exception: " + ex.Message, "DB.cs");
+                throw new Exception(ex.Message, ex);
+            }
+            finally
+            {
+                if (_cmd.Connection != null)
+                {
+                    _cmd.Connection.Close();
+                }
+            }
+        }
+
+        // returns a list of all videos from a specified rating
+        public static List<Video> GetVideosByFloorRating(float rating)
+        {
+            try
+            {
+                var dataSet = new DataSet();
+                InitCommand();
+                _cmd.CommandText =
+                    "SELECT * FROM Video " +
+                    "WHERE Rating >= @rating AND Rating < @rating+1;";
+                _cmd.Parameters.AddWithValue("@rating", rating);
+                _cmd.Connection.Open();
+                var dataAdapter = new SqlDataAdapter { SelectCommand = _cmd };
+                dataAdapter.Fill(dataSet);
+                List<Video> result = new List<Video>();
+                foreach (DataRow row in dataSet.Tables[0].Rows)
+                {
+                    Video tempVideo = new Video();
+                    tempVideo.VideoID = (int)row["VideoID"];
+                    tempVideo.FilePath = row["FilePath"].ToString();
+                    tempVideo.FileName = row["FileName"].ToString();
+                    tempVideo.MediaImagePath = row["MediaImagePath"].ToString();
+                    tempVideo.Title = row["Title"].ToString();
+                    tempVideo.Year = row["Year"].ToString();
+                    tempVideo.Length = row["Length"].ToString();
+                    tempVideo.Rating =
+                        float.Parse(row["Rating"].ToString(),
+                        CultureInfo.InvariantCulture.NumberFormat);
                     tempVideo.Plot = row["Plot"].ToString();
                     result.Add(tempVideo);
                 }
@@ -792,7 +850,9 @@ namespace MediaBrowser
                     tempVideo.Title = row["Title"].ToString();
                     tempVideo.Year = row["Year"].ToString();
                     tempVideo.Length = row["Length"].ToString();
-                    tempVideo.Rating = row["Rating"].ToString();
+                    tempVideo.Rating =
+                        float.Parse(row["Rating"].ToString(),
+                        CultureInfo.InvariantCulture.NumberFormat);
                     tempVideo.Plot = row["Plot"].ToString();
                     result.Add(tempVideo);
                 }
@@ -993,7 +1053,9 @@ namespace MediaBrowser
                     tempVideo.Title = row["Title"].ToString();
                     tempVideo.Year = row["Year"].ToString();
                     tempVideo.Length = row["Length"].ToString();
-                    tempVideo.Rating = row["Rating"].ToString();
+                    tempVideo.Rating =
+                        float.Parse(row["Rating"].ToString(),
+                        CultureInfo.InvariantCulture.NumberFormat);
                     tempVideo.Plot = row["Plot"].ToString();
                     result.Add(tempVideo);
                 }
@@ -1194,7 +1256,9 @@ namespace MediaBrowser
                     tempVideo.Title = row["Title"].ToString();
                     tempVideo.Year = row["Year"].ToString();
                     tempVideo.Length = row["Length"].ToString();
-                    tempVideo.Rating = row["Rating"].ToString();
+                    tempVideo.Rating =
+                        float.Parse(row["Rating"].ToString(),
+                        CultureInfo.InvariantCulture.NumberFormat);
                     tempVideo.Plot = row["Plot"].ToString();
                     result.Add(tempVideo);
                 }
@@ -1395,7 +1459,9 @@ namespace MediaBrowser
                     tempVideo.Title = row["Title"].ToString();
                     tempVideo.Year = row["Year"].ToString();
                     tempVideo.Length = row["Length"].ToString();
-                    tempVideo.Rating = row["Rating"].ToString();
+                    tempVideo.Rating =
+                        float.Parse(row["Rating"].ToString(),
+                        CultureInfo.InvariantCulture.NumberFormat);
                     tempVideo.Plot = row["Plot"].ToString();
                     result.Add(tempVideo);
                 }

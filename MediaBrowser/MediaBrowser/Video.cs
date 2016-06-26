@@ -24,7 +24,7 @@ namespace MediaBrowser
         private Bitmap _mediaImage;
         private string _mediaImagePath;
         private string _length;
-        private string _rating;
+        private float _rating;
         private string _plot;
 
         public int VideoID
@@ -87,7 +87,7 @@ namespace MediaBrowser
             set { _length = value; }
         }
 
-        public string Rating
+        public float Rating
         {
             get { return _rating; }
             set { _rating = value; }
@@ -110,7 +110,7 @@ namespace MediaBrowser
             _mediaImage = new Bitmap(100, 200);
             _mediaImagePath = "";
             _length = "";
-            _rating = "";
+            _rating = 0;
             _plot = "";
         }
 
@@ -130,11 +130,13 @@ namespace MediaBrowser
                 this.Director = doc.Root.Element("movie").Attribute("director").Value.Split(',').ToList();
                 this.Director = ListHelper.ListTrim(this.Director);
                 this.Writer = doc.Root.Element("movie").Attribute("writer").Value.Split(',').ToList();
+                this.Writer = ListHelper.RemoveParentheses(this.Writer);
                 this.Writer = ListHelper.ListTrim(this.Writer);
                 this.Actor = doc.Root.Element("movie").Attribute("actors").Value.Split(',').ToList();
                 this.Actor = ListHelper.ListTrim(this.Actor);
                 this.Length = doc.Root.Element("movie").Attribute("runtime").Value;
-                this.Rating = doc.Root.Element("movie").Attribute("imdbRating").Value;
+                string rating = doc.Root.Element("movie").Attribute("imdbRating").Value;
+                this.Rating = float.Parse(rating, System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
                 this.Plot = doc.Root.Element("movie").Attribute("plot").Value;
 
                 Bitmap poster = null;

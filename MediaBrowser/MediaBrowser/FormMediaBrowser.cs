@@ -77,25 +77,40 @@ namespace MediaBrowser
             }
             else if (lbxBroad.SelectedItem.Equals("Director"))
             {
-                lbxNarrow.DataSource = DB.GetDistinctDirectors();
+                lbxNarrow.DataSource = 
+                    new BindingSource(ListHelper.OrderByLastNames(DB.GetDistinctDirectors()), null);
+                lbxNarrow.DisplayMember = "Key";
+                lbxNarrow.ValueMember = "Value";
             }
             else if (lbxBroad.SelectedItem.Equals("Writer"))
             {
-                lbxNarrow.DataSource = DB.GetDistinctWriters();
+                lbxNarrow.DataSource = 
+                    new BindingSource(ListHelper.OrderByLastNames(DB.GetDistinctWriters()), null);
+                lbxNarrow.DisplayMember = "Key";
+                lbxNarrow.ValueMember = "Value";
             }
             else if (lbxBroad.SelectedItem.Equals("Actor"))
             {
-                lbxNarrow.DataSource = DB.GetDistinctActors();
+                lbxNarrow.DataSource = 
+                    new BindingSource(ListHelper.OrderByLastNames(DB.GetDistinctActors()), null);
+                lbxNarrow.DisplayMember = "Key";
+                lbxNarrow.ValueMember = "Value";
             }
             else if (lbxBroad.SelectedItem.Equals("Rating"))
             {
-                lbxNarrow.DataSource = DB.GetDistinctRatings();
+                //lbxNarrow.DataSource = DB.GetDistinctRatings();
+                List<float> ratings = new List<float>();
+                for (float n = 1; n < 11; n++)
+                {
+                    ratings.Add(n);
+                }
+                lbxNarrow.DataSource = ratings;
             }
         }
 
         private void lbxNarrow_SelectedIndexChanged(object sender, EventArgs e)
         {
-            UpdateListView(lbxBroad.SelectedItem.ToString(), lbxNarrow.SelectedItem.ToString());
+            UpdateListView(lbxBroad.SelectedItem.ToString(), lbxNarrow.SelectedValue.ToString());
         }
 
         private void UpdateListView(string broad, string narrow="")
@@ -118,7 +133,7 @@ namespace MediaBrowser
                 subitem.Text = ListHelper.CreateCommaSeperatedString(currentVideos[v].Genre);
                 item.SubItems.Add(subitem);
                 subitem = new ListViewItem.ListViewSubItem();
-                subitem.Text = currentVideos[v].Rating;
+                subitem.Text = currentVideos[v].Rating.ToString();
                 item.SubItems.Add(subitem);
                 subitem = new ListViewItem.ListViewSubItem();
                 subitem.Text = currentVideos[v].Length;

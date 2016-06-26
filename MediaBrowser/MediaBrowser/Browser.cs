@@ -252,7 +252,10 @@ namespace MediaBrowser
             }
             else if (broad.Equals("Rating"))
             {
-                currentVideos = DB.GetVideosByRating(narrow);
+                float rating =
+                    float.Parse(narrow,
+                    System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+                currentVideos = DB.GetVideosByFloorRating(rating);
             }
             LoadGenres(currentVideos);
             LoadDirectors(currentVideos);
