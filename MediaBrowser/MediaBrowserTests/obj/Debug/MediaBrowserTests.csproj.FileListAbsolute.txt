@@ -1,0 +1,7 @@
+C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowserTests\bin\Debug\MediaBrowserTests.dll
+C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowserTests\bin\Debug\MediaBrowserTests.pdb
+C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowserTests\bin\Debug\MediaBrowser.exe
+C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowserTests\bin\Debug\MediaBrowser.pdb
+C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowserTests\obj\Debug\MediaBrowserTests.csprojResolveAssemblyReference.cache
+C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowserTests\obj\Debug\MediaBrowserTests.dll
+C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowserTests\obj\Debug\MediaBrowserTests.pdb

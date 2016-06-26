@@ -50,7 +50,11 @@ namespace MediaBrowser
                 output += ", ";
                 for (int n = 0; n < names.Count - 1; n++)
                 {
-                    output += names[n] + " ";
+                    output += names[n];
+                    if (n < names.Count - 1)
+                    {
+                         names[n] += " ";
+                    }
                 }
             }
             return output;
