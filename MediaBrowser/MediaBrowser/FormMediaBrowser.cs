@@ -55,11 +55,6 @@ namespace MediaBrowser
             bgwPopulateVideos.RunWorkerAsync(videoFiles);
         }
 
-        private void sourceDirectoriesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            browser.ShowSourceDirectoryDialog();
-        }
-
         private void lbxBroad_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (lbxBroad.SelectedItem.Equals("All"))
@@ -77,28 +72,39 @@ namespace MediaBrowser
             }
             else if (lbxBroad.SelectedItem.Equals("Director"))
             {
-                lbxNarrow.DataSource = 
-                    new BindingSource(ListHelper.OrderByLastNames(DB.GetDistinctDirectors()), null);
-                lbxNarrow.DisplayMember = "Key";
-                lbxNarrow.ValueMember = "Value";
+                List<string> directors = DB.GetDistinctDirectors();
+                if (directors.Count > 0)
+                {
+                    lbxNarrow.DataSource =
+                    new BindingSource(ListHelper.OrderByLastNames(directors), null);
+                    lbxNarrow.DisplayMember = "Key";
+                    lbxNarrow.ValueMember = "Value";
+                }
             }
             else if (lbxBroad.SelectedItem.Equals("Writer"))
             {
-                lbxNarrow.DataSource = 
-                    new BindingSource(ListHelper.OrderByLastNames(DB.GetDistinctWriters()), null);
-                lbxNarrow.DisplayMember = "Key";
-                lbxNarrow.ValueMember = "Value";
+                List<string> writers = DB.GetDistinctWriters();
+                if (writers.Count > 0)
+                {
+                    lbxNarrow.DataSource =
+                    new BindingSource(ListHelper.OrderByLastNames(writers), null);
+                    lbxNarrow.DisplayMember = "Key";
+                    lbxNarrow.ValueMember = "Value";
+                }
             }
             else if (lbxBroad.SelectedItem.Equals("Actor"))
             {
-                lbxNarrow.DataSource = 
+                List<string> actors = DB.GetDistinctActors();
+                if (actors.Count > 0)
+                {
+                    lbxNarrow.DataSource =
                     new BindingSource(ListHelper.OrderByLastNames(DB.GetDistinctActors()), null);
-                lbxNarrow.DisplayMember = "Key";
-                lbxNarrow.ValueMember = "Value";
+                    lbxNarrow.DisplayMember = "Key";
+                    lbxNarrow.ValueMember = "Value";
+                }
             }
             else if (lbxBroad.SelectedItem.Equals("Rating"))
             {
-                //lbxNarrow.DataSource = DB.GetDistinctRatings();
                 List<float> ratings = new List<float>();
                 for (float n = 1; n < 11; n++)
                 {
@@ -247,6 +253,11 @@ namespace MediaBrowser
             uv.Show();
         }
 
+        private void sourceDirectoriesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            browser.ShowSourceDirectoryDialog();
+        }
+
         private void largeIconsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             lvwMedia.View = View.LargeIcon;
@@ -294,6 +305,10 @@ namespace MediaBrowser
         private void SourceDirectoriesUpdated(bool updated)
         {
             InitializeVideos();
+            lbxBroad.SelectedItem = "";
+            lbxNarrow.DataSource = new List<string>();
+            lvwMedia.Clear();
+            pnlVideoInfo.Hide();
         }
 
 

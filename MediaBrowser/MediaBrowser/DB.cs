@@ -574,41 +574,6 @@ namespace MediaBrowser
             }
         }
 
-        // returns a list of the distinct ratings of all the videos
-        public static List<float> GetDistinctRatings()
-        {
-            try
-            {
-                InitCommand();
-                _cmd.CommandText =
-                    "SELECT DISTINCT Rating FROM Video;";
-                _cmd.Connection.Open();
-                List<float> ratings = new List<float>();
-                SqlDataReader reader = _cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    if (reader.GetFloat(0) != 0)
-                    {
-                        ratings.Add(reader.GetFloat(0));
-                    }
-                }
-                reader.Close();
-                return ratings;
-            }
-            catch (Exception ex)
-            {
-                Logger.Error("Sql Query Exception: " + ex.Message, "DB.cs");
-                throw new Exception(ex.Message, ex);
-            }
-            finally
-            {
-                if (_cmd.Connection != null)
-                {
-                    _cmd.Connection.Close();
-                }
-            }
-        }
-
         // returns a list of all videos from a specified rating
         public static List<Video> GetVideosByRating(string rating)
         {
