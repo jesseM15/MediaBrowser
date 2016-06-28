@@ -249,8 +249,12 @@ namespace MediaBrowser
 
         private void slbUnresolvedVideos_Click(object sender, EventArgs e)
         {
-            FormUnresolvedVideos uv = new FormUnresolvedVideos(DB.GetAllUnresolvedVideos());
-            uv.Show();
+            using (FormUnresolvedVideos uv = new FormUnresolvedVideos(DB.GetAllUnresolvedVideos()))
+            {
+                uv.ShowDialog();
+                slbUnresolvedVideos.Text = DB.GetAllUnresolvedVideos().Count.ToString() +
+                " unresolved videos";
+            }
         }
 
         private void sourceDirectoriesToolStripMenuItem_Click(object sender, EventArgs e)

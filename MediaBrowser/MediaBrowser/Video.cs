@@ -138,6 +138,7 @@ namespace MediaBrowser
                 string rating = doc.Root.Element("movie").Attribute("imdbRating").Value;
                 this.Rating = float.Parse(rating, System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
                 this.Plot = doc.Root.Element("movie").Attribute("plot").Value;
+                this.Plot = this.Plot.Replace("&quot;", "\"");
 
                 Bitmap poster = null;
                 poster = new Bitmap(DownloadImage(imageURL));
