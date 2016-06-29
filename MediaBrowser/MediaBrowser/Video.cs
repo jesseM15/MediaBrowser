@@ -132,6 +132,7 @@ namespace MediaBrowser
                 this.Writer = doc.Root.Element("movie").Attribute("writer").Value.Split(',').ToList();
                 this.Writer = ListHelper.RemoveParentheses(this.Writer);
                 this.Writer = ListHelper.ListTrim(this.Writer);
+                this.Writer = this.Writer.Distinct().ToList();
                 this.Actor = doc.Root.Element("movie").Attribute("actors").Value.Split(',').ToList();
                 this.Actor = ListHelper.ListTrim(this.Actor);
                 this.Length = doc.Root.Element("movie").Attribute("runtime").Value;

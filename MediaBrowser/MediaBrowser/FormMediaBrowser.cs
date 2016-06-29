@@ -14,6 +14,7 @@ namespace MediaBrowser
     {
         public static Browser browser = new Browser();
         private List<Video> currentVideos = new List<Video>();
+        private Video lastSelectedVideo = new Video();
         ImageList imageListSmall = new ImageList();
         ImageList imageListLarge = new ImageList();
 
@@ -51,26 +52,33 @@ namespace MediaBrowser
             List<string> videoFiles = browser.GetVideoFiles();
             sprGatheringVideoData.ProgressBar.Show();
             slbUnresolvedVideos.IsLink = false;
-            slbUnresolvedVideos.Text = "Gathering Video Data...";
+            if (DB.GetSourceDirectories().Count < 1)
+            {
+                slbUnresolvedVideos.Text = "No Source Directories Found!";
+            }
+            else
+            {
+                slbUnresolvedVideos.Text = "Gathering Video Data...";
+            }
             bgwPopulateVideos.RunWorkerAsync(videoFiles);
         }
 
-        private void lbxBroad_SelectedIndexChanged(object sender, EventArgs e)
+        private void BroadFilterSelected(string filter)
         {
-            if (lbxBroad.SelectedItem.Equals("All"))
+            if (filter.Equals("All"))
             {
                 lbxNarrow.DataSource = new List<Video>();
                 UpdateListView("All");
             }
-            else if (lbxBroad.SelectedItem.Equals("Year"))
+            else if (filter.Equals("Year"))
             {
                 lbxNarrow.DataSource = DB.GetDistinctYears();
             }
-            else if (lbxBroad.SelectedItem.Equals("Genre"))
+            else if (filter.Equals("Genre"))
             {
                 lbxNarrow.DataSource = DB.GetDistinctGenres();
             }
-            else if (lbxBroad.SelectedItem.Equals("Director"))
+            else if (filter.Equals("Director"))
             {
                 List<string> directors = DB.GetDistinctDirectors();
                 if (directors.Count > 0)
@@ -81,7 +89,7 @@ namespace MediaBrowser
                     lbxNarrow.ValueMember = "Value";
                 }
             }
-            else if (lbxBroad.SelectedItem.Equals("Writer"))
+            else if (filter.Equals("Writer"))
             {
                 List<string> writers = DB.GetDistinctWriters();
                 if (writers.Count > 0)
@@ -92,7 +100,7 @@ namespace MediaBrowser
                     lbxNarrow.ValueMember = "Value";
                 }
             }
-            else if (lbxBroad.SelectedItem.Equals("Actor"))
+            else if (filter.Equals("Actor"))
             {
                 List<string> actors = DB.GetDistinctActors();
                 if (actors.Count > 0)
@@ -103,7 +111,7 @@ namespace MediaBrowser
                     lbxNarrow.ValueMember = "Value";
                 }
             }
-            else if (lbxBroad.SelectedItem.Equals("Rating"))
+            else if (filter.Equals("Rating"))
             {
                 List<float> ratings = new List<float>();
                 for (float n = 1; n < 11; n++)
@@ -112,6 +120,11 @@ namespace MediaBrowser
                 }
                 lbxNarrow.DataSource = ratings;
             }
+        }
+
+        private void lbxBroad_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            BroadFilterSelected(lbxBroad.SelectedItem.ToString());
         }
 
         private void lbxNarrow_SelectedIndexChanged(object sender, EventArgs e)
@@ -194,66 +207,64 @@ namespace MediaBrowser
                     rtxWriter.Text = "Writers: " + ListHelper.CreateCommaSeperatedString(video.Writer);
                     rtxActor.Text = "Actors: " + ListHelper.CreateCommaSeperatedString(video.Actor);
                     rtxPlot.Text = video.Plot;
+                    lastSelectedVideo = video;
                 }
             }
         }
 
         private void btnEditVideoData_Click(object sender, EventArgs e)
         {
-            foreach (Video video in currentVideos)
+            FormEditVideoData evd = new FormEditVideoData(lastSelectedVideo);
+            var result = evd.ShowDialog();
+            if (result == System.Windows.Forms.DialogResult.OK)
             {
-                if (lvwMedia.SelectedItems[0].Text == video.Title)
+                evd.currentVideo.SaveImage();
+                DB.RemoveGenre(evd.currentVideo.VideoID);
+                DB.RemoveDirector(evd.currentVideo.VideoID);
+                DB.RemoveWriter(evd.currentVideo.VideoID);
+                DB.RemoveActor(evd.currentVideo.VideoID);
+                foreach (string genre in evd.currentVideo.Genre)
                 {
-                    int index = lvwMedia.SelectedItems[0].Index;
-                    FormEditVideoData evd = new FormEditVideoData(video);
-                    var result = evd.ShowDialog();
-                    if (result == System.Windows.Forms.DialogResult.OK)
-                    {
-                        evd.currentVideo.SaveImage();
-                        DB.RemoveGenre(evd.currentVideo.VideoID);
-                        DB.RemoveDirector(evd.currentVideo.VideoID);
-                        DB.RemoveWriter(evd.currentVideo.VideoID);
-                        DB.RemoveActor(evd.currentVideo.VideoID);
-                        foreach (string genre in evd.currentVideo.Genre)
-                        {
-                            DB.AddGenre(genre, evd.currentVideo.VideoID);
-                        }
-                        foreach (string director in evd.currentVideo.Director)
-                        {
-                            DB.AddDirector(director, evd.currentVideo.VideoID);
-                        }
-                        foreach (string writer in evd.currentVideo.Writer)
-                        {
-                            DB.AddWriter(writer, evd.currentVideo.VideoID);
-                        }
-                        foreach (string actor in evd.currentVideo.Actor)
-                        {
-                            DB.AddActor(actor, evd.currentVideo.VideoID);
-                        }
-                        DB.UpdateVideo(evd.currentVideo);
-                        if (lbxBroad.SelectedItem.ToString().Equals("All"))
-                        {
-                            UpdateListView("All");
-                        }
-                        else
-                        {
-                            UpdateListView(lbxBroad.SelectedItem.ToString(), lbxNarrow.SelectedItem.ToString());
-                        }
-                        lvwMedia.Items[index].Selected = true;
-                        lvwMedia.Select();
-                        break;
-                    }
+                    DB.AddGenre(genre, evd.currentVideo.VideoID);
+                }
+                foreach (string director in evd.currentVideo.Director)
+                {
+                    DB.AddDirector(director, evd.currentVideo.VideoID);
+                }
+                foreach (string writer in evd.currentVideo.Writer)
+                {
+                    DB.AddWriter(writer, evd.currentVideo.VideoID);
+                }
+                foreach (string actor in evd.currentVideo.Actor)
+                {
+                    DB.AddActor(actor, evd.currentVideo.VideoID);
+                }
+                DB.UpdateVideo(evd.currentVideo);
+                if (lbxBroad.SelectedItem.ToString().Equals("All"))
+                {
+                    UpdateListView("All");
+                }
+                else
+                {
+                    UpdateListView(lbxBroad.SelectedItem.ToString(), lbxNarrow.SelectedItem.ToString());
                 }
             }
         }
 
         private void slbUnresolvedVideos_Click(object sender, EventArgs e)
         {
+            if (slbUnresolvedVideos.IsLink == false)
+            {
+                return;
+            }
             using (FormUnresolvedVideos uv = new FormUnresolvedVideos(DB.GetAllUnresolvedVideos()))
             {
                 uv.ShowDialog();
-                slbUnresolvedVideos.Text = DB.GetAllUnresolvedVideos().Count.ToString() +
-                " unresolved videos";
+                int unresolvedVideos = DB.GetAllUnresolvedVideos().Count;
+                if (unresolvedVideos > 0)
+                {
+                    slbUnresolvedVideos.Text = unresolvedVideos.ToString() + " unresolved videos";
+                }
             }
         }
 
@@ -301,9 +312,12 @@ namespace MediaBrowser
         private void bgwPopulateVideos_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             sprGatheringVideoData.ProgressBar.Hide();
-            slbUnresolvedVideos.IsLink = true;
-            slbUnresolvedVideos.Text = DB.GetAllUnresolvedVideos().Count.ToString() +
-                " unresolved videos";
+            int unresolvedVideos = DB.GetAllUnresolvedVideos().Count;
+            if (unresolvedVideos > 0)
+            {
+                slbUnresolvedVideos.Text = unresolvedVideos.ToString() + " unresolved videos";
+                slbUnresolvedVideos.IsLink = true;
+            }
         }
 
         private void SourceDirectoriesUpdated(bool updated)
