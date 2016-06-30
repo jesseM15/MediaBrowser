@@ -120,6 +120,13 @@ namespace MediaBrowser
                     DB.RemoveWriter(index);
                     DB.RemoveActor(index);
                     DB.RemoveVideo(index);
+                    for (int n = 0; n < Videos.Count; n++)
+                    {
+                        if (Videos[n].VideoID == index)
+                        {
+                            Videos.RemoveAt(n);
+                        }
+                    }
                 }
                 DB.RemoveSourceDirectory(directory);
                 SourceDirectories.Remove(directory);
@@ -157,6 +164,10 @@ namespace MediaBrowser
                 try
                 {
                     tempVideo.MediaImage = new Bitmap(tempVideo.MediaImagePath);
+                    tempVideo.Genre = DB.GetGenresByVideoID(tempVideo.VideoID);
+                    tempVideo.Director = DB.GetDirectorsByVideoID(tempVideo.VideoID);
+                    tempVideo.Writer = DB.GetWritersByVideoID(tempVideo.VideoID);
+                    tempVideo.Actor = DB.GetActorsByVideoID(tempVideo.VideoID);
                 }
                 catch (Exception ex)
                 {
@@ -189,6 +200,10 @@ namespace MediaBrowser
                     DB.AddActor(actor, primaryKey);
                 }
             }
+            if (tempVideo.Title != "")
+            {
+                Videos.Add(tempVideo);
+            }
         }
 
         // create directory to store downloaded poster images in
@@ -213,7 +228,6 @@ namespace MediaBrowser
         // broad categories for lbxBroad listbox on FormMediaBrowser
         private void SetBroadCategories()
         {
-            // temporarily hard-coded
             BroadCategories.Add("All");
             BroadCategories.Add("Year");
             BroadCategories.Add("Genre");
@@ -228,88 +242,63 @@ namespace MediaBrowser
             List<Video> currentVideos = new List<Video>();
             if (broad.Equals("All"))
             {
-                currentVideos = DB.GetAllVideos();
+                List<Video> list =
+                    (from video in Videos
+                     select video).ToList();
+                currentVideos = list;
             }
             else if (broad.Equals("Year"))
             {
-                currentVideos = DB.GetVideosByYear(narrow);
+                List<Video> list =
+                    (from video in Videos
+                     where video.Year.Equals(narrow)
+                     select video).ToList();
+                currentVideos = list;
             }
             else if (broad.Equals("Genre"))
             {
-                currentVideos = DB.GetVideosByGenre(narrow);
+                List<Video> list =
+                    (from video in Videos
+                     where video.Genre.Contains(narrow)
+                     select video).ToList();
+                currentVideos = list;
             }
             else if (broad.Equals("Director"))
             {
-                currentVideos = DB.GetVideosByDirector(narrow);
+                List<Video> list =
+                    (from video in Videos
+                     where video.Director.Contains(narrow)
+                     select video).ToList();
+                currentVideos = list;
             }
             else if (broad.Equals("Writer"))
             {
-                currentVideos = DB.GetVideosByWriter(narrow);
+                List<Video> list =
+                    (from video in Videos
+                     where video.Writer.Contains(narrow)
+                     select video).ToList();
+                currentVideos = list;
             }
             else if (broad.Equals("Actor"))
             {
-                currentVideos = DB.GetVideosByActor(narrow);
+                List<Video> list =
+                    (from video in Videos
+                     where video.Actor.Contains(narrow)
+                     select video).ToList();
+                currentVideos = list;
             }
             else if (broad.Equals("Rating"))
             {
                 float rating =
                     float.Parse(narrow,
                     System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
-                currentVideos = DB.GetVideosByFloorRating(rating);
+                List<Video> list =
+                    (from video in Videos
+                     where Math.Floor(video.Rating).Equals(rating)
+                     select video).ToList();
+                currentVideos = list;
             }
-            LoadGenres(currentVideos);
-            LoadDirectors(currentVideos);
-            LoadWriters(currentVideos);
-            LoadActors(currentVideos);
-            LoadCurrentImages(currentVideos);
             return currentVideos;
-        }
-
-        private void LoadCurrentImages(List<Video> currentVideos)
-        {
-            foreach (Video video in currentVideos)
-            {
-                if (PosterImages.ContainsKey(video.MediaImagePath))
-                {
-                    video.MediaImage = PosterImages[video.MediaImagePath];
-                }
-                else
-                {
-                    video.MediaImage = MediaBrowser.Properties.Resources.default_movie;
-                }
-            }
-        }
-
-        private void LoadGenres(List<Video> currentVideos)
-        {
-            foreach (Video video in currentVideos)
-            {
-                video.Genre = DB.GetGenresByVideoID(video.VideoID);
-            }
-        }
-
-        private void LoadDirectors(List<Video> currentVideos)
-        {
-            foreach (Video video in currentVideos)
-            {
-                video.Director = DB.GetDirectorsByVideoID(video.VideoID);
-            }
-        }
-
-        private void LoadWriters(List<Video> currentVideos)
-        {
-            foreach (Video video in currentVideos)
-            {
-                video.Writer = DB.GetWritersByVideoID(video.VideoID);
-            }
-        }
-
-        private void LoadActors(List<Video> currentVideos)
-        {
-            foreach (Video video in currentVideos)
-            {
-                video.Actor = DB.GetActorsByVideoID(video.VideoID);
-            }
         }
         
     }

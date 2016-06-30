@@ -43,7 +43,6 @@ namespace MediaBrowser
             lvwMedia.MultiSelect = false;
             imageListSmall.ImageSize = new Size(20,20);
             imageListLarge.ImageSize = new Size(50, 100);
-            lbxBroad.SetSelected(0, true);
             pnlVideoInfo.Hide();
         }
 
@@ -311,6 +310,14 @@ namespace MediaBrowser
 
         private void bgwPopulateVideos_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            if (lbxBroad.SelectedItems.Count > 0 && lbxNarrow.SelectedItems.Count > 0)
+            {
+                UpdateListView(lbxBroad.SelectedItem.ToString(), lbxNarrow.SelectedValue.ToString());
+            }
+            else
+            {
+                BroadFilterSelected("All");
+            }
             sprGatheringVideoData.ProgressBar.Hide();
             int unresolvedVideos = DB.GetAllUnresolvedVideos().Count;
             if (unresolvedVideos > 0)

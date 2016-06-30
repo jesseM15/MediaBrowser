@@ -399,52 +399,6 @@ namespace MediaBrowser
             }
         }
 
-        // returns a list of all videos that have a title
-        public static List<Video> GetAllVideos()
-        {
-            try
-            {
-                var dataSet = new DataSet();
-                InitCommand();
-                _cmd.CommandText =
-                    "SELECT * FROM Video " +
-                    "WHERE Title != '';";
-                _cmd.Connection.Open();
-                var dataAdapter = new SqlDataAdapter { SelectCommand = _cmd };
-                dataAdapter.Fill(dataSet);
-                List<Video> result = new List<Video>();
-                foreach (DataRow row in dataSet.Tables[0].Rows)
-                {
-                    Video tempVideo = new Video();
-                    tempVideo.VideoID = (int)row["VideoID"];
-                    tempVideo.FilePath = row["FilePath"].ToString();
-                    tempVideo.FileName = row["FileName"].ToString();
-                    tempVideo.MediaImagePath = row["MediaImagePath"].ToString();
-                    tempVideo.Title = row["Title"].ToString();
-                    tempVideo.Year = row["Year"].ToString();
-                    tempVideo.Length = row["Length"].ToString();
-                    tempVideo.Rating = 
-                        float.Parse(row["Rating"].ToString(), 
-                        CultureInfo.InvariantCulture.NumberFormat);
-                    tempVideo.Plot = row["Plot"].ToString();
-                    result.Add(tempVideo);
-                }
-                return result;
-            }
-            catch (Exception ex)
-            {
-                Logger.Error("Sql Query Exception: " + ex.Message, "DB.cs");
-                throw new Exception(ex.Message, ex);
-            }
-            finally
-            {
-                if (_cmd.Connection != null)
-                {
-                    _cmd.Connection.Close();
-                }
-            }
-        }
-
         // returns a list of all videos that have NOT resolved a title
         public static List<Video> GetAllUnresolvedVideos()
         {
@@ -527,53 +481,6 @@ namespace MediaBrowser
             }
         }
 
-        // returns a list of all videos from a specified year
-        public static List<Video> GetVideosByYear(string year)
-        {
-            try
-            {
-                var dataSet = new DataSet();
-                InitCommand();
-                _cmd.CommandText =
-                    "SELECT * FROM Video " +
-                    "WHERE Year = @year;";
-                _cmd.Parameters.AddWithValue("@year", year);
-                _cmd.Connection.Open();
-                var dataAdapter = new SqlDataAdapter { SelectCommand = _cmd };
-                dataAdapter.Fill(dataSet);
-                List<Video> result = new List<Video>();
-                foreach (DataRow row in dataSet.Tables[0].Rows)
-                {
-                    Video tempVideo = new Video();
-                    tempVideo.VideoID = (int)row["VideoID"];
-                    tempVideo.FilePath = row["FilePath"].ToString();
-                    tempVideo.FileName = row["FileName"].ToString();
-                    tempVideo.MediaImagePath = row["MediaImagePath"].ToString();
-                    tempVideo.Title = row["Title"].ToString();
-                    tempVideo.Year = row["Year"].ToString();
-                    tempVideo.Length = row["Length"].ToString();
-                    tempVideo.Rating =
-                        float.Parse(row["Rating"].ToString(),
-                        CultureInfo.InvariantCulture.NumberFormat);
-                    tempVideo.Plot = row["Plot"].ToString();
-                    result.Add(tempVideo);
-                }
-                return result;
-            }
-            catch (Exception ex)
-            {
-                Logger.Error("Sql Query Exception: " + ex.Message, "DB.cs");
-                throw new Exception(ex.Message, ex);
-            }
-            finally
-            {
-                if (_cmd.Connection != null)
-                {
-                    _cmd.Connection.Close();
-                }
-            }
-        }
-
         // returns a list of all videos from a specified rating
         public static List<Video> GetVideosByRating(string rating)
         {
@@ -584,53 +491,6 @@ namespace MediaBrowser
                 _cmd.CommandText =
                     "SELECT * FROM Video " +
                     "WHERE Rating = @rating;";
-                _cmd.Parameters.AddWithValue("@rating", rating);
-                _cmd.Connection.Open();
-                var dataAdapter = new SqlDataAdapter { SelectCommand = _cmd };
-                dataAdapter.Fill(dataSet);
-                List<Video> result = new List<Video>();
-                foreach (DataRow row in dataSet.Tables[0].Rows)
-                {
-                    Video tempVideo = new Video();
-                    tempVideo.VideoID = (int)row["VideoID"];
-                    tempVideo.FilePath = row["FilePath"].ToString();
-                    tempVideo.FileName = row["FileName"].ToString();
-                    tempVideo.MediaImagePath = row["MediaImagePath"].ToString();
-                    tempVideo.Title = row["Title"].ToString();
-                    tempVideo.Year = row["Year"].ToString();
-                    tempVideo.Length = row["Length"].ToString();
-                    tempVideo.Rating =
-                        float.Parse(row["Rating"].ToString(),
-                        CultureInfo.InvariantCulture.NumberFormat);
-                    tempVideo.Plot = row["Plot"].ToString();
-                    result.Add(tempVideo);
-                }
-                return result;
-            }
-            catch (Exception ex)
-            {
-                Logger.Error("Sql Query Exception: " + ex.Message, "DB.cs");
-                throw new Exception(ex.Message, ex);
-            }
-            finally
-            {
-                if (_cmd.Connection != null)
-                {
-                    _cmd.Connection.Close();
-                }
-            }
-        }
-
-        // returns a list of all videos from a specified rating
-        public static List<Video> GetVideosByFloorRating(float rating)
-        {
-            try
-            {
-                var dataSet = new DataSet();
-                InitCommand();
-                _cmd.CommandText =
-                    "SELECT * FROM Video " +
-                    "WHERE Rating >= @rating AND Rating < @rating+1;";
                 _cmd.Parameters.AddWithValue("@rating", rating);
                 _cmd.Connection.Open();
                 var dataAdapter = new SqlDataAdapter { SelectCommand = _cmd };
@@ -773,55 +633,6 @@ namespace MediaBrowser
                 }
                 reader.Close();
                 return genres;
-            }
-            catch (Exception ex)
-            {
-                Logger.Error("Sql Query Exception: " + ex.Message, "DB.cs");
-                throw new Exception(ex.Message, ex);
-            }
-            finally
-            {
-                if (_cmd.Connection != null)
-                {
-                    _cmd.Connection.Close();
-                }
-            }
-        }
-
-        // returns a list of Videos containing a specified genre
-        public static List<Video> GetVideosByGenre(string genre)
-        {
-            try
-            {
-                var dataSet = new DataSet();
-                InitCommand();
-                _cmd.CommandText =
-                    "SELECT * FROM Video v " +
-                    "JOIN Genre g " +
-                    "ON v.VideoID = g.VideoID " +
-                    "WHERE Genre = @genre;";
-                _cmd.Parameters.AddWithValue("@genre", genre);
-                _cmd.Connection.Open();
-                var dataAdapter = new SqlDataAdapter { SelectCommand = _cmd };
-                dataAdapter.Fill(dataSet);
-                List<Video> result = new List<Video>();
-                foreach (DataRow row in dataSet.Tables[0].Rows)
-                {
-                    Video tempVideo = new Video();
-                    tempVideo.VideoID = (int)row["VideoID"];
-                    tempVideo.FilePath = row["FilePath"].ToString();
-                    tempVideo.FileName = row["FileName"].ToString();
-                    tempVideo.MediaImagePath = row["MediaImagePath"].ToString();
-                    tempVideo.Title = row["Title"].ToString();
-                    tempVideo.Year = row["Year"].ToString();
-                    tempVideo.Length = row["Length"].ToString();
-                    tempVideo.Rating =
-                        float.Parse(row["Rating"].ToString(),
-                        CultureInfo.InvariantCulture.NumberFormat);
-                    tempVideo.Plot = row["Plot"].ToString();
-                    result.Add(tempVideo);
-                }
-                return result;
             }
             catch (Exception ex)
             {
@@ -991,55 +802,6 @@ namespace MediaBrowser
             }
         }
 
-        // returns a list of Videos containing a specified director
-        public static List<Video> GetVideosByDirector(string director)
-        {
-            try
-            {
-                var dataSet = new DataSet();
-                InitCommand();
-                _cmd.CommandText =
-                    "SELECT * FROM Video v " +
-                    "JOIN Director d " +
-                    "ON v.VideoID = d.VideoID " +
-                    "WHERE Director = @director;";
-                _cmd.Parameters.AddWithValue("@director", director);
-                _cmd.Connection.Open();
-                var dataAdapter = new SqlDataAdapter { SelectCommand = _cmd };
-                dataAdapter.Fill(dataSet);
-                List<Video> result = new List<Video>();
-                foreach (DataRow row in dataSet.Tables[0].Rows)
-                {
-                    Video tempVideo = new Video();
-                    tempVideo.VideoID = (int)row["VideoID"];
-                    tempVideo.FilePath = row["FilePath"].ToString();
-                    tempVideo.FileName = row["FileName"].ToString();
-                    tempVideo.MediaImagePath = row["MediaImagePath"].ToString();
-                    tempVideo.Title = row["Title"].ToString();
-                    tempVideo.Year = row["Year"].ToString();
-                    tempVideo.Length = row["Length"].ToString();
-                    tempVideo.Rating =
-                        float.Parse(row["Rating"].ToString(),
-                        CultureInfo.InvariantCulture.NumberFormat);
-                    tempVideo.Plot = row["Plot"].ToString();
-                    result.Add(tempVideo);
-                }
-                return result;
-            }
-            catch (Exception ex)
-            {
-                Logger.Error("Sql Query Exception: " + ex.Message, "DB.cs");
-                throw new Exception(ex.Message, ex);
-            }
-            finally
-            {
-                if (_cmd.Connection != null)
-                {
-                    _cmd.Connection.Close();
-                }
-            }
-        }
-
         // returns a list of Directors for a specified VideoID
         public static List<string> GetDirectorsByVideoID(int videoID)
         {
@@ -1194,55 +956,6 @@ namespace MediaBrowser
             }
         }
 
-        // returns a list of Videos containing a specified writer
-        public static List<Video> GetVideosByWriter(string writer)
-        {
-            try
-            {
-                var dataSet = new DataSet();
-                InitCommand();
-                _cmd.CommandText =
-                    "SELECT * FROM Video v " +
-                    "JOIN Writer w " +
-                    "ON v.VideoID = w.VideoID " +
-                    "WHERE Writer = @writer;";
-                _cmd.Parameters.AddWithValue("@writer", writer);
-                _cmd.Connection.Open();
-                var dataAdapter = new SqlDataAdapter { SelectCommand = _cmd };
-                dataAdapter.Fill(dataSet);
-                List<Video> result = new List<Video>();
-                foreach (DataRow row in dataSet.Tables[0].Rows)
-                {
-                    Video tempVideo = new Video();
-                    tempVideo.VideoID = (int)row["VideoID"];
-                    tempVideo.FilePath = row["FilePath"].ToString();
-                    tempVideo.FileName = row["FileName"].ToString();
-                    tempVideo.MediaImagePath = row["MediaImagePath"].ToString();
-                    tempVideo.Title = row["Title"].ToString();
-                    tempVideo.Year = row["Year"].ToString();
-                    tempVideo.Length = row["Length"].ToString();
-                    tempVideo.Rating =
-                        float.Parse(row["Rating"].ToString(),
-                        CultureInfo.InvariantCulture.NumberFormat);
-                    tempVideo.Plot = row["Plot"].ToString();
-                    result.Add(tempVideo);
-                }
-                return result;
-            }
-            catch (Exception ex)
-            {
-                Logger.Error("Sql Query Exception: " + ex.Message, "DB.cs");
-                throw new Exception(ex.Message, ex);
-            }
-            finally
-            {
-                if (_cmd.Connection != null)
-                {
-                    _cmd.Connection.Close();
-                }
-            }
-        }
-
         // returns a list of Writers for a specified VideoID
         public static List<string> GetWritersByVideoID(int videoID)
         {
@@ -1382,55 +1095,6 @@ namespace MediaBrowser
                 }
                 reader.Close();
                 return actors;
-            }
-            catch (Exception ex)
-            {
-                Logger.Error("Sql Query Exception: " + ex.Message, "DB.cs");
-                throw new Exception(ex.Message, ex);
-            }
-            finally
-            {
-                if (_cmd.Connection != null)
-                {
-                    _cmd.Connection.Close();
-                }
-            }
-        }
-
-        // returns a list of Videos containing a specified actor
-        public static List<Video> GetVideosByActor(string actor)
-        {
-            try
-            {
-                var dataSet = new DataSet();
-                InitCommand();
-                _cmd.CommandText =
-                    "SELECT * FROM Video v " +
-                    "JOIN Actor a " +
-                    "ON v.VideoID = a.VideoID " +
-                    "WHERE Actor = @actor;";
-                _cmd.Parameters.AddWithValue("@actor", actor);
-                _cmd.Connection.Open();
-                var dataAdapter = new SqlDataAdapter { SelectCommand = _cmd };
-                dataAdapter.Fill(dataSet);
-                List<Video> result = new List<Video>();
-                foreach (DataRow row in dataSet.Tables[0].Rows)
-                {
-                    Video tempVideo = new Video();
-                    tempVideo.VideoID = (int)row["VideoID"];
-                    tempVideo.FilePath = row["FilePath"].ToString();
-                    tempVideo.FileName = row["FileName"].ToString();
-                    tempVideo.MediaImagePath = row["MediaImagePath"].ToString();
-                    tempVideo.Title = row["Title"].ToString();
-                    tempVideo.Year = row["Year"].ToString();
-                    tempVideo.Length = row["Length"].ToString();
-                    tempVideo.Rating =
-                        float.Parse(row["Rating"].ToString(),
-                        CultureInfo.InvariantCulture.NumberFormat);
-                    tempVideo.Plot = row["Plot"].ToString();
-                    result.Add(tempVideo);
-                }
-                return result;
             }
             catch (Exception ex)
             {
