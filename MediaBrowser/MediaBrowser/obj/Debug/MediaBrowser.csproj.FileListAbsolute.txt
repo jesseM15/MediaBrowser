@@ -11,3 +11,9 @@ C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowser\obj\Debug\MediaBrows
 C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowser\obj\Debug\MediaBrowser.FormEditVideoData.resources
 C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowser\obj\Debug\MediaBrowser.FormUnresolvedVideos.resources
 C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowser\obj\Debug\MediaBrowser.FormSearch.resources
+C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowser\bin\Debug\Interop.WMPLib.dll
+C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowser\bin\Debug\AxInterop.WMPLib.dll
+C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowser\obj\Debug\Interop.WMPLib.dll
+C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowser\obj\Debug\AxInterop.WMPLib.dll
+C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowser\obj\Debug\MediaBrowser.csproj.ResolveComReference.cache
+C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowser\obj\Debug\MediaBrowser.FormMediaPlayer.resources

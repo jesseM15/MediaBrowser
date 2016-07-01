@@ -250,6 +250,12 @@ namespace MediaBrowser
             }
         }
 
+        private void btnPlay_Click(object sender, EventArgs e)
+        {
+            FormMediaPlayer mp = new FormMediaPlayer(lastSelectedVideo);
+            mp.Show();
+        }
+
         private void slbUnresolvedVideos_Click(object sender, EventArgs e)
         {
             if (slbUnresolvedVideos.IsLink == false)
@@ -335,7 +341,6 @@ namespace MediaBrowser
             lvwMedia.Clear();
             pnlVideoInfo.Hide();
         }
-
 
     }
 }
