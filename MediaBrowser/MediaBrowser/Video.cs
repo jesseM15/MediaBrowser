@@ -192,6 +192,10 @@ namespace MediaBrowser
             try
             {
                 this.MediaImagePath = Browser.PosterImagesPath + this.FileName+".jpg";
+                if (File.Exists(this.MediaImagePath))
+                {
+                    File.Delete(this.MediaImagePath);
+                }
                 this.MediaImage.Save(this.MediaImagePath);
             }
             catch (Exception ex)

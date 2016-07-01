@@ -17,7 +17,6 @@ namespace MediaBrowser
         private List<Video> _videos;
         private List<string> _broadCategories;
         private static string _posterImagesPath;
-        private Dictionary<string, Bitmap> _posterImages;
 
         public event Action<bool> SourceDirectoriesUpdated;
 
@@ -60,12 +59,6 @@ namespace MediaBrowser
             set { _posterImagesPath = value; }
         }
 
-        public Dictionary<string, Bitmap> PosterImages
-        {
-            get { return _posterImages; }
-            set { _posterImages = value; }
-        }
-
         public Browser()
         {
             _state = "";
@@ -73,7 +66,6 @@ namespace MediaBrowser
             _videos = new List<Video>();
             _broadCategories = new List<string>();
             _posterImagesPath = Path.GetDirectoryName(Application.ExecutablePath) + @"\PosterImages\";
-            _posterImages = new Dictionary<string, Bitmap>();
         }
 
         // creates the database/tables and populates Videos
@@ -89,7 +81,6 @@ namespace MediaBrowser
             SourceDirectories = DB.GetSourceDirectories();
 
             CreatePosterImagesDirectory();
-            GetPosterImages();
             SetBroadCategories();
         }
 
@@ -206,22 +197,12 @@ namespace MediaBrowser
             }
         }
 
-        // create directory to store downloaded poster images in
+        //create directory to store downloaded poster images in
         private void CreatePosterImagesDirectory()
         {
             if (Directory.Exists(PosterImagesPath) == false)
             {
                 Directory.CreateDirectory(PosterImagesPath);
-            }
-        }
-
-        // populate PosterImages with paths and images
-        private void GetPosterImages()
-        {
-            List<string> posters = new List<string>(Directory.GetFiles(PosterImagesPath));
-            foreach (string poster in posters)
-            {
-                PosterImages.Add(poster, new Bitmap(poster));
             }
         }
 
