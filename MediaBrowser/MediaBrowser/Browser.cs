@@ -154,7 +154,10 @@ namespace MediaBrowser
                 // Database already contains video
                 try
                 {
-                    tempVideo.MediaImage = new Bitmap(tempVideo.MediaImagePath);
+                    if (tempVideo.MediaImagePath != "")
+                    {
+                        tempVideo.MediaImage = new Bitmap(tempVideo.MediaImagePath);
+                    }
                     tempVideo.Genre = DB.GetGenresByVideoID(tempVideo.VideoID);
                     tempVideo.Director = DB.GetDirectorsByVideoID(tempVideo.VideoID);
                     tempVideo.Writer = DB.GetWritersByVideoID(tempVideo.VideoID);
@@ -162,7 +165,7 @@ namespace MediaBrowser
                 }
                 catch (Exception ex)
                 {
-                    Logger.Error(ex.ToString(), "Browser.cs");
+                    Logger.Error(ex.ToString() + "FOR: " + tempVideo.Title, "Browser.cs");
                 }
             }
             else

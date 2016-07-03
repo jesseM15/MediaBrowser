@@ -107,7 +107,8 @@ namespace MediaBrowser
             _director = new List<string>();
             _writer = new List<string>();
             _actor = new List<string>();
-            _mediaImage = new Bitmap(100, 200);
+            //_mediaImage = new Bitmap(100, 200);
+            _mediaImage = Properties.Resources.default_movie;
             _mediaImagePath = "";
             _length = "";
             _rating = 0;
@@ -141,15 +142,15 @@ namespace MediaBrowser
                 this.Plot = doc.Root.Element("movie").Attribute("plot").Value;
                 this.Plot = this.Plot.Replace("&quot;", "\"");
 
-                Bitmap poster = null;
-                poster = new Bitmap(DownloadImage(imageURL));
+                Bitmap poster = new Bitmap(DownloadImage(imageURL));
+                //poster = new Bitmap(DownloadImage(imageURL));
 
                 if (poster != null)
                 {
                     this.MediaImage = poster;
-                    SaveImage();
                     Logger.Info("Media image download successful for " + searchTitle + ".", "Video.cs");
                 }
+                SaveImage();
             }
             catch (Exception ex)
             {

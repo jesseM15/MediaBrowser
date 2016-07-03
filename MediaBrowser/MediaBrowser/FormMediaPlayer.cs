@@ -13,12 +13,14 @@ namespace MediaBrowser
     public partial class FormMediaPlayer : Form
     {
         private string filePath;
+        private WMPLib.IWMPPlaylist playlist;
 
         public FormMediaPlayer(Video fileToPlay)
         {
             InitializeComponent();
             filePath = fileToPlay.FilePath;
             this.Text = fileToPlay.Title;
+            playlist = wmpPlayer.playlistCollection.newPlaylist("Media Browser Playlist");
         }
 
         private void FormMediaPlayer_Load(object sender, EventArgs e)
