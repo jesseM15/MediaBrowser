@@ -107,7 +107,6 @@ namespace MediaBrowser
             _director = new List<string>();
             _writer = new List<string>();
             _actor = new List<string>();
-            //_mediaImage = new Bitmap(100, 200);
             _mediaImage = Properties.Resources.default_movie;
             _mediaImagePath = "";
             _length = "";
@@ -143,7 +142,6 @@ namespace MediaBrowser
                 this.Plot = this.Plot.Replace("&quot;", "\"");
 
                 Bitmap poster = new Bitmap(DownloadImage(imageURL));
-                //poster = new Bitmap(DownloadImage(imageURL));
 
                 if (poster != null)
                 {

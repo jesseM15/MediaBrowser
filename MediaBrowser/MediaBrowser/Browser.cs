@@ -142,6 +142,20 @@ namespace MediaBrowser
             foreach (string directory in SourceDirectories)
             {
                 filePaths.AddRange(Directory.GetFiles(directory));
+                string[] subdirectories = Directory.GetDirectories(directory);
+                foreach (string subdirectory in subdirectories)
+                {
+                    filePaths.AddRange(Directory.GetFiles(subdirectory));
+                }
+            }
+            List<string> allowedExtensions = new List<string>
+            {".avi", ".flv", ".mpeg", ".mp4", ".m4v", ".mkv", ".mov", ".mp4", ".mts", ".wmv"};
+            for (int n = 0; n < filePaths.Count(); n++)
+            {
+                if (!allowedExtensions.Contains(Path.GetExtension(filePaths[n]).ToLower()))
+                {
+                    filePaths.RemoveAt(n);
+                }
             }
             return filePaths;
         }
