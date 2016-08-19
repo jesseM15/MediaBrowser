@@ -75,9 +75,13 @@ namespace MediaBrowser
             DB.CreateSourceDirectoryTable();
             DB.CreateVideoTable();
             DB.CreateGenreTable();
+            DB.CreateVideoGenreTable();
             DB.CreateDirectorTable();
+            DB.CreateVideoDirectorTable();
             DB.CreateWriterTable();
+            DB.CreateVideoWriterTable();
             DB.CreateActorTable();
+            DB.CreateVideoActorTable();
             SourceDirectories = DB.GetSourceDirectories();
 
             CreatePosterImagesDirectory();
@@ -106,10 +110,10 @@ namespace MediaBrowser
                 foreach (string filePath in filePaths)
                 {
                     int index = DB.GetVideoID(filePath);
-                    DB.RemoveGenre(index);
-                    DB.RemoveDirector(index);
-                    DB.RemoveWriter(index);
-                    DB.RemoveActor(index);
+                    DB.RemoveVideoGenre(index);
+                    DB.RemoveVideoDirector(index);
+                    DB.RemoveVideoWriter(index);
+                    DB.RemoveVideoActor(index);
                     DB.RemoveVideo(index);
                     for (int n = 0; n < Videos.Count; n++)
                     {
@@ -119,6 +123,10 @@ namespace MediaBrowser
                         }
                     }
                 }
+                DB.RemoveUnusedGenres();
+                DB.RemoveUnusedDirectors();
+                DB.RemoveUnusedWriters();
+                DB.RemoveUnusedActors();
                 DB.RemoveSourceDirectory(directory);
                 SourceDirectories.Remove(directory);
             }
@@ -172,10 +180,10 @@ namespace MediaBrowser
                     {
                         tempVideo.MediaImage = new Bitmap(tempVideo.MediaImagePath);
                     }
-                    tempVideo.Genre = DB.GetGenresByVideoID(tempVideo.VideoID);
-                    tempVideo.Director = DB.GetDirectorsByVideoID(tempVideo.VideoID);
-                    tempVideo.Writer = DB.GetWritersByVideoID(tempVideo.VideoID);
-                    tempVideo.Actor = DB.GetActorsByVideoID(tempVideo.VideoID);
+                    tempVideo.Genre = DB.GetVideoGenres(tempVideo.VideoID);
+                    tempVideo.Director = DB.GetVideoDirectors(tempVideo.VideoID);
+                    tempVideo.Writer = DB.GetVideoWriters(tempVideo.VideoID);
+                    tempVideo.Actor = DB.GetVideoActors(tempVideo.VideoID);
                 }
                 catch (Exception ex)
                 {
@@ -193,19 +201,23 @@ namespace MediaBrowser
                 int primaryKey = DB.AddVideo(tempVideo);
                 foreach (string genre in tempVideo.Genre)
                 {
-                    DB.AddGenre(genre, primaryKey);
+                    DB.AddGenre(genre);
+                    DB.AddVideoGenre(primaryKey, genre);
                 }
                 foreach (string director in tempVideo.Director)
                 {
-                    DB.AddDirector(director, primaryKey);
+                    DB.AddDirector(director);
+                    DB.AddVideoDirector(primaryKey, director);
                 }
                 foreach (string writer in tempVideo.Writer)
                 {
-                    DB.AddWriter(writer, primaryKey);
+                    DB.AddWriter(writer);
+                    DB.AddVideoWriter(primaryKey, writer);
                 }
                 foreach (string actor in tempVideo.Actor)
                 {
-                    DB.AddActor(actor, primaryKey);
+                    DB.AddActor(actor);
+                    DB.AddVideoActor(primaryKey, actor);
                 }
             }
             if (tempVideo.Title != "")

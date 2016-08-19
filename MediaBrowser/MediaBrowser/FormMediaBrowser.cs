@@ -75,11 +75,11 @@ namespace MediaBrowser
             }
             else if (filter.Equals("Genre"))
             {
-                lbxNarrow.DataSource = DB.GetDistinctGenres();
+                lbxNarrow.DataSource = DB.GetGenres();
             }
             else if (filter.Equals("Director"))
             {
-                List<string> directors = DB.GetDistinctDirectors();
+                List<string> directors = DB.GetDirectors();
                 if (directors.Count > 0)
                 {
                     lbxNarrow.DataSource =
@@ -90,7 +90,7 @@ namespace MediaBrowser
             }
             else if (filter.Equals("Writer"))
             {
-                List<string> writers = DB.GetDistinctWriters();
+                List<string> writers = DB.GetWriters();
                 if (writers.Count > 0)
                 {
                     lbxNarrow.DataSource =
@@ -101,11 +101,11 @@ namespace MediaBrowser
             }
             else if (filter.Equals("Actor"))
             {
-                List<string> actors = DB.GetDistinctActors();
+                List<string> actors = DB.GetActors();
                 if (actors.Count > 0)
                 {
                     lbxNarrow.DataSource =
-                    new BindingSource(ListHelper.OrderByLastNames(DB.GetDistinctActors()), null);
+                    new BindingSource(ListHelper.OrderByLastNames(actors), null);
                     lbxNarrow.DisplayMember = "Key";
                     lbxNarrow.ValueMember = "Value";
                 }
@@ -218,25 +218,33 @@ namespace MediaBrowser
             if (result == System.Windows.Forms.DialogResult.OK)
             {
                 evd.currentVideo.SaveImage();
-                DB.RemoveGenre(evd.currentVideo.VideoID);
-                DB.RemoveDirector(evd.currentVideo.VideoID);
-                DB.RemoveWriter(evd.currentVideo.VideoID);
-                DB.RemoveActor(evd.currentVideo.VideoID);
+                DB.RemoveVideoGenre(evd.currentVideo.VideoID);
+                DB.RemoveVideoDirector(evd.currentVideo.VideoID);
+                DB.RemoveVideoWriter(evd.currentVideo.VideoID);
+                DB.RemoveVideoActor(evd.currentVideo.VideoID);
+                DB.RemoveUnusedGenres();
+                DB.RemoveUnusedDirectors();
+                DB.RemoveUnusedWriters();
+                DB.RemoveUnusedActors();
                 foreach (string genre in evd.currentVideo.Genre)
                 {
-                    DB.AddGenre(genre, evd.currentVideo.VideoID);
+                    DB.AddGenre(genre);
+                    DB.AddVideoGenre(evd.currentVideo.VideoID, genre);
                 }
                 foreach (string director in evd.currentVideo.Director)
                 {
-                    DB.AddDirector(director, evd.currentVideo.VideoID);
+                    DB.AddDirector(director);
+                    DB.AddVideoDirector(evd.currentVideo.VideoID, director);
                 }
                 foreach (string writer in evd.currentVideo.Writer)
                 {
-                    DB.AddWriter(writer, evd.currentVideo.VideoID);
+                    DB.AddWriter(writer);
+                    DB.AddVideoWriter(evd.currentVideo.VideoID, writer);
                 }
                 foreach (string actor in evd.currentVideo.Actor)
                 {
-                    DB.AddActor(actor, evd.currentVideo.VideoID);
+                    DB.AddActor(actor);
+                    DB.AddVideoActor(evd.currentVideo.VideoID, actor);
                 }
                 DB.UpdateVideo(evd.currentVideo);
                 if (lbxBroad.SelectedItem.ToString().Equals("All"))
