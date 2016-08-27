@@ -12,60 +12,21 @@ namespace MediaBrowser
 {
     public class Browser
     {
-        private string _state;
-        private List<string> _sourceDirectories;
-        private List<Video> _videos;
-        private List<string> _broadCategories;
-        private static string _posterImagesPath;
-
-        public event Action<bool> SourceDirectoriesUpdated;
-
-        private void OnSourceDirectoryUpdate(bool updated)
-        {
-            var eh = SourceDirectoriesUpdated;
-            if (eh != null)
-            {
-                eh(updated);
-            }
-        }
-
-        public string State
-        {
-            get { return _state; }
-            set { _state = value; }
-        }
-
-        public List<string> SourceDirectories
-        {
-            get { return _sourceDirectories; }
-            set { _sourceDirectories = value; }
-        }
-
-        public List<Video> Videos
-        {
-            get { return _videos; }
-            set { _videos = value; }
-        }
-
-        public List<string> BroadCategories
-        {
-            get { return _broadCategories; }
-            set { _broadCategories = value; }
-        }
-
-        public static string PosterImagesPath
-        {
-            get { return _posterImagesPath; }
-            set { _posterImagesPath = value; }
-        }
+        public string State { get; set; }
+        public List<Video> Videos { get; set; }
+        public List<string> BroadCategories { get; set; }
+        public static string PosterImagesPath { get; set; }
+        public SourceDirectory SourceDirectory { get; set; }
 
         public Browser()
         {
-            _state = "";
-            _sourceDirectories = new List<string>();
-            _videos = new List<Video>();
-            _broadCategories = new List<string>();
-            _posterImagesPath = Path.GetDirectoryName(Application.ExecutablePath) + @"\PosterImages\";
+            State = "";
+            Videos = new List<Video>();
+            BroadCategories = new List<string>();
+            PosterImagesPath = Path.GetDirectoryName(Application.ExecutablePath) + @"\PosterImages\";
+            SourceDirectory = new SourceDirectory();
+            FormMediaBrowser F = new FormMediaBrowser(this);
+            F.Show();
         }
 
         // creates the database/tables and populates Videos
@@ -82,72 +43,17 @@ namespace MediaBrowser
             DB.CreateVideoWriterTable();
             DB.CreateActorTable();
             DB.CreateVideoActorTable();
-            SourceDirectories = DB.GetSourceDirectories();
+            SourceDirectory.SourceDirectories = DB.GetSourceDirectories();
 
             CreatePosterImagesDirectory();
             SetBroadCategories();
-        }
-
-        // shows FormSourceDirectories and adds/removes chosen directories
-        public void ShowSourceDirectoryDialog()
-        {
-            FormSourceDirectories sd = new FormSourceDirectories(SourceDirectories);
-            var result = sd.ShowDialog();
-            if (result == System.Windows.Forms.DialogResult.OK)
-            {
-                RemoveSourceDirectories(sd.directoriesToRemove);
-                AddSourceDirectories(sd.directoriesToAdd);
-            }
-        }
-
-        // removes a list of directories from the database and SourceDirectories property
-        private void RemoveSourceDirectories(List<string> directoriesToRemove)
-        {
-            List<string> filePaths = new List<string>();
-            foreach (string directory in directoriesToRemove)
-            {
-                filePaths.AddRange(Directory.GetFiles(directory));
-                foreach (string filePath in filePaths)
-                {
-                    int index = DB.GetVideoID(filePath);
-                    DB.RemoveVideoGenre(index);
-                    DB.RemoveVideoDirector(index);
-                    DB.RemoveVideoWriter(index);
-                    DB.RemoveVideoActor(index);
-                    DB.RemoveVideo(index);
-                    for (int n = 0; n < Videos.Count; n++)
-                    {
-                        if (Videos[n].VideoID == index)
-                        {
-                            Videos.RemoveAt(n);
-                        }
-                    }
-                }
-                DB.RemoveUnusedGenres();
-                DB.RemoveUnusedDirectors();
-                DB.RemoveUnusedWriters();
-                DB.RemoveUnusedActors();
-                DB.RemoveSourceDirectory(directory);
-                SourceDirectories.Remove(directory);
-            }
-        }
-
-        // add a list of directories to the database and SourceDirectories property
-        private void AddSourceDirectories(List<string> directoriesToAdd)
-        {
-            foreach (string directory in directoriesToAdd)
-            {
-                DB.AddSourceDirectory(directory);
-                SourceDirectories.Add(directory);
-            }
-            OnSourceDirectoryUpdate(true);
         }
 
         // returns a list of file paths for every video in the source directories
         public List<string> GetVideoFiles()
         {
             List<string> filePaths = new List<string>();
-            foreach (string directory in SourceDirectories)
+            foreach (string directory in SourceDirectory.SourceDirectories)
             {
                 filePaths.AddRange(Directory.GetFiles(directory));
                 string[] subdirectories = Directory.GetDirectories(directory);
@@ -165,6 +71,7 @@ namespace MediaBrowser
                     filePaths.RemoveAt(n);
                 }
             }
+            filePaths.Sort();
             return filePaths;
         }
 

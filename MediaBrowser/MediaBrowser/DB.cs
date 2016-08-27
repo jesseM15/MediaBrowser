@@ -197,7 +197,7 @@ namespace MediaBrowser
                     "Year varchar(4), " +
                     "Length varchar(32), " +
                     "Rating float(24), " +
-                    "Plot varchar(2048));";
+                    "Plot varchar(4096));";
                 _cmd.Connection.Open();
                 _cmd.ExecuteNonQuery();
             }
@@ -833,7 +833,7 @@ namespace MediaBrowser
             }
         }
 
-        // adds a director if it does not already exits
+        // adds a director if it does not already exist
         public static void AddDirector(string director)
         {
             try

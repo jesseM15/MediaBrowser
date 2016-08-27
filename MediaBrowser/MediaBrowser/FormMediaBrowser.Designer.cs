@@ -41,6 +41,7 @@
             this.lbxBroad = new System.Windows.Forms.ListBox();
             this.lvwMedia = new System.Windows.Forms.ListView();
             this.pnlVideoInfo = new System.Windows.Forms.Panel();
+            this.btnPlay = new System.Windows.Forms.Button();
             this.btnEditVideoData = new System.Windows.Forms.Button();
             this.rtxPlot = new System.Windows.Forms.RichTextBox();
             this.rtxActor = new System.Windows.Forms.RichTextBox();
@@ -57,7 +58,6 @@
             this.slbUnresolvedVideos = new System.Windows.Forms.ToolStripStatusLabel();
             this.sprGatheringVideoData = new System.Windows.Forms.ToolStripProgressBar();
             this.bgwPopulateVideos = new System.ComponentModel.BackgroundWorker();
-            this.btnPlay = new System.Windows.Forms.Button();
             this.mnuMain.SuspendLayout();
             this.pnlFilter.SuspendLayout();
             this.pnlVideoInfo.SuspendLayout();
@@ -187,6 +187,16 @@
             this.pnlVideoInfo.Name = "pnlVideoInfo";
             this.pnlVideoInfo.Size = new System.Drawing.Size(285, 430);
             this.pnlVideoInfo.TabIndex = 3;
+            // 
+            // btnPlay
+            // 
+            this.btnPlay.Location = new System.Drawing.Point(204, 42);
+            this.btnPlay.Name = "btnPlay";
+            this.btnPlay.Size = new System.Drawing.Size(74, 23);
+            this.btnPlay.TabIndex = 12;
+            this.btnPlay.Text = "Play";
+            this.btnPlay.UseVisualStyleBackColor = true;
+            this.btnPlay.Click += new System.EventHandler(this.btnPlay_Click);
             // 
             // btnEditVideoData
             // 
@@ -338,16 +348,6 @@
             this.bgwPopulateVideos.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bgwPopulateVideos_ProgressChanged);
             this.bgwPopulateVideos.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgwPopulateVideos_RunWorkerCompleted);
             // 
-            // btnPlay
-            // 
-            this.btnPlay.Location = new System.Drawing.Point(204, 42);
-            this.btnPlay.Name = "btnPlay";
-            this.btnPlay.Size = new System.Drawing.Size(74, 23);
-            this.btnPlay.TabIndex = 12;
-            this.btnPlay.Text = "Play";
-            this.btnPlay.UseVisualStyleBackColor = true;
-            this.btnPlay.Click += new System.EventHandler(this.btnPlay_Click);
-            // 
             // FormMediaBrowser
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -361,6 +361,7 @@
             this.MainMenuStrip = this.mnuMain;
             this.Name = "FormMediaBrowser";
             this.Text = "Media Browser";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormMediaBrowser_FormClosed);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.Shown += new System.EventHandler(this.FormMediaBrowser_Shown);
             this.mnuMain.ResumeLayout(false);

@@ -12,16 +12,17 @@ namespace MediaBrowser
 {
     public partial class FormMediaBrowser : Form
     {
-        public static Browser browser = new Browser();
+        public static Browser browser;
         private List<Video> currentVideos = new List<Video>();
         private Video lastSelectedVideo = new Video();
         ImageList imageListSmall = new ImageList();
         ImageList imageListLarge = new ImageList();
 
-        public FormMediaBrowser()
+        public FormMediaBrowser(Browser _browser)
         {
             InitializeComponent();
-            browser.SourceDirectoriesUpdated += SourceDirectoriesUpdated;
+            browser = _browser;
+            browser.SourceDirectory.SourceDirectoriesUpdated += SourceDirectoriesUpdated;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -32,6 +33,11 @@ namespace MediaBrowser
         private void FormMediaBrowser_Shown(object sender, EventArgs e)
         {
             InitializeVideos();
+        }
+
+        private void FormMediaBrowser_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Application.Exit();
         }
 
         private void InitializeForm()
@@ -283,7 +289,7 @@ namespace MediaBrowser
 
         private void sourceDirectoriesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            browser.ShowSourceDirectoryDialog();
+            browser.SourceDirectory.ShowSourceDirectoryDialog();
         }
 
         private void largeIconsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -343,12 +349,15 @@ namespace MediaBrowser
 
         private void SourceDirectoriesUpdated(bool updated)
         {
+            browser.Videos.Clear();
             InitializeVideos();
             lbxBroad.SelectedItem = "";
             lbxNarrow.DataSource = new List<string>();
             lvwMedia.Clear();
             pnlVideoInfo.Hide();
         }
+
+        
 
     }
 }

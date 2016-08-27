@@ -1,7 +1,6 @@
 c:\users\j\Documents\MediaBrowser\MediaBrowser\MediaBrowser\bin\Debug\MediaBrowser.exe.config
 c:\users\j\Documents\MediaBrowser\MediaBrowser\MediaBrowser\bin\Debug\MediaBrowser.exe
 c:\users\j\Documents\MediaBrowser\MediaBrowser\MediaBrowser\bin\Debug\MediaBrowser.pdb
-c:\users\j\Documents\MediaBrowser\MediaBrowser\MediaBrowser\obj\Debug\MediaBrowser.csprojResolveAssemblyReference.cache
 c:\users\j\Documents\MediaBrowser\MediaBrowser\MediaBrowser\obj\Debug\MediaBrowser.Properties.Resources.resources
 c:\users\j\Documents\MediaBrowser\MediaBrowser\MediaBrowser\obj\Debug\MediaBrowser.csproj.GenerateResource.Cache
 c:\users\j\Documents\MediaBrowser\MediaBrowser\MediaBrowser\obj\Debug\MediaBrowser.exe
@@ -17,3 +16,8 @@ C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowser\obj\Debug\Interop.WM
 C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowser\obj\Debug\AxInterop.WMPLib.dll
 C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowser\obj\Debug\MediaBrowser.csproj.ResolveComReference.cache
 C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowser\obj\Debug\MediaBrowser.FormMediaPlayer.resources
+C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowser\bin\Debug\MediaBrowser.exe.manifest
+C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowser\bin\Debug\MediaBrowser.application
+C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowser\obj\Debug\MediaBrowser.csprojResolveAssemblyReference.cache
+C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowser\obj\Debug\MediaBrowser.exe.manifest
+C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowser\obj\Debug\MediaBrowser.application
