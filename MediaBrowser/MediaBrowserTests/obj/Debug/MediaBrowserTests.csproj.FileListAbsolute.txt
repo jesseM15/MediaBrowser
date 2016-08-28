@@ -5,7 +5,5 @@ C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowserTests\bin\Debug\Media
 C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowserTests\obj\Debug\MediaBrowserTests.csprojResolveAssemblyReference.cache
 C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowserTests\obj\Debug\MediaBrowserTests.dll
 C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowserTests\obj\Debug\MediaBrowserTests.pdb
-C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowserTests\bin\Debug\MediaBrowserTests.dll.CodeAnalysisLog.xml
-C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowserTests\bin\Debug\MediaBrowserTests.dll.lastcodeanalysissucceeded
 C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowserTests\bin\Debug\Interop.WMPLib.dll
 C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowserTests\bin\Debug\AxInterop.WMPLib.dll

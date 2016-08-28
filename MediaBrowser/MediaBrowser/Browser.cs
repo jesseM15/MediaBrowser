@@ -77,55 +77,15 @@ namespace MediaBrowser
 
         public void PopulateVideo(string filePath)
         {
-            Video tempVideo = DB.GetVideoData(filePath);
-            if (tempVideo != null)
+            Video tempVideo = new Video();
+            IVideoData vr = new VideoRepository();
+            // attempt to gather video data from database
+            tempVideo = vr.GetVideo(filePath);
+            if (tempVideo == null)
             {
-                // Database already contains video
-                try
-                {
-                    if (tempVideo.MediaImagePath != "")
-                    {
-                        tempVideo.MediaImage = new Bitmap(tempVideo.MediaImagePath);
-                    }
-                    tempVideo.Genre = DB.GetVideoGenres(tempVideo.VideoID);
-                    tempVideo.Director = DB.GetVideoDirectors(tempVideo.VideoID);
-                    tempVideo.Writer = DB.GetVideoWriters(tempVideo.VideoID);
-                    tempVideo.Actor = DB.GetVideoActors(tempVideo.VideoID);
-                }
-                catch (Exception ex)
-                {
-                    Logger.Error(ex.ToString() + "FOR: " + tempVideo.Title, "Browser.cs");
-                }
-            }
-            else
-            {
-                // Video not in database, data needs to be gathered
-                tempVideo = new Video();
-                tempVideo.FilePath = filePath;
-                tempVideo.FileName = Path.GetFileNameWithoutExtension(filePath);
-
-                tempVideo.DownloadVideoData(tempVideo.FileName);
-                int primaryKey = DB.AddVideo(tempVideo);
-                foreach (string genre in tempVideo.Genre)
-                {
-                    DB.AddGenre(genre);
-                    DB.AddVideoGenre(primaryKey, genre);
-                }
-                foreach (string director in tempVideo.Director)
-                {
-                    DB.AddDirector(director);
-                    DB.AddVideoDirector(primaryKey, director);
-                }
-                foreach (string writer in tempVideo.Writer)
-                {
-                    DB.AddWriter(writer);
-                    DB.AddVideoWriter(primaryKey, writer);
-                }
-                foreach (string actor in tempVideo.Actor)
-                {
-                    DB.AddActor(actor);
-                    DB.AddVideoActor(primaryKey, actor);
-                }
+                IVideoData vo = new VideoOMDB();
+                // attempt to gather video data from OMDB
+                tempVideo = vo.GetVideo(filePath);
             }
             if (tempVideo.Title != "")
             {
@@ -133,7 +93,7 @@ namespace MediaBrowser
             }
         }
 
-        //create directory to store downloaded poster images in
+        // create directory to store downloaded poster images in
         private void CreatePosterImagesDirectory()
         {
             if (Directory.Exists(PosterImagesPath) == false)

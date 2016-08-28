@@ -27,6 +27,8 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -37,6 +39,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -46,6 +49,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>19D8431E5797C77A26F86A39B3E3B3EDA9220172</ManifestCertificateThumbprint>
@@ -105,6 +109,7 @@
     <Compile Include="FormUnresolvedVideos.Designer.cs">
       <DependentUpon>FormUnresolvedVideos.cs</DependentUpon>
     </Compile>
+    <Compile Include="IVideoData.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Media.cs" />
     <Compile Include="Program.cs" />
@@ -118,6 +123,8 @@
     <Compile Include="ListHelper.cs" />
     <Compile Include="SourceDirectory.cs" />
     <Compile Include="Video.cs" />
+    <Compile Include="VideoOMDB.cs" />
+    <Compile Include="VideoRepository.cs" />
     <EmbeddedResource Include="FormEditVideoData.resx">
       <DependentUpon>FormEditVideoData.cs</DependentUpon>
     </EmbeddedResource>
