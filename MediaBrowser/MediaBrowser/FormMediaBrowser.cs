@@ -13,16 +13,26 @@ namespace MediaBrowser
     public partial class FormMediaBrowser : Form
     {
         public static Browser browser;
-        private List<Video> currentVideos = new List<Video>();
-        private Video lastSelectedVideo = new Video();
-        ImageList imageListSmall = new ImageList();
-        ImageList imageListLarge = new ImageList();
+        public Video lastSelectedVideo { get; set; }
+        public ListView mediaListView { get { return lvwMedia; } set { lvwMedia = value; } }
+        public Panel videoInfoPanel { get { return pnlVideoInfo; } set { pnlVideoInfo = value; } }
+        public Label videoInfoTitle { get { return lblTitle; } set { lblTitle = value; } }
+        public PictureBox videoInfoPoster { get { return picPoster; } set { picPoster = value; } }
+        public Label videoInfoYear { get { return lblYear; } set { lblYear = value; } }
+        public Label videoInfoRating { get { return lblRating; } set { lblRating = value; } }
+        public Label videoInfoLength { get { return lblLength; } set { lblLength = value; } }
+        public RichTextBox videoInfoGenre { get { return rtxGenre; } set { rtxGenre = value; } }
+        public RichTextBox videoInfoDirector { get { return rtxDirector; } set { rtxDirector = value; } }
+        public RichTextBox videoInfoWriter { get { return rtxWriter; } set { rtxWriter = value; } }
+        public RichTextBox videoInfoActor { get { return rtxActor; } set { rtxActor = value; } }
+        public RichTextBox videoInfoPlot { get { return rtxPlot; } set { rtxPlot = value; } }
 
         public FormMediaBrowser(Browser _browser)
         {
             InitializeComponent();
             browser = _browser;
             browser.SourceDirectory.SourceDirectoriesUpdated += SourceDirectoriesUpdated;
+            ListViewWorker.lvwMedia = lvwMedia;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -44,11 +54,9 @@ namespace MediaBrowser
         {
             browser.Initialize();
             lbxBroad.DataSource = browser.BroadCategories;
-            CreateDetailViewColumns();
+            ListViewWorker.CreateDetailViewColumns();
             lvwMedia.View = View.LargeIcon;
             lvwMedia.MultiSelect = false;
-            imageListSmall.ImageSize = new Size(20,20);
-            imageListLarge.ImageSize = new Size(50, 100);
             pnlVideoInfo.Hide();
         }
 
@@ -73,7 +81,7 @@ namespace MediaBrowser
             if (filter.Equals("All"))
             {
                 lbxNarrow.DataSource = new List<Video>();
-                UpdateListView("All");
+                ListViewWorker.UpdateListView(browser.Videos, "All");
             }
             else if (filter.Equals("Year"))
             {
@@ -134,87 +142,12 @@ namespace MediaBrowser
 
         private void lbxNarrow_SelectedIndexChanged(object sender, EventArgs e)
         {
-            UpdateListView(lbxBroad.SelectedItem.ToString(), lbxNarrow.SelectedValue.ToString());
-        }
-
-        private void UpdateListView(string broad, string narrow="")
-        {
-            lvwMedia.Items.Clear();
-            imageListLarge.Images.Clear();
-            currentVideos = browser.GetCurrentVideos(broad, narrow);
-            for (int v = 0; v < currentVideos.Count; v++)
-            {
-                imageListSmall.Images.Add(currentVideos[v].MediaImage);
-                imageListLarge.Images.Add(currentVideos[v].MediaImage);
-                ListViewItem item = new ListViewItem();
-                item.ImageIndex = v;
-                item.Text = currentVideos[v].Title;
-                lvwMedia.Items.Add(item);
-                ListViewItem.ListViewSubItem subitem = new ListViewItem.ListViewSubItem();
-                subitem.Text = currentVideos[v].Year;
-                item.SubItems.Add(subitem);
-                subitem = new ListViewItem.ListViewSubItem();
-                subitem.Text = ListHelper.CreateCommaSeperatedString(currentVideos[v].Genre);
-                item.SubItems.Add(subitem);
-                subitem = new ListViewItem.ListViewSubItem();
-                subitem.Text = currentVideos[v].Rating.ToString();
-                item.SubItems.Add(subitem);
-                subitem = new ListViewItem.ListViewSubItem();
-                subitem.Text = currentVideos[v].Length;
-                item.SubItems.Add(subitem);
-            }
-            lvwMedia.SmallImageList = imageListSmall;
-            lvwMedia.LargeImageList = imageListLarge;
-        }
-
-        private void CreateDetailViewColumns()
-        {
-            ColumnHeader videoHeader = new ColumnHeader();
-            videoHeader.Text = "Video";
-            videoHeader.Width = 150;
-            lvwMedia.Columns.Add(videoHeader);
-            ColumnHeader yearHeader = new ColumnHeader();
-            yearHeader.Text = "Year";
-            yearHeader.Width = 50;
-            lvwMedia.Columns.Add(yearHeader);
-            ColumnHeader genreHeader = new ColumnHeader();
-            genreHeader.Text = "Genres";
-            genreHeader.Width = 160;
-            lvwMedia.Columns.Add(genreHeader);
-            ColumnHeader ratingHeader = new ColumnHeader();
-            ratingHeader.Text = "Rating";
-            ratingHeader.Width = 50;
-            lvwMedia.Columns.Add(ratingHeader);
-            ColumnHeader lengthHeader = new ColumnHeader();
-            lengthHeader.Text = "Run Time";
-            lengthHeader.Width = 80;
-            lvwMedia.Columns.Add(lengthHeader);
+            ListViewWorker.UpdateListView(browser.Videos, lbxBroad.SelectedItem.ToString(), lbxNarrow.SelectedValue.ToString());
         }
 
         private void lvwMedia_SelectedIndexChanged(object sender, EventArgs e)
         {
-            foreach (Video video in currentVideos)
-            {
-                if (lvwMedia.SelectedItems.Count == 0)
-                {
-                    pnlVideoInfo.Hide();
-                }
-                if (lvwMedia.SelectedItems.Count > 0 && lvwMedia.SelectedItems[0].Text == video.Title)
-                {
-                    pnlVideoInfo.Show();
-                    lblTitle.Text = video.Title;
-                    picPoster.Image = video.MediaImage;
-                    lblYear.Text = "Year: " + video.Year;
-                    lblLength.Text = "Run Time: " + video.Length;
-                    lblRating.Text = "Rating: " + video.Rating;
-                    rtxGenre.Text = "Genres: " + ListHelper.CreateCommaSeperatedString(video.Genre);
-                    rtxDirector.Text = "Directors: " + ListHelper.CreateCommaSeperatedString(video.Director);
-                    rtxWriter.Text = "Writers: " + ListHelper.CreateCommaSeperatedString(video.Writer);
-                    rtxActor.Text = "Actors: " + ListHelper.CreateCommaSeperatedString(video.Actor);
-                    rtxPlot.Text = video.Plot;
-                    lastSelectedVideo = video;
-                }
-            }
+            ListViewWorker.SelectedIndexChanged(browser.FMB);
         }
 
         private void btnEditVideoData_Click(object sender, EventArgs e)
@@ -255,11 +188,11 @@ namespace MediaBrowser
                 DB.UpdateVideo(evd.currentVideo);
                 if (lbxBroad.SelectedItem.ToString().Equals("All"))
                 {
-                    UpdateListView("All");
+                    ListViewWorker.UpdateListView(browser.Videos, "All");
                 }
                 else
                 {
-                    UpdateListView(lbxBroad.SelectedItem.ToString(), lbxNarrow.SelectedItem.ToString());
+                    ListViewWorker.UpdateListView(browser.Videos, lbxBroad.SelectedItem.ToString(), lbxNarrow.SelectedItem.ToString());
                 }
             }
         }
@@ -332,7 +265,7 @@ namespace MediaBrowser
         {
             if (lbxBroad.SelectedItems.Count > 0 && lbxNarrow.SelectedItems.Count > 0)
             {
-                UpdateListView(lbxBroad.SelectedItem.ToString(), lbxNarrow.SelectedValue.ToString());
+                ListViewWorker.UpdateListView(browser.Videos, lbxBroad.SelectedItem.ToString(), lbxNarrow.SelectedValue.ToString());
             }
             else
             {

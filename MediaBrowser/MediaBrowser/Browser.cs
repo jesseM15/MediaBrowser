@@ -17,6 +17,7 @@ namespace MediaBrowser
         public List<string> BroadCategories { get; set; }
         public static string PosterImagesPath { get; set; }
         public SourceDirectory SourceDirectory { get; set; }
+        public FormMediaBrowser FMB { get; set; }
 
         public Browser()
         {
@@ -25,8 +26,8 @@ namespace MediaBrowser
             BroadCategories = new List<string>();
             PosterImagesPath = Path.GetDirectoryName(Application.ExecutablePath) + @"\PosterImages\";
             SourceDirectory = new SourceDirectory();
-            FormMediaBrowser F = new FormMediaBrowser(this);
-            F.Show();
+            FMB = new FormMediaBrowser(this);
+            FMB.Show();
         }
 
         // creates the database/tables and populates Videos
@@ -112,70 +113,6 @@ namespace MediaBrowser
             BroadCategories.Add("Writer");
             BroadCategories.Add("Actor");
             BroadCategories.Add("Rating");
-        }
-
-        public List<Video> GetCurrentVideos(string broad, string narrow)
-        {
-            List<Video> currentVideos = new List<Video>();
-            if (broad.Equals("All"))
-            {
-                List<Video> list =
-                    (from video in Videos
-                     select video).ToList();
-                currentVideos = list;
-            }
-            else if (broad.Equals("Year"))
-            {
-                List<Video> list =
-                    (from video in Videos
-                     where video.Year.Equals(narrow)
-                     select video).ToList();
-                currentVideos = list;
-            }
-            else if (broad.Equals("Genre"))
-            {
-                List<Video> list =
-                    (from video in Videos
-                     where video.Genre.Contains(narrow)
-                     select video).ToList();
-                currentVideos = list;
-            }
-            else if (broad.Equals("Director"))
-            {
-                List<Video> list =
-                    (from video in Videos
-                     where video.Director.Contains(narrow)
-                     select video).ToList();
-                currentVideos = list;
-            }
-            else if (broad.Equals("Writer"))
-            {
-                List<Video> list =
-                    (from video in Videos
-                     where video.Writer.Contains(narrow)
-                     select video).ToList();
-                currentVideos = list;
-            }
-            else if (broad.Equals("Actor"))
-            {
-                List<Video> list =
-                    (from video in Videos
-                     where video.Actor.Contains(narrow)
-                     select video).ToList();
-                currentVideos = list;
-            }
-            else if (broad.Equals("Rating"))
-            {
-                float rating =
-                    float.Parse(narrow,
-                    System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
-                List<Video> list =
-                    (from video in Videos
-                     where Math.Floor(video.Rating).Equals(rating)
-                     select video).ToList();
-                currentVideos = list;
-            }
-            return currentVideos;
         }
         
     }

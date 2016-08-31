@@ -66,24 +66,24 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MediaBrowser.exe" size="137216">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MediaBrowser.exe" size="139776">
       <assemblyIdentity name="MediaBrowser" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>v/YyMXFHd1tsUjdAEeStoPmwlFy1yo93FTqECNsxDmA=</dsig:DigestValue>
+        <dsig:DigestValue>8VZxO30E1x10bLAGEvQOKbwX1VPvBnem7F8aYKbhRVQ=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
-  <file name="MediaBrowser.exe.config" size="687">
+  <file name="MediaBrowser.exe.config" size="683">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>QAVg6zYrlB7rYqMTwVeIK56K84Wzs5DAH3qgrz5oPPo=</dsig:DigestValue>
+      <dsig:DigestValue>3Xq4TVzhZr9HAkJd5fL5R2gdQHhs+s8iQdiFshypzcI=</dsig:DigestValue>
     </hash>
   </file>
 </asmv1:assembly>

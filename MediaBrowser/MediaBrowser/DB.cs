@@ -18,7 +18,7 @@ namespace MediaBrowser
 
         static DB()
         {
-            _con = ConfigurationManager.ConnectionStrings["MediaBrowserTestConnectionString"].ConnectionString;
+            _con = ConfigurationManager.ConnectionStrings["MediaBrowserConnectionString"].ConnectionString;
         }
 
         // initializes a command for sql

@@ -110,6 +110,7 @@
       <DependentUpon>FormUnresolvedVideos.cs</DependentUpon>
     </Compile>
     <Compile Include="IVideoData.cs" />
+    <Compile Include="ListViewWorker.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Media.cs" />
     <Compile Include="Program.cs" />
