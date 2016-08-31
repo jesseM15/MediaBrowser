@@ -14,7 +14,6 @@ namespace MediaBrowser
     {
         public static Browser browser;
         public Video lastSelectedVideo { get; set; }
-        public ListView mediaListView { get { return lvwMedia; } set { lvwMedia = value; } }
         public Panel videoInfoPanel { get { return pnlVideoInfo; } set { pnlVideoInfo = value; } }
         public Label videoInfoTitle { get { return lblTitle; } set { lblTitle = value; } }
         public PictureBox videoInfoPoster { get { return picPoster; } set { picPoster = value; } }
@@ -32,7 +31,6 @@ namespace MediaBrowser
             InitializeComponent();
             browser = _browser;
             browser.SourceDirectory.SourceDirectoriesUpdated += SourceDirectoriesUpdated;
-            ListViewWorker.lvwMedia = lvwMedia;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -54,7 +52,7 @@ namespace MediaBrowser
         {
             browser.Initialize();
             lbxBroad.DataSource = browser.BroadCategories;
-            ListViewWorker.CreateDetailViewColumns();
+            ListViewWorker.CreateDetailViewColumns(lvwMedia);
             lvwMedia.View = View.LargeIcon;
             lvwMedia.MultiSelect = false;
             pnlVideoInfo.Hide();
@@ -76,125 +74,24 @@ namespace MediaBrowser
             bgwPopulateVideos.RunWorkerAsync(videoFiles);
         }
 
-        private void BroadFilterSelected(string filter)
-        {
-            if (filter.Equals("All"))
-            {
-                lbxNarrow.DataSource = new List<Video>();
-                ListViewWorker.UpdateListView(browser.Videos, "All");
-            }
-            else if (filter.Equals("Year"))
-            {
-                lbxNarrow.DataSource = DB.GetDistinctYears();
-            }
-            else if (filter.Equals("Genre"))
-            {
-                lbxNarrow.DataSource = DB.GetGenres();
-            }
-            else if (filter.Equals("Director"))
-            {
-                List<string> directors = DB.GetDirectors();
-                if (directors.Count > 0)
-                {
-                    lbxNarrow.DataSource =
-                    new BindingSource(ListHelper.OrderByLastNames(directors), null);
-                    lbxNarrow.DisplayMember = "Key";
-                    lbxNarrow.ValueMember = "Value";
-                }
-            }
-            else if (filter.Equals("Writer"))
-            {
-                List<string> writers = DB.GetWriters();
-                if (writers.Count > 0)
-                {
-                    lbxNarrow.DataSource =
-                    new BindingSource(ListHelper.OrderByLastNames(writers), null);
-                    lbxNarrow.DisplayMember = "Key";
-                    lbxNarrow.ValueMember = "Value";
-                }
-            }
-            else if (filter.Equals("Actor"))
-            {
-                List<string> actors = DB.GetActors();
-                if (actors.Count > 0)
-                {
-                    lbxNarrow.DataSource =
-                    new BindingSource(ListHelper.OrderByLastNames(actors), null);
-                    lbxNarrow.DisplayMember = "Key";
-                    lbxNarrow.ValueMember = "Value";
-                }
-            }
-            else if (filter.Equals("Rating"))
-            {
-                List<float> ratings = new List<float>();
-                for (float n = 1; n < 11; n++)
-                {
-                    ratings.Add(n);
-                }
-                lbxNarrow.DataSource = ratings;
-            }
-        }
-
         private void lbxBroad_SelectedIndexChanged(object sender, EventArgs e)
         {
-            BroadFilterSelected(lbxBroad.SelectedItem.ToString());
+            ListBoxWorker. BroadFilterSelected(lbxBroad.SelectedItem.ToString(), lbxNarrow, lvwMedia, browser.Videos);
         }
 
         private void lbxNarrow_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ListViewWorker.UpdateListView(browser.Videos, lbxBroad.SelectedItem.ToString(), lbxNarrow.SelectedValue.ToString());
+            ListViewWorker.UpdateListView(lvwMedia, browser.Videos, lbxBroad.SelectedItem.ToString(), lbxNarrow.SelectedValue.ToString());
         }
 
         private void lvwMedia_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ListViewWorker.SelectedIndexChanged(browser.FMB);
+            ListViewWorker.SelectedIndexChanged(lvwMedia, browser.FMB);
         }
 
         private void btnEditVideoData_Click(object sender, EventArgs e)
         {
-            FormEditVideoData evd = new FormEditVideoData(lastSelectedVideo);
-            var result = evd.ShowDialog();
-            if (result == System.Windows.Forms.DialogResult.OK)
-            {
-                evd.currentVideo.SaveImage();
-                DB.RemoveVideoGenre(evd.currentVideo.VideoID);
-                DB.RemoveVideoDirector(evd.currentVideo.VideoID);
-                DB.RemoveVideoWriter(evd.currentVideo.VideoID);
-                DB.RemoveVideoActor(evd.currentVideo.VideoID);
-                DB.RemoveUnusedGenres();
-                DB.RemoveUnusedDirectors();
-                DB.RemoveUnusedWriters();
-                DB.RemoveUnusedActors();
-                foreach (string genre in evd.currentVideo.Genre)
-                {
-                    DB.AddGenre(genre);
-                    DB.AddVideoGenre(evd.currentVideo.VideoID, genre);
-                }
-                foreach (string director in evd.currentVideo.Director)
-                {
-                    DB.AddDirector(director);
-                    DB.AddVideoDirector(evd.currentVideo.VideoID, director);
-                }
-                foreach (string writer in evd.currentVideo.Writer)
-                {
-                    DB.AddWriter(writer);
-                    DB.AddVideoWriter(evd.currentVideo.VideoID, writer);
-                }
-                foreach (string actor in evd.currentVideo.Actor)
-                {
-                    DB.AddActor(actor);
-                    DB.AddVideoActor(evd.currentVideo.VideoID, actor);
-                }
-                DB.UpdateVideo(evd.currentVideo);
-                if (lbxBroad.SelectedItem.ToString().Equals("All"))
-                {
-                    ListViewWorker.UpdateListView(browser.Videos, "All");
-                }
-                else
-                {
-                    ListViewWorker.UpdateListView(browser.Videos, lbxBroad.SelectedItem.ToString(), lbxNarrow.SelectedItem.ToString());
-                }
-            }
+            EditVideoDataWorker.EditClicked(lastSelectedVideo, lvwMedia, browser.Videos, lbxBroad, lbxNarrow);
         }
 
         private void btnPlay_Click(object sender, EventArgs e)
@@ -265,11 +162,11 @@ namespace MediaBrowser
         {
             if (lbxBroad.SelectedItems.Count > 0 && lbxNarrow.SelectedItems.Count > 0)
             {
-                ListViewWorker.UpdateListView(browser.Videos, lbxBroad.SelectedItem.ToString(), lbxNarrow.SelectedValue.ToString());
+                ListViewWorker.UpdateListView(lvwMedia, browser.Videos, lbxBroad.SelectedItem.ToString(), lbxNarrow.SelectedValue.ToString());
             }
             else
             {
-                BroadFilterSelected("All");
+                ListBoxWorker.BroadFilterSelected("All", lbxNarrow, lvwMedia, browser.Videos);
             }
             sprGatheringVideoData.ProgressBar.Hide();
             int unresolvedVideos = DB.GetAllUnresolvedVideos().Count;
@@ -289,8 +186,6 @@ namespace MediaBrowser
             lvwMedia.Clear();
             pnlVideoInfo.Hide();
         }
-
-        
 
     }
 }

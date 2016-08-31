@@ -79,6 +79,7 @@
   <ItemGroup>
     <Compile Include="Browser.cs" />
     <Compile Include="DB.cs" />
+    <Compile Include="EditVideoDataWorker.cs" />
     <Compile Include="FormEditVideoData.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -110,6 +111,7 @@
       <DependentUpon>FormUnresolvedVideos.cs</DependentUpon>
     </Compile>
     <Compile Include="IVideoData.cs" />
+    <Compile Include="ListBoxWorker.cs" />
     <Compile Include="ListViewWorker.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Media.cs" />

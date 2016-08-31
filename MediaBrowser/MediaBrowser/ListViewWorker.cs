@@ -11,7 +11,6 @@ namespace MediaBrowser
 {
     public static class ListViewWorker
     {
-        public static ListView lvwMedia { get; set; }
         private static ImageList imageListSmall = new ImageList();
         private static ImageList imageListLarge = new ImageList();
         private static List<Video> currentVideos = new List<Video>();
@@ -22,7 +21,7 @@ namespace MediaBrowser
             imageListLarge.ImageSize = new Size(50, 100);
         }
 
-        public static void UpdateListView(List<Video> videos, string broad, string narrow = "")
+        public static void UpdateListView(ListView lvwMedia, List<Video> videos, string broad, string narrow = "")
         {
             lvwMedia.Items.Clear();
             imageListSmall.Images.Clear();
@@ -53,7 +52,7 @@ namespace MediaBrowser
             lvwMedia.LargeImageList = imageListLarge;
         }
 
-        public static void CreateDetailViewColumns()
+        public static void CreateDetailViewColumns(ListView lvwMedia)
         {
             ColumnHeader videoHeader = new ColumnHeader();
             videoHeader.Text = "Video";
@@ -77,7 +76,7 @@ namespace MediaBrowser
             lvwMedia.Columns.Add(lengthHeader);
         }
 
-        public static void SelectedIndexChanged(FormMediaBrowser FMB)
+        public static void SelectedIndexChanged(ListView lvwMedia, FormMediaBrowser FMB)
         {
             foreach (Video video in currentVideos)
             {
