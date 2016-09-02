@@ -66,14 +66,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MediaBrowser.exe" size="139264">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MediaBrowser.exe" size="139776">
       <assemblyIdentity name="MediaBrowser" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>BNQlM99ECNbOMV5yuIUoQdoC7066oeYEdn1oV36hwXI=</dsig:DigestValue>
+        <dsig:DigestValue>mdId3yRmNSEShTgTVt6IritIRd0Yx/F/K/pvzS+rhU0=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
