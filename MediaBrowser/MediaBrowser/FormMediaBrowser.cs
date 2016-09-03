@@ -13,6 +13,7 @@ namespace MediaBrowser
     public partial class FormMediaBrowser : Form
     {
         public static Browser browser;
+        private bool closePending;
         public Video lastSelectedVideo { get; set; }
         public Panel videoInfoPanel { get { return pnlVideoInfo; } set { pnlVideoInfo = value; } }
         public Label videoInfoTitle { get { return lblTitle; } set { lblTitle = value; } }
@@ -41,6 +42,19 @@ namespace MediaBrowser
         private void FormMediaBrowser_Shown(object sender, EventArgs e)
         {
             InitializeVideos();
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            if (bgwPopulateVideos.IsBusy)
+            {
+                closePending = true;
+                bgwPopulateVideos.CancelAsync();
+                e.Cancel = true;
+                this.Enabled = false;
+                return;
+            }
+            base.OnFormClosing(e);
         }
 
         private void FormMediaBrowser_FormClosed(object sender, FormClosedEventArgs e)
@@ -144,13 +158,7 @@ namespace MediaBrowser
 
         private void bgwPopulateVideos_DoWork(object sender, DoWorkEventArgs e)
         {
-            List<string> videoFiles = (List<string>)e.Argument;
-            for (int n = 0; n < videoFiles.Count; n++)
-            {
-                browser.PopulateVideo(videoFiles[n]);
-                double progress = (double)n / videoFiles.Count * 100;
-                bgwPopulateVideos.ReportProgress((int)progress);
-            }
+            AsyncWorker.DoWork(e, bgwPopulateVideos, browser);
         }
 
         private void bgwPopulateVideos_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -160,21 +168,7 @@ namespace MediaBrowser
 
         private void bgwPopulateVideos_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            if (lbxBroad.SelectedItems.Count > 0 && lbxNarrow.SelectedItems.Count > 0)
-            {
-                ListViewWorker.UpdateListView(lvwMedia, browser.Videos, lbxBroad.SelectedItem.ToString(), lbxNarrow.SelectedValue.ToString());
-            }
-            else
-            {
-                ListBoxWorker.BroadFilterSelected("All", lbxNarrow, lvwMedia, browser.Videos);
-            }
-            sprGatheringVideoData.ProgressBar.Hide();
-            int unresolvedVideos = DB.GetAllUnresolvedVideos().Count;
-            if (unresolvedVideos > 0)
-            {
-                slbUnresolvedVideos.Text = unresolvedVideos.ToString() + " unresolved videos";
-                slbUnresolvedVideos.IsLink = true;
-            }
+            AsyncWorker.RunWorkerCompleted(this, closePending, lbxBroad, lbxNarrow, lvwMedia, browser, sprGatheringVideoData, slbUnresolvedVideos);
         }
 
         private void SourceDirectoriesUpdated(bool updated)

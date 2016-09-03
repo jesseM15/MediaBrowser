@@ -324,7 +324,7 @@
             // slbRightAlign
             // 
             this.slbRightAlign.Name = "slbRightAlign";
-            this.slbRightAlign.Size = new System.Drawing.Size(627, 17);
+            this.slbRightAlign.Size = new System.Drawing.Size(596, 17);
             this.slbRightAlign.Spring = true;
             // 
             // slbUnresolvedVideos
@@ -344,6 +344,7 @@
             // bgwPopulateVideos
             // 
             this.bgwPopulateVideos.WorkerReportsProgress = true;
+            this.bgwPopulateVideos.WorkerSupportsCancellation = true;
             this.bgwPopulateVideos.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgwPopulateVideos_DoWork);
             this.bgwPopulateVideos.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bgwPopulateVideos_ProgressChanged);
             this.bgwPopulateVideos.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgwPopulateVideos_RunWorkerCompleted);
