@@ -21,3 +21,5 @@ C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowser\bin\Debug\MediaBrows
 C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowser\obj\Debug\MediaBrowser.csprojResolveAssemblyReference.cache
 C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowser\obj\Debug\MediaBrowser.exe.manifest
 C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowser\obj\Debug\MediaBrowser.application
+C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowser\bin\Debug\App_Data\MediaBrowser.mdf
+C:\Users\J\Documents\MediaBrowser\MediaBrowser\MediaBrowser\bin\Debug\App_Data\MediaBrowser_log.ldf

@@ -33,19 +33,7 @@ namespace MediaBrowser
         // creates the database/tables and populates Videos
         public void Initialize()
         {
-            DB.CreateMediaBrowserDB();
-            DB.CreateSourceDirectoryTable();
-            DB.CreateVideoTable();
-            DB.CreateGenreTable();
-            DB.CreateVideoGenreTable();
-            DB.CreateDirectorTable();
-            DB.CreateVideoDirectorTable();
-            DB.CreateWriterTable();
-            DB.CreateVideoWriterTable();
-            DB.CreateActorTable();
-            DB.CreateVideoActorTable();
             SourceDirectory.SourceDirectories = DB.GetSourceDirectories();
-
             CreatePosterImagesDirectory();
             SetBroadCategories();
         }

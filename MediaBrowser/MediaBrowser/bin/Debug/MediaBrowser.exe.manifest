@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2">
-  <asmv1:assemblyIdentity name="MediaBrowser.exe" version="1.0.0.1" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
+  <asmv1:assemblyIdentity name="MediaBrowser.exe" version="1.0.0.2" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
   <application />
   <entryPoint>
     <assemblyIdentity name="MediaBrowser" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
@@ -61,29 +61,47 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>PW43/bzRByOO+aQjfSOd4Jfc8VmsWxvavEg8Q6xDbgs=</dsig:DigestValue>
+        <dsig:DigestValue>LZ7cXjcT6w0d8UeirFAQ+ap1jPYimP2IJfiagjy02Jk=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MediaBrowser.exe" size="140288">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MediaBrowser.exe" size="274944">
       <assemblyIdentity name="MediaBrowser" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>5GB+zoaRQQBELnRLk1ZtfMPDbK924DL+JYsGc6fqTfw=</dsig:DigestValue>
+        <dsig:DigestValue>J7gcvIrmP2HwEw2PH04mFpLBLv5Qo1aYAo1AaurnBxg=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
-  <file name="MediaBrowser.exe.config" size="683">
+  <file name="App_Data\MediaBrowser.mdf" size="3211264" writeableType="applicationData">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>3Xq4TVzhZr9HAkJd5fL5R2gdQHhs+s8iQdiFshypzcI=</dsig:DigestValue>
+      <dsig:DigestValue>bSCaf7YAz3cdOkg29K8rduHL4F91aHBCox4GKxi3pYY=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="App_Data\MediaBrowser_log.ldf" size="516096" writeableType="applicationData">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>npRdPIUIZvmggIQUc2ZT10u4/uxF+EHpVZro3WR3sgw=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="MediaBrowser.exe.config" size="824">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>+YRs1Ys0m0EYAucXGTqKDGaeTowEGu85tR3vYytAdkU=</dsig:DigestValue>
     </hash>
   </file>
 </asmv1:assembly>

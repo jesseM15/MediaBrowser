@@ -26,13 +26,13 @@ namespace MediaBrowser
             }
         }
 
-        public static void RunWorkerCompleted(FormMediaBrowser FMB, bool closePending, 
-            ListBox lbxBroad, ListBox lbxNarrow, ListView lvwMedia, Browser browser, 
-            ToolStripProgressBar sprGatheringVideoData, ToolStripStatusLabel slbUnresolvedVideos)
+        public static void RunWorkerCompleted(bool closePending, ListBox lbxBroad, ListBox lbxNarrow, 
+            ListView lvwMedia, Browser browser, ToolStripProgressBar sprGatheringVideoData, 
+            ToolStripStatusLabel slbUnresolvedVideos)
         {
             if (closePending)
             {
-                FMB.Close();
+                browser.FMB.Close();
                 return;
             }
             if (lbxBroad.SelectedItems.Count > 0 && lbxNarrow.SelectedItems.Count > 0)

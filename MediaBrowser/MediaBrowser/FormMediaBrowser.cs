@@ -168,7 +168,7 @@ namespace MediaBrowser
 
         private void bgwPopulateVideos_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            AsyncWorker.RunWorkerCompleted(this, closePending, lbxBroad, lbxNarrow, lvwMedia, browser, sprGatheringVideoData, slbUnresolvedVideos);
+            AsyncWorker.RunWorkerCompleted(closePending, lbxBroad, lbxNarrow, lvwMedia, browser, sprGatheringVideoData, slbUnresolvedVideos);
         }
 
         private void SourceDirectoriesUpdated(bool updated)
